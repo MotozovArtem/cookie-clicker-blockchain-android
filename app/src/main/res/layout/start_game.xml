@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff"
+    android:orientation="vertical"
+    tools:context=".StartGameActivity">
+
+    <TextView
+        android:id="@+id/startTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startTitle"
+        android:textColor="@color/colorTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="40sp"
+        android:gravity="center"
+        />
+    <Button
+        android:id="@+id/btnStart"
+        app:layout_constraintTop_toBottomOf="@id/startTitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnStatistic"
+        android:drawableLeft="@drawable/icon_play"
+        style="@style/ButtonStart"
+        android:text="@string/newGame" />
+
+    <Button
+        android:id="@+id/btnStatistic"
+        style="@style/ButtonStart"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:drawableLeft="@drawable/icon_diagramm"
+        android:text="@string/statistic" />
+</android.support.constraint.ConstraintLayout>

@@ -1,3 +1,22 @@
 <resources>
-    <string name="app_name">cookie-clicker-blockchain-android</string>
+    <string name="app_name">My Application</string>
+    <string name="nullPoints">00000</string>
+    <string name="clicked">+1</string>
+    <string name="title">Donut clicker</string>
+    <string name="backToGame">Back to game</string>
+    <string name="name">Buy donuts per click!</string>
+    <string name="description_2">+2 donuts (-10 points)</string>
+    <string name="description_4">+4 donuts (-20 points)</string>
+    <string name="description_5">+5 donuts (-30 points)</string>
+    <string name="shop">Go to shop</string>
+    <string name="shopTitle">Shop</string>
+    <string name="gameTitle">Game</string>
+    <string name="newGame">New game</string>
+    <string name="statistic">Statistics</string>
+    <string name="startTitle">Welcome to donut clicker!</string>
+    <string name="endGame">The end!</string>
+    <string name="titleDialog">Game over</string>
+    <string name="continueGameDialog">Ok</string>
+    <string name="statisticsDesc">You won</string>
+    <string name="diagrammTitle">Diagramm</string>
 </resources>
