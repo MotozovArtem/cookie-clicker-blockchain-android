@@ -16,7 +16,7 @@
     <string name="startTitle">Welcome to donut clicker!</string>
     <string name="endGame">The end!</string>
     <string name="titleDialog">Game over</string>
-    <string name="continueGameDialog">Ok</string>
+    <string name="continueGameDialog">OK</string>
     <string name="statisticsDesc">You won</string>
     <string name="diagrammTitle">Diagramm</string>
 </resources>

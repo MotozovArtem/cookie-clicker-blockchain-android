@@ -15,11 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.example.klimo.myapplication.R;
 
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+	private static final String FORMAT = "%02d:%02d";
 
 	private TextView tvPoint;
 	private TextView newClick;
@@ -35,18 +36,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private long timer;
 	private long currentTime;
 	private Animation rotateAnimation;
-	private Animation timeAnumation;
+	private Animation timeAnimation;
 	private Animation donutClickAnimation;
 	private long timeBoost;
 	private long currentTimeBoost;
 	private CountDownTimer countDownTimer;
 	private AlertDialog.Builder ad;
 	private Context context;
-	DatabaseHandler db;
-
-
-	private static final String FORMAT = "%02d:%02d";
-
+	private DatabaseHandler db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 		newClick.setVisibility(View.INVISIBLE);
-		timeAnumation = AnimationUtils.loadAnimation(this, R.anim.timer_animation);
+		timeAnimation = AnimationUtils.loadAnimation(this, R.anim.timer_animation);
 		rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.donut_rotate);
 		donutClickAnimation = AnimationUtils.loadAnimation(this, R.anim.donut_animation);
 		donutClickAnimation.setAnimationListener(new SimpleAnimationListener() {
@@ -125,12 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			db.deleteAll();
 		}
 		countDownTimer = new CountDownTimer(timer, 1000) {
-
 			public void onTick(long millisUntilFinished) {
-
 				if (millisUntilFinished <= 20000) {
-
-					tvClock.startAnimation(timeAnumation);
+					tvClock.startAnimation(timeAnimation);
 				}
 				tvClock.setText("" + String.format(FORMAT,
 						TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(
