@@ -13,8 +13,8 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	private int dpc;
 	private int points;
 	private long currentTime;
-
 	private boolean flagShop = false;
+
 	private Button plus2Donut;
 	private Button plus4Donut;
 	private Button plus5Donut;

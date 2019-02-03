@@ -15,7 +15,7 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE " + BlockChainBaseHelper.DATABASE_NAME + "(" +
+		db.execSQL("CREATE TABLE " + BlocksTable.NAME + "(  " +
 				BlocksTable.Columns.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 				BlocksTable.Columns.MESSAGE + " VARCHAR(255)," +
 				BlocksTable.Columns.GOAL + " INTEGER," +

@@ -56,8 +56,8 @@ public class BlockDaoImpl implements DataAccessObject<Block> {
 				null,
 				null,
 				BlocksTable.Columns.CREATION_TIME);
-		boolean isEmpty = cursor.moveToFirst();
-		if (isEmpty) {
+		int rowsCount = cursor.getCount();
+		if (rowsCount == 0) {
 			cursor.close();
 			throw new DaoException(String.format("Block with this id: %d not found!", id));
 		}
@@ -74,11 +74,12 @@ public class BlockDaoImpl implements DataAccessObject<Block> {
 		Cursor cursor = db.query(BlocksTable.NAME, BlocksTable.allColumns(),
 				null, null, null, null, BlocksTable.Columns.CREATION_TIME);
 		List<Block> blocks = new ArrayList<>();
-		boolean isEmpty = cursor.moveToFirst();
-		if (isEmpty) {
+		int rowsCount = cursor.getCount();
+		if (rowsCount == 0) {
 			cursor.close();
 			return Collections.emptyList();
 		}
+		cursor.moveToFirst();
 		do {
 			blocks.add(blockFactory.buildFromCursor(cursor));
 		} while (cursor.moveToNext());

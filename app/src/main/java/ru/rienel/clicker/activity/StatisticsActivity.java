@@ -62,15 +62,15 @@ public class StatisticsActivity extends AppCompatActivity {
 	}
 
 	private class StatisticsAdapter extends BaseAdapter {
-		Context ctx;
+		Context context;
 		LayoutInflater inflater;
 
 		List<Block> objects;
 
 		StatisticsAdapter(Context context, List<Block> blocks) {
-			ctx = context;
+			this.context = context;
 			objects = blocks;
-			inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 
 		// элемент по позиции
