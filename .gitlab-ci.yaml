@@ -2,3 +2,7 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq gradle
   - gradle -v
   - which gradle
+
+build:
+  script:
+    - gradle assemble
