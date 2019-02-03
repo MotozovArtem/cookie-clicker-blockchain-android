@@ -10,16 +10,16 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
 		<activity
-				android:name="ru.rienel.clicker.MainActivity"
+				android:name="ru.rienel.clicker.activity.MainActivity"
 				android:label="@string/newGame">
 
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.ShopActivity"
+				android:name="ru.rienel.clicker.activity.ShopActivity"
 				android:label="@string/shopTitle">
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.StartGameActivity"
+				android:name="ru.rienel.clicker.activity.StartGameActivity"
 				android:label="@string/gameTitle">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -28,7 +28,7 @@
 			</intent-filter>
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.StatisticsActivity"
+				android:name="ru.rienel.clicker.activity.StatisticsActivity"
 				android:label="@string/statistic">
 		</activity>
 	</application>

@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
     android:orientation="horizontal"
-    tools:context="ru.rienel.clicker.StartGameActivity">
+    tools:context="ru.rienel.clicker.activity.StartGameActivity">
 
     <TextView
         android:id="@+id/startTitle"

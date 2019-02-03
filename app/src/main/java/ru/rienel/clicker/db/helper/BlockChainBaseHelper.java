@@ -1,9 +1,9 @@
-package ru.rienel.clicker.db;
+package ru.rienel.clicker.db.helper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import ru.rienel.clicker.db.domain.BlockChainDbSchema.BlocksTable;
+import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 
 public class BlockChainBaseHelper extends SQLiteOpenHelper {
 	public static final int VERSION = 1;

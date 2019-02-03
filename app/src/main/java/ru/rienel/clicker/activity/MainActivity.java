@@ -1,4 +1,4 @@
-package ru.rienel.clicker;
+package ru.rienel.clicker.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import ru.rienel.clicker.DatabaseHandler;
+import ru.rienel.clicker.R;
+import ru.rienel.clicker.SimpleAnimationListener;
 
 import java.util.concurrent.TimeUnit;
 

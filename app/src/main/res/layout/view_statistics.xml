@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="ru.rienel.clicker.StatisticsActivity">
+    tools:context="ru.rienel.clicker.activity.StatisticsActivity">
     <TextView
         android:id="@+id/statisticsTitle"
         android:layout_width="wrap_content"
