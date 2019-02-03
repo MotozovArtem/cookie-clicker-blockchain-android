@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="horizontal"
-    tools:context="ru.rienel.cookie_clicker_blockchain_android.MainActivity">
+    tools:context="ru.rienel.clicker.MainActivity">
 
 
     <TextView

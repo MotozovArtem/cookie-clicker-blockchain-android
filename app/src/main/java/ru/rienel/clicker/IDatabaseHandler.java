@@ -1,4 +1,4 @@
-package ru.rienel.cookie_clicker_blockchain_android;
+package ru.rienel.clicker;
 
 import java.util.List;
 

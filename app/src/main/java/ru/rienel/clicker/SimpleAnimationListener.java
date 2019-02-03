@@ -1,8 +1,8 @@
-package ru.rienel.cookie_clicker_blockchain_android;
+package ru.rienel.clicker;
 
 import android.view.animation.Animation;
 
-public abstract class TimeAnimation implements Animation.AnimationListener {
+public class SimpleAnimationListener implements Animation.AnimationListener {
 	@Override
 	public void onAnimationStart(Animation animation) {
 

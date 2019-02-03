@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
     android:orientation="vertical"
-    tools:context="ru.rienel.cookie_clicker_blockchain_android.StartGameActivity">
+    tools:context="ru.rienel.clicker.StartGameActivity">
 
     <TextView
         android:id="@+id/startTitle"
