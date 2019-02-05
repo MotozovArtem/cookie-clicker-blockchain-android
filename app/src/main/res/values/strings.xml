@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">P2P-Clicker</string>
     <string name="nullPoints">00000</string>
     <string name="clicked">+1</string>
     <string name="title">Donut clicker</string>
@@ -10,7 +10,7 @@
     <string name="description_5">+5 donuts (-30 points)</string>
     <string name="shop">Go to shop</string>
     <string name="shopTitle">Shop</string>
-    <string name="gameTitle">Game</string>
+    <string name="gameTitle">Chain Clicker</string>
     <string name="newGame">New game</string>
     <string name="statistic">Statistics</string>
     <string name="startTitle">Welcome to donut clicker!</string>
@@ -18,5 +18,5 @@
     <string name="titleDialog">Game over</string>
     <string name="continueGameDialog">OK</string>
     <string name="statisticsDesc">You won</string>
-    <string name="diagrammTitle">Diagramm</string>
+    <string name="diagrammTitle">Diagram</string>
 </resources>

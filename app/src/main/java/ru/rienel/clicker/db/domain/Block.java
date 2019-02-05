@@ -7,6 +7,7 @@ public class Block {
 	private String message;
 	private Integer goal;
 	private Date creationTime;
+	private String opponent;
 	private String hashOfPreviousBlock;
 	private String hashOfBlock;
 
@@ -59,5 +60,13 @@ public class Block {
 
 	public void setHashOfBlock(String hashOfBlock) {
 		this.hashOfBlock = hashOfBlock;
+	}
+
+	public String getOpponent() {
+		return opponent;
+	}
+
+	public void setOpponent(String opponent) {
+		this.opponent = opponent;
 	}
 }

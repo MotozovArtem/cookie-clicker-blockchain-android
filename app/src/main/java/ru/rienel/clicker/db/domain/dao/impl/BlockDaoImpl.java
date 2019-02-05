@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
-import ru.rienel.clicker.db.domain.dao.DataAccessObject;
+import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.db.factory.domain.impl.BlockFactoryImpl;
 import ru.rienel.clicker.db.helper.BlockChainBaseHelper;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BlockDaoImpl implements DataAccessObject<Block> {
+public class BlockDaoImpl implements Repository<Block> {
 	private BlockChainBaseHelper dbHelper;
 	private BlockFactory blockFactory;
 
@@ -44,8 +44,11 @@ public class BlockDaoImpl implements DataAccessObject<Block> {
 		db.beginTransaction();
 		rowId = db.insert(BlocksTable.NAME, null, values);
 		if (rowId == -1) {
+			db.endTransaction();
 			throw new DaoException("Block insert error");
 		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
 	}
 
 	@Override
@@ -74,12 +77,12 @@ public class BlockDaoImpl implements DataAccessObject<Block> {
 		Cursor cursor = db.query(BlocksTable.NAME, BlocksTable.allColumns(),
 				null, null, null, null, BlocksTable.Columns.CREATION_TIME);
 		List<Block> blocks = new ArrayList<>();
+		cursor.moveToFirst();
 		int rowsCount = cursor.getCount();
-		if (rowsCount == 0) {
+		if (rowsCount == 0 || rowsCount == -1) {
 			cursor.close();
 			return Collections.emptyList();
 		}
-		cursor.moveToFirst();
 		do {
 			blocks.add(blockFactory.buildFromCursor(cursor));
 		} while (cursor.moveToNext());

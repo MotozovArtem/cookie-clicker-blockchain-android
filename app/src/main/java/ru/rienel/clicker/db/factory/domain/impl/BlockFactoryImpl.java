@@ -10,7 +10,7 @@ import java.util.Date;
 public class BlockFactoryImpl implements BlockFactory {
 	@Override
 	public Block build(Integer id, String message, Integer goal,
-	                   Date creationTime, String hashOfPreviousBlock, String hashOfBlock) {
+	                   Date creationTime, String opponent, String hashOfPreviousBlock, String hashOfBlock) {
 		Block block = new Block();
 		block.setId(id);
 		block.setMessage(message);
@@ -24,16 +24,49 @@ public class BlockFactoryImpl implements BlockFactory {
 	@Override
 	public Block buildFromCursor(Cursor cursor) {
 		Block block = new Block();
-		block.setId(cursor.getInt(cursor.getColumnIndex(BlocksTable.Columns.ID)));
-		block.setMessage(cursor.getString(cursor.getColumnIndex(BlocksTable.Columns.MESSAGE)));
-		block.setGoal(cursor.getInt(cursor.getColumnIndex(BlocksTable.Columns.GOAL)));
-		block.setCreationTime(
-				new Date(
-						cursor.getInt(cursor.getColumnIndex(BlocksTable.Columns.CREATION_TIME))
-				)
-		);
-		block.setHashOfPreviousBlock(cursor.getString(cursor.getColumnIndex(BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK)));
-		block.setHashOfBlock(cursor.getString(cursor.getColumnIndex(BlocksTable.Columns.HASH_OF_BLOCK)));
+		Integer index = null;
+		index = cursor.getColumnIndex(BlocksTable.Columns.ID);
+		if (index != -1) {
+			block.setId(cursor.getInt(index));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.MESSAGE);
+		if (index != -1) {
+			block.setMessage(cursor.getString(index));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.GOAL);
+		if (index != -1) {
+			block.setGoal(cursor.getInt(index));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.CREATION_TIME);
+		if (index != -1) {
+			block.setCreationTime(
+					new Date(cursor.getInt(index)));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.OPPONENT);
+		if (index != -1) {
+			block.setOpponent(cursor.getString(index));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK);
+		if (index != -1) {
+			block.setHashOfPreviousBlock(cursor.getString(index));
+		}
+
+		index = cursor.getColumnIndex(BlocksTable.Columns.HASH_OF_BLOCK);
+		if (index != -1) {
+			block.setHashOfBlock(cursor.getString(index));
+		}
 		return block;
+	}
+
+	@Override
+	public Block build(String message, Integer goal, Date creationTime,
+	                   String opponent, String hashOfPreviousBlock, String hashOfBlock) {
+		return this.build(null,
+				message, goal, creationTime, opponent, hashOfPreviousBlock, hashOfBlock);
 	}
 }

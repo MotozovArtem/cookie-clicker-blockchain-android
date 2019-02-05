@@ -13,7 +13,7 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
-import ru.rienel.clicker.db.domain.dao.DataAccessObject;
+import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
 	private static final String TAG = StatisticsActivity.class.getName();
 
-	private DataAccessObject<Block> blockAccess;
+	private Repository<Block> blockAccess;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,22 +91,17 @@ public class StatisticsActivity extends AppCompatActivity {
 			return position;
 		}
 
-		// point по позиции
-		int getPoint(int position) {
-			return ((int) getItem(position));
-		}
-
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
 			if (view == null) {
 				view = inflater.inflate(R.layout.item, parent, false);
 			}
-
-			int point = getPoint(position);
+			Block block = (Block) getItem(position);
 
 			((TextView) view.findViewById(R.id.statisticsPoints)).
-					setText(String.format(Locale.ENGLISH, "%d) You won: %d blocks", position + 1, point));
+					setText(String.format(Locale.ENGLISH, "%d) You won: %d blocks",
+							position + 1, block.getGoal()));
 			return view;
 		}
 

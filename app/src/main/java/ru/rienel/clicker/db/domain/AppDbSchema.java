@@ -9,6 +9,7 @@ public class AppDbSchema {
 			public static final String MESSAGE = "message";
 			public static final String GOAL = "goal";
 			public static final String CREATION_TIME = "creation_time";
+			public static final String OPPONENT = "opponent";
 			public static final String HASH_OF_PREVIOUS_BLOCK = "previous_block_hash";
 			public static final String HASH_OF_BLOCK = "hash_of_block";
 
@@ -19,6 +20,7 @@ public class AppDbSchema {
 					Columns.MESSAGE,
 					Columns.GOAL,
 					Columns.CREATION_TIME,
+					Columns.OPPONENT,
 					Columns.HASH_OF_PREVIOUS_BLOCK,
 					Columns.HASH_OF_BLOCK
 			};

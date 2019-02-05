@@ -2,7 +2,7 @@ package ru.rienel.clicker.db.domain.dao;
 
 import java.util.List;
 
-public interface DataAccessObject<T> {
+public interface Repository<T> {
 	void add(T model) throws DaoException;
 
 	T findById(Integer id) throws DaoException;

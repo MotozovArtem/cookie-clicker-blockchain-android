@@ -2,17 +2,14 @@ package ru.rienel.clicker.data;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
-import ru.rienel.clicker.db.domain.dao.DataAccessObject;
+import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.helper.BlockChainBaseHelper;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
@@ -28,7 +25,7 @@ public class BlockDaoTest {
 	public void testAddFullBlock(){
 		// Environment init
 		Context appContext = InstrumentationRegistry.getContext();
-		DataAccessObject<Block> blockDao = new BlockDaoImpl(appContext);
+		Repository<Block> blockDao = new BlockDaoImpl(appContext);
 
 		// Init block
 		Block block = new Block();

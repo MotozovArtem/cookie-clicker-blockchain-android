@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 
 public class BlockChainBaseHelper extends SQLiteOpenHelper {
-	public static final int VERSION = 1;
-	public static final String DATABASE_NAME = "storage.db";
+	private static final int VERSION = 1;
+	private static final String DATABASE_NAME = "storage.db";
 
 	public BlockChainBaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
@@ -20,6 +20,7 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 				BlocksTable.Columns.MESSAGE + " VARCHAR(255)," +
 				BlocksTable.Columns.GOAL + " INTEGER," +
 				BlocksTable.Columns.CREATION_TIME + " INTEGER," +
+				BlocksTable.Columns.OPPONENT + " VARCHAR(100)," +
 				BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK + " VARCHAR(32)," +
 				BlocksTable.Columns.HASH_OF_BLOCK + " VARCHAR(32)" +
 				" )");
@@ -27,6 +28,7 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		db.execSQL("DROP TABLE "+BlocksTable.NAME);
+		onCreate(db);
 	}
 }

@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		  package="ru.rienel.clicker">
 
+	<uses-permission
+			android:name="android.permission.ACCESS_COARSE_LOCATION"
+			android:required="true"/>
+	<uses-permission
+			android:name="android.permission.ACCESS_WIFI_STATE"
+			android:required="true"/>
+	<uses-permission
+			android:name="android.permission.INTERNET"
+			android:required="true"/>
+	<uses-permission
+			android:name="android.permission.CHANGE_WIFI_STATE"
+			android:required="true"/>
+
 	<application
 			android:allowBackup="true"
 			android:icon="@mipmap/ic_launcher"
@@ -9,17 +22,17 @@
 			android:roundIcon="@drawable/donut_icon"
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
+		<service android:name="service.NetworkService"/>
 		<activity
-				android:name="ru.rienel.clicker.activity.MainActivity"
+				android:name=".activity.GameActivity"
 				android:label="@string/newGame">
-
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.activity.ShopActivity"
+				android:name=".activity.ShopActivity"
 				android:label="@string/shopTitle">
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.activity.StartGameActivity"
+				android:name=".activity.MainActivity"
 				android:label="@string/gameTitle">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -28,8 +41,10 @@
 			</intent-filter>
 		</activity>
 		<activity
-				android:name="ru.rienel.clicker.activity.StatisticsActivity"
+				android:name=".activity.StatisticsActivity"
 				android:label="@string/statistic">
+		</activity>
+		<activity android:name=".activity.NetworkActivity">
 		</activity>
 	</application>
 

@@ -84,7 +84,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void showDonutFragment() {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, GameActivity.class);
 		intent.putExtra("dpc", dpc);
 		intent.putExtra("points", points);
 		intent.putExtra("flagShop", flagShop);
