@@ -46,6 +46,7 @@
 		</activity>
 		<activity android:name=".activity.NetworkActivity">
 		</activity>
+		<activity android:name=".activity.preference.PreferencesActivity"/>
 	</application>
 
 </manifest>

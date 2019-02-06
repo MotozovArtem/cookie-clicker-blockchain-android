@@ -39,10 +39,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private TextView clock;
 	private ImageView donutImage;
 	private TextView time;
-	private Button btnShop;
+	private Button shop;
 	private ProgressBar progressBar;
 	private Integer points;
-	private int dpc;
+	private int donutPerClick;
 	private CountDownTimer countDownTimerBoost;
 	private boolean flagShop;
 	private long timer;
@@ -63,10 +63,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
-
 		point = findViewById(R.id.tvPoints);
-		btnShop = findViewById(R.id.btnShop);
+		shop = findViewById(R.id.btnShop);
 		time = findViewById(R.id.time);
 		progressBar = findViewById(R.id.prBar);
 		donutImage = findViewById(R.id.imageDonut);
@@ -79,13 +77,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 		if (savedInstanceState == null)   // приложение запущено впервые
 		{
-			dpc = 1;
+			donutPerClick = 1;
 			points = 0;
 			flagShop = false;
 			currentTime = 0;
 			currentTimeBoost = 0;
 		} else {
-			dpc = savedInstanceState.getInt("dpc_state");
+			donutPerClick = savedInstanceState.getInt("dpc_state");
 			points = savedInstanceState.getInt("points_state");
 			flagShop = savedInstanceState.getBoolean("flagShop_state");
 			currentTime = savedInstanceState.getLong("currentTime_state");
@@ -178,7 +176,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 				public void onTick(long millisUntilFinished) {
 					time.setVisibility(View.VISIBLE);
 					progressBar.setVisibility(View.VISIBLE);
-					btnShop.setEnabled(false);
+					shop.setEnabled(false);
 					time.setText(String.format(Locale.ENGLISH,
 							"Осталось: %d секунд", millisUntilFinished / 1000));
 					progressBar.setProgress((int) millisUntilFinished / 1000);
@@ -190,12 +188,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 				@Override
 				public void onFinish() {
-					btnShop.setEnabled(true);
+					shop.setEnabled(true);
 					time.setVisibility(View.GONE);
 					progressBar.setVisibility(View.GONE);
 					currentTimeBoost = 0;
 					timeBoost = 20000;
-					dpc = 1;
+					donutPerClick = 1;
 					flagShop = false;
 				}
 			};
@@ -221,7 +219,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("dpc_state", dpc);
+		outState.putInt("dpc_state", donutPerClick);
 		outState.putInt("points_state", points);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
@@ -231,7 +229,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		dpc = savedInstanceState.getInt("dpc_state");
+		donutPerClick = savedInstanceState.getInt("dpc_state");
 		points = savedInstanceState.getInt("points_state");
 		flagShop = savedInstanceState.getBoolean("flagShop_state");
 		currentTime = savedInstanceState.getLong("currentTime_state");
@@ -248,15 +246,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void donutClick() {
-		this.points += this.dpc;
+		this.points += this.donutPerClick;
 		point.setText(Integer.toString(points));
-		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.dpc));
+		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 
 	private void showShopFragment() {
 		Intent intent = new Intent(this, ShopActivity.class);
 		intent.putExtra("points", points);
-		intent.putExtra("dpc", dpc);
+		intent.putExtra("donutPerClick", donutPerClick);
 		intent.putExtra("currentTime", currentTime);
 		startActivityForResult(intent, 1);
 	}
@@ -266,7 +264,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (data == null) {
 			return;
 		}
-		dpc = data.getIntExtra("dpc", dpc);
+		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
 		points = data.getIntExtra("points", points);
 		flagShop = data.getBooleanExtra("flagShop", flagShop);
 		currentTime = data.getLongExtra("currentTime", currentTime);

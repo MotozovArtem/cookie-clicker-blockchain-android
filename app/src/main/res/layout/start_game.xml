@@ -1,43 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:tools="http://schemas.android.com/tools"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="center"
+			android:background="#FFECECEC"
+			android:orientation="vertical"
+			tools:context="ru.rienel.clicker.activity.MainActivity"
+			android:columnCount="4"
+		>
 
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#fff"
-    android:orientation="vertical"
-    tools:context="ru.rienel.clicker.activity.MainActivity">
+	<TextView
+			android:id="@+id/startTitle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/startTitle"
+			android:textColor="@color/colorTitle"
+			android:layout_marginBottom="50dp"
+			android:layout_column="0"
+			android:layout_row="0"
+			android:layout_gravity="fill_horizontal"
+			android:textSize="40sp"
+			android:gravity="center"
+			/>
 
-    <TextView
-        android:id="@+id/startTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/startTitle"
-        android:textColor="@color/colorTitle"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:textSize="40sp"
-        android:gravity="center"
-        />
-    <Button
-        android:id="@+id/btnStart"
-        app:layout_constraintTop_toBottomOf="@id/startTitle"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnStatistic"
-        android:drawableLeft="@drawable/icon_play"
-        style="@style/ButtonStart"
-        android:text="@string/newGame" />
+	<Button
+			android:id="@+id/btnStart"
+			android:layout_width="match_parent"
+			style="@style/ButtonStart"
+			android:layout_column="0"
+			android:layout_row="1"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="30dp"
+			android:text="@string/newGame"
+			android:drawableStart="@drawable/icon_play"
+			/>
 
-    <Button
-        android:id="@+id/btnStatistic"
-        style="@style/ButtonStart"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:drawableLeft="@drawable/icon_diagramm"
-        android:text="@string/statistic" />
-</android.support.constraint.ConstraintLayout>
+	<Button
+			android:id="@+id/multiplayer"
+			android:layout_width="match_parent"
+			style="@style/ButtonMultiplayer"
+			android:layout_column="0"
+			android:layout_row="2"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="30dp"
+			android:text="@string/multiplayer"
+			android:drawableStart="@drawable/icon_network"
+			/>
+
+	<Button
+			android:id="@+id/btnStatistic"
+			android:layout_width="match_parent"
+
+			style="@style/ButtonStart"
+			android:layout_column="0"
+			android:layout_row="3"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="30dp"
+			android:text="@string/statistic"
+			android:drawableStart="@drawable/icon_diagramm"
+			/>
+
+</GridLayout>
