@@ -8,9 +8,10 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Client extends Thread {
+	private static final String TAG = "Client";
+
 	private Socket socket;
 	private InetAddress clientAddress;
-	private static final String TAG = "Client";
 
 	public Client(InetAddress clientAddress) {
 		this.clientAddress = clientAddress;
