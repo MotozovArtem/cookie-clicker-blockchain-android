@@ -75,8 +75,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		blockRepository = new BlockDaoImpl(this);
 		blockFactory = new BlockFactoryImpl();
 
-		if (savedInstanceState == null)   // приложение запущено впервые
-		{
+		if (savedInstanceState == null) {   // приложение запущено впервые
 			donutPerClick = 1;
 			points = 0;
 			flagShop = false;

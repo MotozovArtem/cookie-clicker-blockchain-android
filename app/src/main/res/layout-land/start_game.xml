@@ -22,16 +22,16 @@
         android:gravity="center"
         />
     <Button
-        android:id="@+id/btnStart"
+        android:id="@+id/start"
         app:layout_constraintTop_toBottomOf="@id/startTitle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnStatistic"
+        app:layout_constraintBottom_toTopOf="@id/statistic"
         style="@style/ButtonStart"
         android:text="@string/newGame" />
 
     <Button
-        android:id="@+id/btnStatistic"
+        android:id="@+id/statistic"
         style="@style/ButtonStart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

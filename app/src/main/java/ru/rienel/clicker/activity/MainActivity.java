@@ -11,17 +11,20 @@ import ru.rienel.clicker.R;
 public class MainActivity extends AppCompatActivity {
 	private Button startGame;
 	private Button statistics;
+	private Button multiplayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_game);
 
-		startGame = findViewById(R.id.btnStart);
-		statistics = findViewById(R.id.btnStatistic);
+		startGame = findViewById(R.id.start);
+		statistics = findViewById(R.id.statistic);
+		multiplayer = findViewById(R.id.multiplayer);
 
 		startGame.setOnClickListener(buildChageActivityOnClickListener(this, GameActivity.class));
 		statistics.setOnClickListener(buildChageActivityOnClickListener(this, StatisticsActivity.class));
+		multiplayer.setOnClickListener(buildChageActivityOnClickListener(this, MultiplayerActivity.class));
 	}
 
 	private View.OnClickListener buildChageActivityOnClickListener(final Context context,
