@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import ru.rienel.clicker.R;
-import ru.rienel.clicker.SimpleAnimationListener;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
@@ -94,7 +93,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		timeAnimation = AnimationUtils.loadAnimation(this, R.anim.timer_animation);
 		rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.donut_rotate);
 		donutClickAnimation = AnimationUtils.loadAnimation(this, R.anim.donut_animation);
-		donutClickAnimation.setAnimationListener(new SimpleAnimationListener() {
+
+		donutClickAnimation.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				donutClick();
+				newClick.setVisibility(View.VISIBLE);
+			}
+
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				newClick.setVisibility(View.INVISIBLE);
@@ -102,10 +108,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 			}
 
 			@Override
-			public void onAnimationStart(Animation animation) {
-				super.onAnimationStart(animation);
-				donutClick();
-				newClick.setVisibility(View.VISIBLE);
+			public void onAnimationRepeat(Animation animation) {
+
 			}
 		});
 

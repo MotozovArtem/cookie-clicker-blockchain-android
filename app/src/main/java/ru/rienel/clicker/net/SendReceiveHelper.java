@@ -2,6 +2,7 @@ package ru.rienel.clicker.net;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,7 @@ public class SendReceiveHelper extends Thread {
 					handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(TAG, "Error", e);
 			}
 		}
 	}

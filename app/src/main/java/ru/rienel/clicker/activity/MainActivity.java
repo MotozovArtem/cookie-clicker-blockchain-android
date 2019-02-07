@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
 		startGame.setOnClickListener(buildChageActivityOnClickListener(this, GameActivity.class));
 		statistics.setOnClickListener(buildChageActivityOnClickListener(this, StatisticsActivity.class));
-		multiplayer.setOnClickListener(buildChageActivityOnClickListener(this, MultiplayerActivity.class));
+		multiplayer.setOnClickListener(buildChageActivityOnClickListener(this, OpponentsActivity.class));
 	}
 
 	private View.OnClickListener buildChageActivityOnClickListener(final Context context,

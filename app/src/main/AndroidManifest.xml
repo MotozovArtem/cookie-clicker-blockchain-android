@@ -23,6 +23,7 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
 		<service android:name="service.NetworkService"/>
+
 		<activity
 				android:name=".activity.GameActivity"
 				android:label="@string/newGame">
@@ -44,10 +45,14 @@
 				android:name=".activity.StatisticsActivity"
 				android:label="@string/statistic">
 		</activity>
-		<activity android:name=".activity.NetworkActivity">
+		<activity
+				android:name=".activity.NetworkActivity">
 		</activity>
-		<activity android:name=".activity.preference.PreferencesActivity"/>
-		<activity android:name=".activity.MultiplayerActivity"/>
+		<activity
+				android:name=".activity.preference.PreferencesActivity"/>
+		<activity
+				android:name=".activity.MultiplayerActivity"/>
+		<activity android:name=".activity.OpponentsActivity"/>
 	</application>
 
 </manifest>
