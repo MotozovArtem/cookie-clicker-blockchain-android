@@ -5,4 +5,5 @@ before_script:
 
 build:
   script:
-    - gradle assemble
+    - gradle -v
+    - gradle -i -s build
