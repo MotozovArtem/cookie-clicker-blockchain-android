@@ -1,9 +1,14 @@
 package ru.rienel.clicker.db.helper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
+import ru.rienel.clicker.db.domain.Block;
+import ru.rienel.clicker.db.factory.domain.BlockFactoryImpl;
+
+import java.util.Date;
 
 public class BlockChainBaseHelper extends SQLiteOpenHelper {
 	private static final int VERSION = 1;
@@ -24,6 +29,24 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 				BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK + " VARCHAR(32)," +
 				BlocksTable.Columns.HASH_OF_BLOCK + " VARCHAR(32)" +
 				" )");
+
+		ContentValues contentValues = createContentValuesForGenesisBlock(db);
+		db.insert(BlocksTable.NAME, null, contentValues);
+	}
+
+	private ContentValues createContentValuesForGenesisBlock(SQLiteDatabase db) {
+		Block genesisBlock = new BlockFactoryImpl().build("Genesis block",
+				0, new Date(System.currentTimeMillis()),
+				null, null, "GENESIS");
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(BlocksTable.Columns.ID, genesisBlock.getId());
+		contentValues.put(BlocksTable.Columns.MESSAGE, genesisBlock.getMessage());
+		contentValues.put(BlocksTable.Columns.GOAL, genesisBlock.getGoal());
+		contentValues.put(BlocksTable.Columns.CREATION_TIME, genesisBlock.getCreationTime().getTime());
+		contentValues.put(BlocksTable.Columns.OPPONENT, genesisBlock.getHashOfPreviousBlock());
+		contentValues.put(BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK, genesisBlock.getHashOfPreviousBlock());
+		contentValues.put(BlocksTable.Columns.HASH_OF_BLOCK, genesisBlock.getHashOfBlock());
+		return contentValues;
 	}
 
 	@Override

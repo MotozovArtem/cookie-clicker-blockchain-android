@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<GridLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:orientation="vertical"
+		android:columnCount="1"
+		android:rowCount="2"
 		android:id="@+id/block_fragment_container"
-		tools:context="ru.rienel.clicker.activity.StatisticsActivity"
 		>
 
 	<TextView
 			android:id="@+id/statisticsTitle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintLeft_toLeftOf="parent"
-			app:layout_constraintRight_toRightOf="parent"
 			android:textColor="@color/colorTitle"
 			android:textSize="38sp"
 			android:gravity="center"
+			android:layout_column="0"
+			android:layout_row="1"
 			/>
-
-
-</android.support.constraint.ConstraintLayout>
+</GridLayout>

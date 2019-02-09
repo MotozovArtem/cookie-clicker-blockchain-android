@@ -8,8 +8,7 @@ import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
-import ru.rienel.clicker.db.factory.domain.BlockFactory;
-import ru.rienel.clicker.db.factory.domain.impl.BlockFactoryImpl;
+import ru.rienel.clicker.db.factory.domain.BlockFactoryImpl;
 import ru.rienel.clicker.db.helper.BlockChainBaseHelper;
 
 import java.util.ArrayList;
@@ -18,11 +17,9 @@ import java.util.List;
 
 public class BlockDaoImpl implements Repository<Block> {
 	private BlockChainBaseHelper dbHelper;
-	private BlockFactory blockFactory;
 
 	public BlockDaoImpl(Context context) {
 		dbHelper = new BlockChainBaseHelper(context);
-		blockFactory = new BlockFactoryImpl();
 	}
 
 	private ContentValues getValues(Block model) {
@@ -67,7 +64,7 @@ public class BlockDaoImpl implements Repository<Block> {
 		}
 
 		Block block;
-		block = blockFactory.buildFromCursor(cursor);
+		block = BlockFactoryImpl.buildFromCursor(cursor);
 		cursor.close();
 		return block;
 	}
@@ -85,7 +82,7 @@ public class BlockDaoImpl implements Repository<Block> {
 			return Collections.emptyList();
 		}
 		do {
-			blocks.add(blockFactory.buildFromCursor(cursor));
+			blocks.add(BlockFactoryImpl.buildFromCursor(cursor));
 		} while (cursor.moveToNext());
 		cursor.close();
 		return blocks;
@@ -124,6 +121,6 @@ public class BlockDaoImpl implements Repository<Block> {
 		cursor.moveToFirst();
 		int count = cursor.getInt(0);
 		cursor.close();
-		return 0;
+		return count;
 	}
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ru.rienel.clicker.R;
@@ -56,7 +57,7 @@ public class BlockListFragment extends Fragment {
 		@Override
 		public BlockHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 			LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-			View view = layoutInflater.inflate(R.layout.list_item_opponent, viewGroup, false);
+			View view = layoutInflater.inflate(R.layout.list_item_block, viewGroup, false);
 			return new BlockHolder(view);
 		}
 
@@ -74,6 +75,7 @@ public class BlockListFragment extends Fragment {
 
 	private class BlockHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private Block block;
+
 		private TextView blockNumber;
 		private TextView blockMessage;
 		private TextView dateOfCreate;
