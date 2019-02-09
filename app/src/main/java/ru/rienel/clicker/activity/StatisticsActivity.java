@@ -1,110 +1,51 @@
 package ru.rienel.clicker.activity;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
-import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
+import ru.rienel.clicker.ui.view.BlockListFragment;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 public class StatisticsActivity extends AppCompatActivity {
 
 	private static final String TAG = StatisticsActivity.class.getName();
-
-	private Repository<Block> blockAccess;
+	private Repository<Block> blockRepository;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.view_statistics);
-		blockAccess = new BlockDaoImpl(this);
+		setContentView(R.layout.statistics_activity);
+
+		blockRepository = new BlockDaoImpl(this);
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		Fragment fragment = fragmentManager.findFragmentById(R.id.block_fragment_container);
+		if (fragment == null) {
+			fragment = new BlockListFragment();
+
+			fragmentManager.beginTransaction()
+					.add(R.id.block_fragment_container, fragment)
+					.commit();
+		}
 	}
 
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		ListView statistics;
 		TextView statisticTitle;
-		statistics = findViewById(R.id.lvStatistics);
 		statisticTitle = findViewById(R.id.statisticsTitle);
-		List<Block> blocks = null;
-		try {
-			blocks = blockAccess.findAll();
-		} catch (DaoException e) {
-			Log.v(TAG, e.getMessage());
-			blocks = Collections.emptyList();
-		}
 
-		BaseAdapter adapter = new StatisticsAdapter(this, blocks);
-
-		statistics.setAdapter(adapter);
-		statisticTitle.setText(String.format(Locale.ENGLISH, "Statistics %d games out of 10", blocks.size()));
-
+		Integer blocksCount = blockRepository.count();
+		statisticTitle.setText(String.format(Locale.ENGLISH, "Statistics: %d games played", blocksCount));
 	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	private class StatisticsAdapter extends BaseAdapter {
-		Context context;
-		LayoutInflater inflater;
-
-		List<Block> objects;
-
-		StatisticsAdapter(Context context, List<Block> blocks) {
-			this.context = context;
-			objects = blocks;
-			inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		}
-
-		// элемент по позиции
-		@Override
-		public Object getItem(int position) {
-			return objects.get(position);
-		}
-
-		// кол-во элементов
-		@Override
-		public int getCount() {
-			return objects.size();
-		}
-
-		// id по позиции
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = convertView;
-			if (view == null) {
-				view = inflater.inflate(R.layout.item, parent, false);
-			}
-			Block block = (Block) getItem(position);
-
-			((TextView) view.findViewById(R.id.statisticsPoints)).
-					setText(String.format(Locale.ENGLISH, "%d) You won: %d blocks",
-							position + 1, block.getGoal()));
-			return view;
-		}
-
-	}
-
 }

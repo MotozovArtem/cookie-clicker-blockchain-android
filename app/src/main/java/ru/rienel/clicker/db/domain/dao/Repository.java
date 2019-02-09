@@ -7,11 +7,13 @@ public interface Repository<T> {
 
 	T findById(Integer id) throws DaoException;
 
-	List<T> findAll() throws DaoException;
+	List<T> findAll();
 
 	void deleteById(Integer id) throws DaoException;
 
 	void delete(T model) throws DaoException;
 
 	void update(T model) throws DaoException;
+
+	int count();
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class OpponentListFragment extends Fragment {
 	private RecyclerView opponentRecyclerView;
-	private OpponentAdapter adapter;
+	private OpponentAdapter opponentAdapter;
 
 	@Nullable
 	@Override
@@ -46,14 +46,13 @@ public class OpponentListFragment extends Fragment {
 		testOpponent.setName("iPhone");
 		opponentList.add(testOpponent);
 
-		adapter = new OpponentAdapter(opponentList);
-		opponentRecyclerView.setAdapter(adapter);
+		opponentAdapter = new OpponentAdapter(opponentList);
+		opponentRecyclerView.setAdapter(opponentAdapter);
 	}
 
 
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {
 		private List<Opponent> opponentList;
-
 
 		public OpponentAdapter(List<Opponent> opponentList) {
 			this.opponentList = opponentList;
@@ -79,7 +78,7 @@ public class OpponentListFragment extends Fragment {
 		}
 	}
 
-	private class OpponentHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+	private class OpponentHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		private Opponent opponent;
 
 		private ImageView thumbnail;

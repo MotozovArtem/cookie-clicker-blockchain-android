@@ -59,6 +59,7 @@ public class BlockDaoImpl implements Repository<Block> {
 				null,
 				null,
 				BlocksTable.Columns.CREATION_TIME);
+		cursor.moveToFirst();
 		int rowsCount = cursor.getCount();
 		if (rowsCount == 0) {
 			cursor.close();
@@ -114,5 +115,15 @@ public class BlockDaoImpl implements Repository<Block> {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int affectedRows = db.update(BlocksTable.NAME, getValues(model), String.format("%s=?", BlocksTable.Columns.ID),
 				new String[]{model.getId().toString()});
+	}
+
+	@Override
+	public int count() {
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT count(id) FROM " + BlocksTable.NAME, null);
+		cursor.moveToFirst();
+		int count = cursor.getInt(0);
+		cursor.close();
+		return 0;
 	}
 }
