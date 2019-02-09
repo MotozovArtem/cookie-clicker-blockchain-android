@@ -3,7 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#ed4d87</color>
-    <color name="colorTitle">#9400D3</color>
+    <color name="colorTitle">#0d47a1</color>
     <color name="colorPoint">#9400D3</color>
     <color name="colorToast">#111</color>
     <color name="clock">#832fea</color>
@@ -13,4 +13,9 @@
     <color name="btnEnable">#dba1a1a1</color>
     <color name="btnPressed">#e60767</color>
     <color name="statisticPoints">#111</color>
+
+    <color name="accent">#1565c0</color>
+    <color name="foreground">#212121</color>
+    <color name="background">#e8eaf6</color>
+    <color name="black">#000000</color>
 </resources>

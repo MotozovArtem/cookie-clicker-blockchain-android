@@ -4,8 +4,17 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/foreground</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:statusBarColor">?attr/colorAccent</item>
+    </style>
+
+    <!-- Custom Application theme -->
+    <style name="AppStandard" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorForeground">@color/foreground</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:statusBarColor">?attr/colorAccent</item>
     </style>
 
     <style name="ButtonInShop" parent="Base.AlertDialog.AppCompat.Light">
@@ -20,7 +29,7 @@
 
     <style name="ButtonStart" parent="Base.AlertDialog.AppCompat.Light">
         <item name="android:textColor">@color/btnText</item>
-        <item name="android:background">@color/colorBtnShop</item>
+        <item name="android:background">@color/accent</item>
         <item name="android:textSize">28sp</item>
         <item name="android:width">180dp</item>
         <item name="android:padding">5dp</item>
@@ -30,12 +39,13 @@
 
     <style name="ButtonMultiplayer" parent="Base.AlertDialog.AppCompat.Light">
         <item name="android:textColor">@color/btnText</item>
-        <item name="android:background">@color/colorBtnShop</item>
         <item name="android:textSize">28sp</item>
         <item name="android:width">180dp</item>
         <item name="android:padding">5dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
+
+
 
 </resources>
