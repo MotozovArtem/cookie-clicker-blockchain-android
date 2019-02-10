@@ -8,7 +8,7 @@ import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
-import ru.rienel.clicker.db.factory.domain.BlockFactoryImpl;
+import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.db.helper.BlockChainBaseHelper;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class BlockDaoImpl implements Repository<Block> {
 		}
 
 		Block block;
-		block = BlockFactoryImpl.buildFromCursor(cursor);
+		block = BlockFactory.buildFromCursor(cursor);
 		cursor.close();
 		return block;
 	}
@@ -82,7 +82,7 @@ public class BlockDaoImpl implements Repository<Block> {
 			return Collections.emptyList();
 		}
 		do {
-			blocks.add(BlockFactoryImpl.buildFromCursor(cursor));
+			blocks.add(BlockFactory.buildFromCursor(cursor));
 		} while (cursor.moveToNext());
 		cursor.close();
 		return blocks;

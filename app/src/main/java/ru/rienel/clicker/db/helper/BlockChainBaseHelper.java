@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
-import ru.rienel.clicker.db.factory.domain.BlockFactoryImpl;
+import ru.rienel.clicker.db.factory.domain.BlockFactory;
 
 import java.util.Date;
 
@@ -35,7 +35,7 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 	}
 
 	private ContentValues createContentValuesForGenesisBlock(SQLiteDatabase db) {
-		Block genesisBlock = new BlockFactoryImpl().build("Genesis block",
+		Block genesisBlock = new BlockFactory().build("Genesis block",
 				0, new Date(System.currentTimeMillis()),
 				null, null, "GENESIS");
 		ContentValues contentValues = new ContentValues();

@@ -7,10 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ListView;
 import ru.rienel.clicker.R;
-import ru.rienel.clicker.net.WiFiAppBroadcastReceiver;
 
 public class NetworkActivity extends AppCompatActivity implements PeersListListenable {
-	private WiFiAppBroadcastReceiver receiver;
+//	private WiFiAppBroadcastReceiver receiver;
 	private WifiP2pManager manager;
 	private WifiP2pManager.Channel channel;
 
@@ -31,20 +30,20 @@ public class NetworkActivity extends AppCompatActivity implements PeersListListe
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-		receiver = new WiFiAppBroadcastReceiver(manager, channel, this);
-		registerReceiver(receiver, intentFilter);
+//		receiver = new WiFiAppBroadcastReceiver(manager, channel, this);
+//		registerReceiver(receiver, intentFilter);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		receiver = new WiFiAppBroadcastReceiver(manager, channel, this);
+//		receiver = new WiFiAppBroadcastReceiver(manager, channel, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unregisterReceiver(receiver);
+//		unregisterReceiver(receiver);
 	}
 
 	@Override

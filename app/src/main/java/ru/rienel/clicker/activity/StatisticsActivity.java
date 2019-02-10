@@ -46,6 +46,8 @@ public class StatisticsActivity extends AppCompatActivity {
 		statisticTitle = findViewById(R.id.statisticsTitle);
 
 		Integer blocksCount = blockRepository.count();
-		statisticTitle.setText(String.format(Locale.ENGLISH, "Statistics: %d games played", blocksCount - 1));
+		statisticTitle.setText(
+				String.format(Locale.ENGLISH, "Statistics: %d games played",
+						blocksCount - 1)); // -1 genesis block
 	}
 }

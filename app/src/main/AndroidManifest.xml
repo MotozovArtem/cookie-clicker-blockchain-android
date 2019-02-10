@@ -6,6 +6,8 @@
 			android:name="android.permission.ACCESS_COARSE_LOCATION"
 			android:required="true"/>
 	<uses-permission
+			android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission
 			android:name="android.permission.ACCESS_WIFI_STATE"
 			android:required="true"/>
 	<uses-permission
@@ -22,16 +24,15 @@
 			android:roundIcon="@drawable/donut_icon"
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
-		<service android:name="service.NetworkService"/>
+		<service
+				android:name=".service.NetworkService"/>
 
 		<activity
 				android:name=".activity.GameActivity"
-				android:label="@string/newGame">
-		</activity>
+				android:label="@string/newGame"/>
 		<activity
 				android:name=".activity.ShopActivity"
-				android:label="@string/shopTitle">
-		</activity>
+				android:label="@string/shopTitle"/>
 		<activity
 				android:name=".activity.MainActivity"
 				android:label="@string/gameTitle">
@@ -52,7 +53,8 @@
 				android:name=".activity.preference.PreferencesActivity"/>
 		<activity
 				android:name=".activity.MultiplayerActivity"/>
-		<activity android:name=".activity.OpponentsActivity"/>
+		<activity
+				android:name=".activity.OpponentsActivity"/>
 	</application>
 
 </manifest>

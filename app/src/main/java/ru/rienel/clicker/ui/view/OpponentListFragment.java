@@ -21,6 +21,7 @@ import java.util.List;
 public class OpponentListFragment extends Fragment {
 	private RecyclerView opponentRecyclerView;
 	private OpponentAdapter opponentAdapter;
+	private List<Opponent> opponentList;
 
 	@Nullable
 	@Override
@@ -35,21 +36,28 @@ public class OpponentListFragment extends Fragment {
 	}
 
 	private void updateUi() {
-		// TODO Get Opponents after network scan
-		List<Opponent> opponentList = new ArrayList<>();
-		// FIXME: 07.02.2019
-
-		Opponent testOpponent = new Opponent();
-		testOpponent.setName("Nokia");
-		opponentList.add(testOpponent);
-		testOpponent = new Opponent();
-		testOpponent.setName("iPhone");
-		opponentList.add(testOpponent);
+//		// TODO Get Opponents after network scan
+//		List<Opponent> opponentList = new ArrayList<>();
+//		// FIXME: 07.02.2019
+//
+//		Opponent testOpponent = new Opponent();
+//		testOpponent.setName("Nokia");
+//		opponentList.add(testOpponent);
+//		testOpponent = new Opponent();
+//		testOpponent.setName("iPhone");
+//		opponentList.add(testOpponent);
 
 		opponentAdapter = new OpponentAdapter(opponentList);
 		opponentRecyclerView.setAdapter(opponentAdapter);
 	}
 
+	public List<Opponent> getOpponentList() {
+		return opponentList;
+	}
+
+	public void setOpponentList(List<Opponent> opponentList) {
+		this.opponentList = opponentList;
+	}
 
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {
 		private List<Opponent> opponentList;

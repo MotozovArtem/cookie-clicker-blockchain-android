@@ -21,7 +21,7 @@ import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
-import ru.rienel.clicker.db.factory.domain.BlockFactoryImpl;
+import ru.rienel.clicker.db.factory.domain.BlockFactory;
 
 import java.util.Date;
 import java.util.Locale;
@@ -156,7 +156,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", points);
 				dialog.setMessage(message);
 				dialog.show();
-				Block newBlock = BlockFactoryImpl.build(message, 100, new Date(System.currentTimeMillis()), "None",
+				Block newBlock = BlockFactory.build(message, 100, new Date(System.currentTimeMillis()), "None",
 						"none", "HASH");
 				try {
 					blockRepository.add(newBlock);

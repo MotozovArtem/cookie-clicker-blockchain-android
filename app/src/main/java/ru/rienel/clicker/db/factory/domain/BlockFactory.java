@@ -5,7 +5,7 @@ import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import java.util.Date;
 
-public class BlockFactoryImpl{
+public class BlockFactory {
 	public static Block build(Integer id, String message, Integer goal,
 	                   Date creationTime, String opponent, String hashOfPreviousBlock, String hashOfBlock) {
 		Block block = new Block();
@@ -19,6 +19,9 @@ public class BlockFactoryImpl{
 	}
 
 	public static Block buildFromCursor(Cursor cursor) {
+		if (cursor == null) {
+			throw new IllegalArgumentException("Cursor cannot be null");
+		}
 		Block block = new Block();
 		Integer index = null;
 		index = cursor.getColumnIndex(BlocksTable.Columns.ID);

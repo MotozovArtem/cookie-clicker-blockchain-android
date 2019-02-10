@@ -2,6 +2,10 @@ package ru.rienel.clicker.db.domain;
 
 public class Opponent {
 	private String name;
+	private String address;
+
+	public Opponent() {
+	}
 
 	public String getName() {
 		return name;
@@ -9,5 +13,13 @@ public class Opponent {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }
