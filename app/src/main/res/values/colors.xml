@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#1976d2</color>
+    <color name="colorPrimaryDark">#1a237e</color>
     <color name="colorAccent">#ed4d87</color>
     <color name="colorTitle">#0d47a1</color>
     <color name="colorPoint">#9400D3</color>
     <color name="colorToast">#111</color>
     <color name="clock">#832fea</color>
-    <color name="colorBtnShop">#d711b3</color>
+    <color name="colorBtnShop">#1565c0</color>
     <color name="btnText">#fff</color>
     <color name="btnBack">#02bbf9</color>
-    <color name="btnEnable">#dba1a1a1</color>
-    <color name="btnPressed">#e60767</color>
+    <color name="enabled">#dba1a1a1</color>
+    <color name="pressed">#304ffe</color>
     <color name="statisticPoints">#111</color>
 
     <color name="accent">#1565c0</color>

@@ -7,18 +7,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OpponentListFragment extends Fragment {
+	private static final boolean HAS_MENU = true;
+
 	private RecyclerView opponentRecyclerView;
 	private OpponentAdapter opponentAdapter;
 	private List<Opponent> opponentList;
@@ -35,6 +39,18 @@ public class OpponentListFragment extends Fragment {
 		return view;
 	}
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(HAS_MENU);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.fragment_opponent_list, menu);
+	}
+
 	private void updateUi() {
 //		// TODO Get Opponents after network scan
 //		List<Opponent> opponentList = new ArrayList<>();
@@ -49,6 +65,23 @@ public class OpponentListFragment extends Fragment {
 
 		opponentAdapter = new OpponentAdapter(opponentList);
 		opponentRecyclerView.setAdapter(opponentAdapter);
+	}
+
+	public void clearOpponents() {
+		opponentList.clear();
+	}
+
+	public void updateOpponent(Opponent opponent) {
+		Preconditions.notNull(opponent);
+
+		int size = opponentList.size();
+		for (int i = 0; i < size; i++) {
+			Opponent newOpponent = opponentList.get(i);
+			if (newOpponent.getName().equals(opponent.getName())) {
+				opponentList.remove(i);
+				opponentList.add(newOpponent);
+			}
+		}
 	}
 
 	public List<Opponent> getOpponentList() {
@@ -82,6 +115,9 @@ public class OpponentListFragment extends Fragment {
 
 		@Override
 		public int getItemCount() {
+			if (opponentList == null) {
+				return 0;
+			}
 			return opponentList.size();
 		}
 	}
@@ -107,6 +143,7 @@ public class OpponentListFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
+			// TODO Select opponent
 			Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
 		}
 	}

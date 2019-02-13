@@ -167,9 +167,10 @@ public class WifiP2pHelper {
 				}
 
 				NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
 				if (networkInfo.isConnected()) {
 					manager.requestConnectionInfo(channel, connectionInfoListener);
+				} else {
+					Toast.makeText(context, "Disconected", Toast.LENGTH_SHORT).show();
 				}
 			} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 

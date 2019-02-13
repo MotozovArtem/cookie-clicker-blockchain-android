@@ -22,4 +22,6 @@
 	<string name="multiplayer">Multiplayer</string>
 	<string name="opponents_header">Choose your destiny</string>
 	<string name="genesis_block">Genesis</string>
+    <string name="empty"/>
+	<string name="update">Update opponent list</string>
 </resources>
