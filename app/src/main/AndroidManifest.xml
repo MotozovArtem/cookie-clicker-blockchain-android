@@ -47,9 +47,6 @@
 				android:label="@string/statistic">
 		</activity>
 		<activity
-				android:name=".activity.NetworkActivity">
-		</activity>
-		<activity
 				android:name=".activity.preference.PreferencesActivity"/>
 		<activity
 				android:name=".activity.MultiplayerActivity"/>

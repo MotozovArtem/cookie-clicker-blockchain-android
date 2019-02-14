@@ -37,13 +37,13 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 			}
 			Log.d(TAG, "P2P state changed - state:" + state);
 		} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-			if (service.isWifiP2pAvailable()) {
+			if (service.isP2pEnabled()) {
 				service.requestPeers(serviceListener);
 
 			}
 			Log.d(TAG, "P2P peers changed");
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-			if (!service.isWifiP2pAvailable()) {
+			if (!service.isP2pEnabled()) {
 				return;
 			}
 

@@ -18,9 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.MainActivity;
+import ru.rienel.clicker.activity.OpponentsActivity;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.service.NetworkService;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class OpponentListFragment extends Fragment {
@@ -29,6 +33,7 @@ public class OpponentListFragment extends Fragment {
 	private RecyclerView opponentRecyclerView;
 	private OpponentAdapter opponentAdapter;
 	private List<Opponent> opponentList;
+	private OpponentsActivity opponentsActivity;
 
 	@Nullable
 	@Override
@@ -38,6 +43,10 @@ public class OpponentListFragment extends Fragment {
 		opponentRecyclerView = view.findViewById(R.id.opponent_recycler_view);
 		opponentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+		if (opponentsActivity == null) {
+			opponentsActivity = (OpponentsActivity) getActivity();
+		}
+
 		updateUi();
 		return view;
 	}
@@ -45,16 +54,17 @@ public class OpponentListFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_item_back:
-				Intent intent = new Intent(getActivity(), MainActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				return true;
 			case R.id.menu_item_update:
+				List<Opponent> newOpponentsList = updateOpponents();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private List<Opponent> updateOpponents() {
+		List<Opponent> opponents = new LinkedList<>();
+		return new ArrayList<>(opponents);
 	}
 
 	@Override

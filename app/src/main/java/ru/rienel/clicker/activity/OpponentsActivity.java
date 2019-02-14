@@ -1,7 +1,9 @@
 package ru.rienel.clicker.activity;
 
+import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,21 +16,20 @@ import android.util.Log;
 
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.net.WifiP2pHelper;
 import ru.rienel.clicker.service.ConfigInfo;
 import ru.rienel.clicker.service.DeviceActionListener;
 import ru.rienel.clicker.service.NetworkService;
 import ru.rienel.clicker.ui.view.OpponentListFragment;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class OpponentsActivity extends AppCompatActivity implements DeviceActionListener {
 	public static final String TAG = OpponentsActivity.class.getName();
 
-	private NetworkService networkService;
-	private WifiP2pHelper wifiP2pHelper;
-
-//	private OpponentDetailFragment opponentDetailFragment;
 	private OpponentListFragment opponentListFragment;
 
 	private String selectHost = "";
@@ -42,7 +43,8 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 		opponentToolbar.setNavigationIcon(R.drawable.ic_back);
 		setSupportActionBar(opponentToolbar);
 
-		wifiP2pHelper = new WifiP2pHelper(this);
+		Intent serviceIntent = NetworkService.newIntent(this);
+		startService(serviceIntent);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		Fragment fragment = fragmentManager.findFragmentById(R.id.opponent_fragment_container);
@@ -53,14 +55,6 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 					.add(R.id.opponent_fragment_container, fragment)
 					.commit();
 		}
-	}
-
-	public NetworkService getNetworkService() {
-		return networkService;
-	}
-
-	public void setNetworkService(NetworkService networkService) {
-		this.networkService = networkService;
 	}
 
 //	private OpponentDetailFragment getDetailFragment() {
@@ -82,7 +76,8 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 	}
 
 	public List<WifiP2pDevice> getPeersList() {
-		return this.getNetworkService().getP2pDevices();
+//		return this.getNetworkService().getP2pDevices();
+		return null;
 	}
 
 	public void updateThisDevice(Opponent device) {
@@ -97,21 +92,27 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		Fragment fragment = fragmentManager.findFragmentById(R.id.opponent_fragment_container);
 		if (fragment != null) {
-			wifiP2pHelper.discoverPeers();
-			((OpponentListFragment) fragment).setOpponentList(wifiP2pHelper.getOpponents());
+//			networkService.discoverPeers();
+//			List<WifiP2pDevice> p2pDevices = networkService.getP2pDevices();
+//			List<Opponent> opponentList = new ArrayList<>(p2pDevices.size());
+//			for (WifiP2pDevice device: p2pDevices) {
+//				Opponent opponent = OpponentFactory.buildFromWifiP2pDevice(device);
+//				opponentList.add(opponent);
+//			}
+//			((OpponentListFragment) fragment).setOpponentList(opponentList);
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(wifiP2pHelper.getReceiver(), wifiP2pHelper.getIntentFilter());
+//		registerReceiver(networkService.getReceiver(), networkService.getIntentFilter());
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unregisterReceiver(wifiP2pHelper.getReceiver());
+//		unregisterReceiver(networkService.getReceiver());
 	}
 
 	static private class ActivityHandler extends Handler {
@@ -189,7 +190,8 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 	@Override
 	public void cancelDisconnect() {
 		Log.e(TAG, "cancelDisconnect.");
-		if (networkService.isWifiP2pManager()) {
+//		WifiP2pManager manager = networkService.getManager();
+//		if (manager != null) {
 			final OpponentListFragment fragment = getListFragment();
 //			if (fragment.getDevice() == null
 //					|| fragment.getDevice().status == WifiP2pDevice.CONNECTED) {
@@ -198,18 +200,18 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 //					|| fragment.getDevice().status == WifiP2pDevice.INVITED) {
 //				networkService.cancelDisconnect();
 //			}
-		}
+//		}
 	}
 
 	@Override
 	public void connect(WifiP2pConfig config) {
-		networkService.connect(config);
+//		networkService.connect(config);
 	}
 
 	@Override
 	public void disconnect() {
 		resetPeers();
-		networkService.removeGroup();
-		networkService.discoverPeers();
+//		networkService.removeGroup();
+//		networkService.discoverPeers();
 	}
 }
