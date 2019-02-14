@@ -54,6 +54,8 @@
 		<activity
 				android:name=".activity.MultiplayerActivity"/>
 		<activity
+				android:parentActivityName=".activity.MainActivity"
+				android:label="Opponents"
 				android:name=".activity.OpponentsActivity"/>
 	</application>
 

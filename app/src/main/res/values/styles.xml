@@ -39,6 +39,7 @@
 
     <style name="ButtonMultiplayer" parent="Base.AlertDialog.AppCompat.Light">
         <item name="android:textColor">@color/btnText</item>
+        <item name="android:background">@color/accent</item>
         <item name="android:textSize">28sp</item>
         <item name="android:width">180dp</item>
         <item name="android:padding">5dp</item>

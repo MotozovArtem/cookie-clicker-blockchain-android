@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import ru.rienel.clicker.R;
@@ -32,11 +33,14 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 
 	private String selectHost = "";
 
-
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.opponents_activity);
+
+		Toolbar opponentToolbar = findViewById(R.id.opponent_toolbar);
+		opponentToolbar.setNavigationIcon(R.drawable.ic_back);
+		setSupportActionBar(opponentToolbar);
 
 		wifiP2pHelper = new WifiP2pHelper(this);
 
