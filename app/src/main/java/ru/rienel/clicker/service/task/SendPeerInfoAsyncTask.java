@@ -18,7 +18,7 @@ public class SendPeerInfoAsyncTask extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... params) {
-		Preconditions.equals(params.length, 2);
+		Preconditions.checkEquals(params.length, 2);
 		String host = params[0];
 		int port = Integer.parseInt(params[1]);
 		if (Utility.sendPeerInfo(host, port)){

@@ -25,10 +25,13 @@ public class SendStreamRunable implements Runnable {
 
 	@Override
 	public void run() {
-		if (sendStream())
-			networkService.postSendStreamResult(0);
-		else
-			networkService.postSendStreamResult(-1);
+		if (sendStream()) {
+
+//			networkService.postSendStreamResult(0);
+		} else {
+
+		}
+//			networkService.postSendStreamResult(-1);
 	}
 
 	private boolean sendStream() {

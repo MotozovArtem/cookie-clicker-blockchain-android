@@ -28,7 +28,7 @@ public class ThreadPoolManager extends HandlerThread {
 
 	public ThreadPoolManager(NetworkService netService, int port, int poolSize) throws IOException {
 		super(TAG, Process.THREAD_PRIORITY_FOREGROUND);
-		if (poolSize > 0) {
+		if (poolSize < 0) {
 			throw new IllegalArgumentException("PoolSize should be greater than 0");
 		}
 		this.netService = netService;

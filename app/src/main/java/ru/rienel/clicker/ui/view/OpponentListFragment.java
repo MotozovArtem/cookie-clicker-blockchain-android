@@ -1,6 +1,5 @@
 package ru.rienel.clicker.ui.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,14 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import ru.rienel.clicker.R;
-import ru.rienel.clicker.activity.MainActivity;
 import ru.rienel.clicker.activity.OpponentsActivity;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OpponentListFragment extends Fragment {
@@ -34,6 +30,7 @@ public class OpponentListFragment extends Fragment {
 	private OpponentAdapter opponentAdapter;
 	private List<Opponent> opponentList;
 	private OpponentsActivity opponentsActivity;
+	private NetworkService networkService;
 
 	@Nullable
 	@Override
@@ -47,6 +44,9 @@ public class OpponentListFragment extends Fragment {
 			opponentsActivity = (OpponentsActivity) getActivity();
 		}
 
+		if (opponentsActivity != null) {
+			networkService = opponentsActivity.getNetworkService();
+		}
 		updateUi();
 		return view;
 	}
@@ -55,16 +55,15 @@ public class OpponentListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_item_update:
-				List<Opponent> newOpponentsList = updateOpponents();
+				if (networkService == null) {
+					networkService = opponentsActivity.getNetworkService();
+				}
+				networkService.discoverPeers();
+				updateUi();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private List<Opponent> updateOpponents() {
-		List<Opponent> opponents = new LinkedList<>();
-		return new ArrayList<>(opponents);
 	}
 
 	@Override
@@ -100,7 +99,7 @@ public class OpponentListFragment extends Fragment {
 	}
 
 	public void updateOpponent(Opponent opponent) {
-		Preconditions.notNull(opponent);
+		Preconditions.checkNotNull(opponent);
 
 		int size = opponentList.size();
 		for (int i = 0; i < size; i++) {
@@ -118,6 +117,15 @@ public class OpponentListFragment extends Fragment {
 
 	public void setOpponentList(List<Opponent> opponentList) {
 		this.opponentList = opponentList;
+	}
+
+	public void updateOpponentList(List<Opponent> opponentList) {
+		Preconditions.checkNotNull(opponentList);
+
+		if (this.opponentList.equals(opponentList)) {
+			this.setOpponentList(opponentList);
+			updateUi();
+		}
 	}
 
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {

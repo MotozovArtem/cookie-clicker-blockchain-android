@@ -2,7 +2,6 @@ package ru.rienel.clicker.service;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,62 +17,52 @@ import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import ru.rienel.clicker.activity.OpponentsActivity;
-import ru.rienel.clicker.common.Preconditions;
+import ru.rienel.clicker.ActivityWithNetwork;
 import ru.rienel.clicker.common.ThreadPoolManager;
-import ru.rienel.clicker.common.Utility;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
-import ru.rienel.clicker.service.runnable.SendFileRunable;
-import ru.rienel.clicker.service.runnable.SendPeerInfoRunable;
 import ru.rienel.clicker.service.runnable.SendStreamRunable;
-import ru.rienel.clicker.service.runnable.SendStringRunable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class NetworkService extends Service implements ChannelListener, WifiP2pNetworkServiceListener {
 	private static final String TAG = NetworkService.class.getName();
+
+	private final IntentFilter intentFilter = new IntentFilter();
 
 	private boolean retryChannel;
 	private NetworkServiceBinder binder = new NetworkServiceBinder();
 	private ThreadPoolManager threadPoolManager;
 	private WifiP2pManager manager;
-	private WifiP2pInfo wifiP2pInfo;
 
 	private Channel channel;
 	private BroadcastReceiver receiver;
-	private final IntentFilter intentFilter = new IntentFilter();
 	private List<WifiP2pDevice> p2pDevices = new ArrayList<>();
-	private List<PeerInfo> peerInfoList = new ArrayList<>();
-	private OpponentsActivity opponentsActivity;
+	private WifiP2pDevice localDevice;
+
+	private ActivityWithNetwork activity;
 	private NetworkServiceListener serviceListener;
-	private boolean isP2pEnabled;
-	private boolean verifyReceivedFile;
 	private SocketAddress remoteSockAddr;
 	private CountDownLatch startRecvFileSignal;
-	private WifiP2pDevice localDevice;
+
+	private boolean isP2pEnabled;
+	private boolean verifyReceivedFile;
 
 	public static Intent newIntent(Context context) {
 		return new Intent(context, NetworkService.class);
 	}
+
 
 	@Override
 	public void onCreate() {
@@ -147,56 +136,43 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	public void resetPeers() {
 		p2pDevices.clear();
-		if (opponentsActivity != null) {
-			opponentsActivity.resetPeers();
+		if (activity != null) {
+			activity.resetPeers();
 		}
 	}
 
-	public String hostAddress() {
-		return wifiP2pInfo.groupOwnerAddress.getHostAddress();
+	public void registerActivity(ActivityWithNetwork activity) {
+		this.activity = activity;
 	}
 
-	public boolean isPeer() {
-		return !wifiP2pInfo.isGroupOwner;
-	}
-
-	public boolean isGroupOwner() {
-		return wifiP2pInfo.isGroupOwner;
-	}
-
-
-	public void bindActivity(OpponentsActivity activity) {
-		this.opponentsActivity = activity;
+	public void bindActivity(ActivityWithNetwork activity) {
+		this.activity = activity;
 		if (localDevice != null) {
 			updateThisDevice(localDevice);
 		}
 		discoverPeers();
 	}
 
-	public boolean discoverPeers() {
-		if (opponentsActivity != null) {
-			if (!isP2pEnabled) {
-				Toast.makeText(this, "P2P off", Toast.LENGTH_SHORT).show();
-			} else {
-//				((OpponentsActivity) opponentsActivity).showDiscoverPeers();
-				manager.discoverPeers(channel, new ActionListener() {
-					@Override
-					public void onSuccess() {
-						Toast.makeText(NetworkService.this,
-								"Discovery Initiated",
-								Toast.LENGTH_SHORT).show();
-					}
+	public void discoverPeers() {
+		if (!isP2pEnabled) {
+			Toast.makeText(this, "P2P off", Toast.LENGTH_SHORT).show();
+		} else {
+			manager.discoverPeers(channel, new ActionListener() {
+				@Override
+				public void onSuccess() {
+					Toast.makeText(NetworkService.this,
+							"Discovery Initiated",
+							Toast.LENGTH_SHORT).show();
+				}
 
-					@Override
-					public void onFailure(int reason) {
-						Toast.makeText(NetworkService.this,
-								"Discovery Failed : " + reason,
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
+				@Override
+				public void onFailure(int reason) {
+					Toast.makeText(NetworkService.this,
+							"Discovery Failed : " + reason,
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
-		return false;
 	}
 
 	public void connect(WifiP2pConfig config) {
@@ -248,7 +224,7 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 			@Override
 			public void onSuccess() {
-//				((OpponentsActivity) opponentsActivity).onDisconnect();
+//				((OpponentsActivity) activity).onDisconnect();
 			}
 
 			@Override
@@ -262,63 +238,22 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		Message msg = new Message();
 		msg.what = ConfigInfo.MSG_REPORT_RECV_PEER_LIST;
 		msg.arg1 = count;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
-
-	public void postSendStringResult(int sendBytes) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_SEND_STRING;
-		msg.arg1 = sendBytes;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
-
-	public void postSendRecvBytes(int sendBytes, int receiveBytes) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_SEND_RECV_FILE_BYTES;
-		msg.arg1 = sendBytes;
-		msg.arg2 = receiveBytes;
-		opponentsActivity.getHandler().sendMessage(msg);
+		activity.getHandler().sendMessage(msg);
 	}
 
 	public void postSendPeerInfoResult(int result) {
 		Message msg = new Message();
 		msg.what = ConfigInfo.MSG_REPORT_SEND_PEER_INFO_RESULT;
 		msg.arg1 = result;
-		opponentsActivity.getHandler().sendMessage(msg);
+		activity.getHandler().sendMessage(msg);
 	}
 
 	public void postRecvPeerInfo(PeerInfo info) {
 		Message msg = new Message();
 		msg.what = ConfigInfo.MSG_RECV_PEER_INFO;
-		opponentsActivity.getHandler().sendMessage(msg);
+		activity.getHandler().sendMessage(msg);
 	}
 
-	public void postVerifyRecvFile() {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_VERIFY_RECV_FILE_DIALOG;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
-
-	public void postRecvFileResult(int result) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_REPORT_RECV_FILE_RESULT;
-		msg.arg1 = result;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
-
-	public void postSendFileResult(int result) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_REPORT_SEND_FILE_RESULT;
-		msg.arg1 = result;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
-
-	public void postSendStreamResult(int result) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_REPORT_SEND_STREAM_RESULT;
-		msg.arg1 = result;
-		opponentsActivity.getHandler().sendMessage(msg);
-	}
 
 	public void bindListener(NetworkServiceListener listener) {
 		serviceListener = listener;
@@ -327,250 +262,23 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	@Override
 	public void updateThisDevice(WifiP2pDevice device) {
 		localDevice = device;
-		if (opponentsActivity != null)
-			opponentsActivity.updateThisDevice(OpponentFactory.buildFromWifiP2pDevice(device));
-	}
-
-	public void handleSendFile() {
-
+		if (activity != null) {
+			activity.updateThisDevice(OpponentFactory.buildFromWifiP2pDevice(device));
+		}
 	}
 
 	public String getFileInfo(Uri uri) throws IOException {
-//		Pair<String, Integer> pair = Utility.getFileNameAndSize(getOpponentsActivity(), uri);
-//		String name = pair.first;
-//		long size = pair.second;
-//		getOpponentsActivity().setSendFileSize(size);
-//		getOpponentsActivity().setSendFileName(name);
 		String fileInfo = "size:" + 0 + "name: fadfas";
 		return fileInfo;
 	}
 
-	public InputStream getInputStream(Uri uri) throws FileNotFoundException {
-		ContentResolver cr = getOpponentsActivity().getContentResolver();
-		return cr.openInputStream(uri);
-	}
-
-	public void handleRecvFile(InputStream ins) {
-		handleRecvFileInfo(ins);
-
-		String extName = ".jpg";
-//		if (!opponentsActivity.recvFileName().isEmpty()) {
-//			int dotIndex = opponentsActivity.recvFileName().lastIndexOf(".");
-//			if (dotIndex != -1
-//					&& dotIndex != opponentsActivity.recvFileName().length() - 1) {
-//				extName = opponentsActivity.recvFileName().substring(dotIndex);
-//			}
-//		}
-//		Log.d(TAG, "opponentsActivity.recvFileName():" + opponentsActivity.recvFileName()
-//				+ " extName:" + extName);
-
-		if (waitForVerifyRecvFile() && isVerifyReceivedFile()) {
-			recvFileAndSave(ins, extName);
-		} else
-			postRecvFileResult(-1);
-	}
-
-	public void verifyRecvFile() {
-		Preconditions.notNull(startRecvFileSignal);
-		startRecvFileSignal.countDown();
-	}
-
-	private boolean waitForVerifyRecvFile() {
-		try {
-			startRecvFileSignal = new CountDownLatch(1);
-			boolean res = startRecvFileSignal.await(10, TimeUnit.SECONDS);
-			return res;
-		} catch (InterruptedException e) {
-			Log.e(this.getClass().getName(), "waitForVerifyRecvFile e:", e);
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean handleRecvPeerList(InputStream ins) {
-		try {
-			peerInfoList.clear();
-			int peerListSize = ins.read();
-			for (int i = 0; i < peerListSize; ++i) {
-				int bufferLen = ins.read();
-				byte[] buffer = new byte[256];
-				ins.read(buffer, 0, bufferLen);
-				String strBuffer = new String(buffer, 0, bufferLen);
-				int offset1 = strBuffer.indexOf("peer:");
-				int offset2 = strBuffer.indexOf("port:");
-				Log.d(OpponentsActivity.TAG, "recvPeerSockAddr strBuffer:"
-						+ strBuffer);
-				if (offset1 != -1 && offset2 != -1) {
-					Preconditions.isTrue(offset1 < offset2);
-					String host = strBuffer.substring(offset1 + 5, offset2);
-					int port = Integer.parseInt(strBuffer.substring(offset2 + 5));
-					peerInfoList.add(new PeerInfo(host, port));
-					Log.d(OpponentsActivity.TAG, "peerInfoList.add(...). size:"
-							+ peerInfoList.size());
-				}
-			}
-			postRecvPeerList(peerInfoList.size());
-			return true;
-		} catch (IOException e) {
-			Log.e(OpponentsActivity.TAG, e.getMessage());
-			return false;
-		}
-	}
-
-	public boolean handleRecvFileInfo(InputStream inputStream) {
-//		opponentsActivity.resetRecvFileInfo();
-		try {
-			int streamSize = inputStream.read();
-			byte[] buffer = new byte[streamSize];
-			int len = inputStream.read(buffer, 0, streamSize);
-			String stringBuffer = new String(buffer, 0, len);
-			Preconditions.equals(stringBuffer.length(), streamSize);
-			int offset1 = stringBuffer.indexOf("size:");
-			int offset2 = stringBuffer.indexOf("name:");
-			Log.d(OpponentsActivity.TAG, "recvDistFileInfo buffer:"
-					+ stringBuffer);
-			if (offset1 != -1 && offset2 != -1) {
-				Preconditions.isTrue(offset1 < offset2);
-				String strSize = stringBuffer.substring(offset1 + 5, offset2);
-//				opponentsActivity.setRecvFileSize(Long.parseLong(strSize));
-//				opponentsActivity.setRecvFileName(stringBuffer.substring(offset2 + 5));
-
-				Log.d(OpponentsActivity.TAG,
-						"iFileSize:" +
-								Integer.parseInt(strSize) +
-								" strFileName:" +
-								stringBuffer.substring(offset2 + 5));
-				postVerifyRecvFile();
-				return true;
-			}
-			return false;
-		} catch (IOException e) {
-			Log.e(OpponentsActivity.TAG, e.getMessage());
-			return false;
-		}
-	}
-
-	public boolean handleRecvPeerInfo(InputStream ins) {
-		try {
-			StringBuilder strBuffer = new StringBuilder();
-			byte[] buffer = new byte[1024];
-			int len;
-			while ((len = ins.read(buffer)) != -1) {
-				strBuffer.append(new String(buffer, 0, len));
-			}
-
-			int offset1 = strBuffer.indexOf("peer:");
-			int offset2 = strBuffer.indexOf("port:");
-			Log.d(OpponentsActivity.TAG, "recvPeerSockAddr strBuffer:"
-					+ strBuffer);
-			if (offset1 != -1 && offset2 != -1) {
-				Preconditions.isTrue(offset1 < offset2);
-				String host = strBuffer.substring(offset1 + 5, offset2);
-				int port = Integer.parseInt(strBuffer.substring(offset2 + 5
-				));
-				Log.d(OpponentsActivity.TAG, "new host:" + host);
-
-				PeerInfo info = new PeerInfo(host, port);
-				postRecvPeerInfo(info);
-				for (Iterator<PeerInfo> iter = peerInfoList.iterator(); iter.hasNext(); ) {
-					PeerInfo peer = iter.next();
-					Log.d(OpponentsActivity.TAG, "host:" + peer.host
-							+ " port:" + peer.port);
-					if (peer.host.equals(host))
-						return true;
-				}
-				peerInfoList.add(info);
-				Log.d(OpponentsActivity.TAG, "peerInfoList.add(...). size:"
-						+ peerInfoList.size());
-			}
-			return true;
-		} catch (IOException e) {
-			Log.e(OpponentsActivity.TAG, e.getMessage());
-			return false;
-		}
-	}
-
-	public boolean recvFileAndSave(InputStream ins, String extName) {
-		try {
-			final File recvFile = new File(
-					Environment.getExternalStorageDirectory()
-							+ "/wifi-direct/wifip2pshared-"
-							+ System.currentTimeMillis() + extName);
-
-			File dirs = new File(recvFile.getParent());
-			if (!dirs.exists()) {
-				dirs.mkdirs();
-			}
-			recvFile.createNewFile();
-
-			Log.d(OpponentsActivity.TAG,
-					"server: copying files " + recvFile.toString());
-			FileOutputStream fileOutS = new FileOutputStream(recvFile);
-
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = ins.read(buf)) != -1) {
-				fileOutS.write(buf, 0, len);
-				postSendRecvBytes(0, len);
-
-			}
-			fileOutS.close();
-			String strFile = recvFile.getAbsolutePath();
-			if (strFile != null) {
-				Utility.openFile(opponentsActivity, recvFile);
-			}
-			return true;
-		} catch (IOException e) {
-			Log.e(OpponentsActivity.TAG, "IOException", e);
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public void handleSendPeerInfo() {
-		threadPoolManager.execute(new SendPeerInfoRunable(
-				new PeerInfo(hostAddress(), ConfigInfo.LISTEN_PORT),
-				this));
-	}
-
-	public void handleBroadcastPeerList() {
-		if (isGroupOwner()) {
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			outputStream.write(peerInfoList.size());
-			for (PeerInfo peerInfo : peerInfoList) {
-				String tmp = peerInfo.toString();
-				outputStream.write(tmp.length());
-				try {
-					outputStream.write(tmp.getBytes());
-				} catch (IOException e) {
-					Log.e(TAG, " e:" + e);
-					e.printStackTrace();
-				}
-			}
-
-			Log.d(TAG, " outputStream:" + outputStream);
-			ByteArrayInputStream ins = new ByteArrayInputStream(outputStream.toByteArray());
-			Log.d(TAG, " ins's length:" + ins.available());
-			for (PeerInfo peerInfo : peerInfoList) {
-				handleSendStream(peerInfo.host, peerInfo.port, ins);
-			}
-		}
-	}
 
 	public void handleSendStream(String host, int port, InputStream inputStream) {
 		threadPoolManager.execute(new SendStreamRunable(host, port, inputStream, this));
 	}
 
-	public void handleSendString(String host, int port, String data) {
-		threadPoolManager.execute(new SendStringRunable(host, port, data, this));
-	}
-
-	public OpponentsActivity getOpponentsActivity() {
-		return opponentsActivity;
-	}
-
-	public List<PeerInfo> getPeerInfoList() {
-		return peerInfoList;
+	public ActivityWithNetwork getActivity() {
+		return activity;
 	}
 
 	public boolean isVerifyReceivedFile() {
@@ -635,12 +343,35 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
+		final InetAddress groupOnwerAddress = info.groupOwnerAddress;
 
+		if (info.groupFormed && info.isGroupOwner) {
+//			connectionStatus.setText(R.string.host);
+//			serverClass = new ServerClass();
+//			serverClass.start();
+		} else if (info.groupFormed) {
+//			connectionStatus.setText(R.string.client);
+//			clientClass = new ClientClass(groupOnwerAddress);
+//			clientClass.start();
+		}
 	}
 
 	@Override
 	public void onPeersAvailable(WifiP2pDeviceList peers) {
+		int listSize = peers.getDeviceList().size();
+		if (listSize == 0) {
+			Log.d(TAG, "onPeersAvailable: Devices not found");
+			Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_LONG).show();
+			p2pDevices.clear();
+		}
 
+		if (!p2pDevices.equals(peers.getDeviceList())) {
+			Log.d(TAG, String.format("onPeersAvailable: Found %d devices", listSize));
+			p2pDevices.clear();
+			p2pDevices.addAll(peers.getDeviceList());
+		}
+		activity.updatePeers(
+				new ArrayList<>(peers.getDeviceList()));
 	}
 
 	public class PeerInfo {
@@ -655,9 +386,9 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	}
 
-	class NetworkServiceBinder extends Binder {
+	public class NetworkServiceBinder extends Binder {
 
-		NetworkService getService() {
+		public NetworkService getService() {
 			return NetworkService.this;
 		}
 	}

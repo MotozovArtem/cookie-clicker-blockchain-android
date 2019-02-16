@@ -37,21 +37,21 @@ public class HandleAcceptSocket implements Runnable {
 			int command = inputStream.read();
 			Log.d(this.getClass().getName(), "Run command:" + command);
 			if (command == ConfigInfo.COMMAND_ID_SEND_PEER_INFO) {
-				networkService.handleRecvPeerInfo(inputStream);
+//				networkService.handleRecvPeerInfo(inputStream);
 			} else if (command == ConfigInfo.COMMAND_ID_SEND_FILE) {
 				lockRecvFile.lock();
 				try {
 					networkService.setRemoteSockAddress(socketAddress);
-					networkService.handleRecvFile(inputStream);
+//					networkService.handleRecvFile(inputStream);
 				} finally {
 					lockRecvFile.unlock();
 				}
 			} else if (command == ConfigInfo.COMMAND_ID_REQUEST_SEND_FILE) {
-				networkService.handleRecvFileInfo(inputStream);
+//				networkService.handleRecvFileInfo(inputStream);
 			} else if (command == ConfigInfo.COMMAND_ID_RESPONSE_SEND_FILE) {
 
 			} else if (command == ConfigInfo.COMMAND_ID_BROADCAST_PEER_LIST) {
-				networkService.handleRecvPeerList(inputStream);
+//				networkService.handleRecvPeerList(inputStream);
 			}  else if (command == ConfigInfo.COMMAND_ID_SEND_STRING) {
 
 			}

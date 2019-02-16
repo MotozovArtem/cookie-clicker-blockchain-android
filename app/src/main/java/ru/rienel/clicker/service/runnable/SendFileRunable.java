@@ -28,10 +28,9 @@ public class SendFileRunable implements Runnable {
 	@Override
 	public void run() {
 		if (sendFile()) {
-			networkService.postSendFileResult(0);
+//			networkService.postSendFileResult(0);
 		} else {
-
-			networkService.postSendFileResult(-1);
+//			networkService.postSendFileResult(-1);
 		}
 	}
 
@@ -50,16 +49,16 @@ public class SendFileRunable implements Runnable {
 			Log.d(this.getClass().getName(), "fileInfo:" + fileInfo);
 			outputStream.write(fileInfo.length());
 			outputStream.write(fileInfo.getBytes(), 0, fileInfo.length());
-			InputStream inputStream = networkService.getInputStream(uri);
+//			InputStream inputStream = networkService.getInputStream(uri);
 			byte[] buffer = new byte[1024];
 			int len;
-			while ((len = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, len);
-				networkService.postSendRecvBytes(len, 0);
-			}
+//			while ((len = inputStream.read(buffer)) != -1) {
+//				outputStream.write(buffer, 0, len);
+//				networkService.postSendRecvBytes(len, 0);
+//			}
 
-			inputStream.close();
-			outputStream.close();
+//			inputStream.close();
+//			outputStream.close();
 			Log.d(this.getClass().getName(), "Client: Data written");
 		} catch (FileNotFoundException e) {
 			Log.d(this.getClass().getName(), "send file exception " + e.toString());
