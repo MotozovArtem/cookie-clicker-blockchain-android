@@ -42,7 +42,7 @@ public class BlockFactory {
 		index = cursor.getColumnIndex(BlocksTable.Columns.CREATION_TIME);
 		if (index != -1) {
 			block.setCreationTime(
-					new Date(cursor.getInt(index)));
+					new Date(cursor.getLong(index)));
 		}
 
 		index = cursor.getColumnIndex(BlocksTable.Columns.OPPONENT);

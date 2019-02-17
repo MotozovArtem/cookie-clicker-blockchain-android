@@ -41,7 +41,7 @@ public class HandleAcceptSocket implements Runnable {
 			} else if (command == ConfigInfo.COMMAND_ID_SEND_FILE) {
 				lockRecvFile.lock();
 				try {
-					networkService.setRemoteSockAddress(socketAddress);
+//					networkService.setRemoteSockAddress(socketAddress);
 //					networkService.handleRecvFile(inputStream);
 				} finally {
 					lockRecvFile.unlock();

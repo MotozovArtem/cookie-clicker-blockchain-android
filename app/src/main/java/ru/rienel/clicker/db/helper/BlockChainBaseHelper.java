@@ -36,7 +36,7 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 
 	private ContentValues createContentValuesForGenesisBlock(SQLiteDatabase db) {
 		Block genesisBlock = new BlockFactory().build("Genesis block",
-				0, new Date(System.currentTimeMillis()),
+				0, new Date(System.currentTimeMillis() - 1000),
 				null, null, "GENESIS");
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(BlocksTable.Columns.ID, genesisBlock.getId());

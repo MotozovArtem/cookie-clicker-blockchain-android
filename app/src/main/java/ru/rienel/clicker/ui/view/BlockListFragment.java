@@ -18,8 +18,12 @@ import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class BlockListFragment extends Fragment {
 	private RecyclerView blockRecyclerView;
@@ -106,7 +110,8 @@ public class BlockListFragment extends Fragment {
 		}
 
 		private String getFormattedDateFromBlock(Block block) {
-			DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.ENGLISH);
+			DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.UK);
+			format.setCalendar(GregorianCalendar.getInstance());
 			return format.format(block.getCreationTime());
 		}
 

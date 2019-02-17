@@ -55,7 +55,7 @@ public class BlockDaoImpl implements Repository<Block> {
 				String.format("%s=?", BlocksTable.Columns.ID), new String[]{id.toString()},
 				null,
 				null,
-				BlocksTable.Columns.CREATION_TIME);
+				String.format("%s ASC", BlocksTable.Columns.CREATION_TIME));
 		cursor.moveToFirst();
 		int rowsCount = cursor.getCount();
 		if (rowsCount == 0) {
