@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
@@ -60,7 +59,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private Repository<Block> blockRepository;
 	private MediaPlayer mediaPlayer;
 
-	SoundPool sp;
+	SoundPool soundPool;
 	int soundId;
 
 	@Override
@@ -78,9 +77,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		context = GameActivity.this;
 
 		//Звук нажатия
-		sp = new SoundPool(30, AudioManager.STREAM_MUSIC, 0);
-		sp. setOnLoadCompleteListener(this);
-		soundId = sp.load(this, R.raw.muda,1);
+		soundPool = new SoundPool.Builder().setMaxStreams(10).build();
+		soundPool. setOnLoadCompleteListener(this);
+		soundId = soundPool.load(this, R.raw.muda,1);
 
 
 
@@ -266,7 +265,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imageDonut) {
-			sp.play(soundId, 1, 1, 0, 0, 1);
+			soundPool.play(soundId, 1, 1, 0, 0, 1);
 			v.startAnimation(donutClickAnimation);
 		} else if (v.getId() == R.id.btnShop) {
 			showShopFragment();
