@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +31,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, OnLoadCompleteListener {
 
 	private static final String FORMAT = "%02d:%02d";
 	private static final String TAG = "GameActivity";
@@ -57,6 +60,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private Repository<Block> blockRepository;
 	private MediaPlayer mediaPlayer;
 
+	SoundPool sp;
+	int soundId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,6 +76,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		clock = findViewById(R.id.tvClock);
 		newClick = findViewById(R.id.newClick);
 		context = GameActivity.this;
+
+		//Звук нажатия
+		sp = new SoundPool(30, AudioManager.STREAM_MUSIC, 0);
+		sp. setOnLoadCompleteListener(this);
+		soundId = sp.load(this, R.raw.muda,1);
+
+
+
 		blockRepository = new BlockDaoImpl(this);
 
 		mediaPlayer = MediaPlayer.create(this,R.raw.ora_vc_madu);
@@ -132,6 +146,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		dialog.setCancelable(false);
 
 	}
+
+
 
 	@Override
 	public void onResume() {
@@ -250,6 +266,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imageDonut) {
+			sp.play(soundId, 1, 1, 0, 0, 1);
 			v.startAnimation(donutClickAnimation);
 		} else if (v.getId() == R.id.btnShop) {
 			showShopFragment();
@@ -260,7 +277,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		this.points += this.donutPerClick;
 		point.setText(Integer.toString(points));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
-
 	}
 
 	private void showShopFragment() {
@@ -283,4 +299,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 
+	@Override
+	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+
+	}
 }
