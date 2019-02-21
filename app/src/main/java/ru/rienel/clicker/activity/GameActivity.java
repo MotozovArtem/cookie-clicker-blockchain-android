@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private AlertDialog.Builder dialog;
 	private Context context;
 	private Repository<Block> blockRepository;
+	private MediaPlayer mediaPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +70,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		clock = findViewById(R.id.tvClock);
 		newClick = findViewById(R.id.newClick);
 		context = GameActivity.this;
-
 		blockRepository = new BlockDaoImpl(this);
+
+		mediaPlayer = MediaPlayer.create(this,R.raw.ora_vc_madu);
+		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mediaPlayer) {
+				mediaPlayer.stop();
+			}
+		});
+		mediaPlayer.start();
 
 		if (savedInstanceState == null) {   // приложение запущено впервые
 			donutPerClick = 1;
@@ -116,6 +126,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		dialog.setPositiveButton(R.string.continueGameDialog, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int arg1) {
 				finish();
+				mediaPlayer.stop();
 			}
 		});
 		dialog.setCancelable(false);
@@ -249,6 +260,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		this.points += this.donutPerClick;
 		point.setText(Integer.toString(points));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
+
 	}
 
 	private void showShopFragment() {
