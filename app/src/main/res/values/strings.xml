@@ -25,4 +25,5 @@
     <string name="empty"/>
 	<string name="update">Update opponent list</string>
 	<string name="back">Back</string>
+	<string name="opponent_icon_description">Opponent icon</string>
 </resources>

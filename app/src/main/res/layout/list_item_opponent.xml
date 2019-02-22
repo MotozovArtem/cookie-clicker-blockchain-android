@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:paddingTop="15dp"
+		android:paddingStart="20dp"
+		android:paddingBottom="15dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="20dp"
-		>
+		android:layout_marginBottom="10dp">
 
 	<ImageView
 			android:id="@+id/list_item_opponent_thumbnail"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:background="@drawable/icon_phone"
-			/>
+			android:contentDescription="@string/opponent_icon_description"/>
 
 	<TextView
 			android:id="@+id/list_item_opponent_name"
 			android:layout_width="match_parent"
+			android:layout_centerVertical="true"
 			android:layout_height="wrap_content"
-			android:layout_toRightOf="@id/list_item_opponent_thumbnail"
-			/>
+			android:layout_toEndOf="@id/list_item_opponent_thumbnail"
+			style="@style/opponent_list_item"/>
 </RelativeLayout>
