@@ -1,5 +1,6 @@
 package ru.rienel.clicker.ui.view;
 
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.OpponentsActivity;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OpponentListFragment extends Fragment {
@@ -79,17 +80,6 @@ public class OpponentListFragment extends Fragment {
 	}
 
 	private void updateUi() {
-//		// TODO Get Opponents after network scan
-//		List<Opponent> opponentList = new ArrayList<>();
-//		// FIXME: 07.02.2019
-//
-//		Opponent testOpponent = new Opponent();
-//		testOpponent.setName("Nokia");
-//		opponentList.add(testOpponent);
-//		testOpponent = new Opponent();
-//		testOpponent.setName("iPhone");
-//		opponentList.add(testOpponent);
-
 		opponentAdapter = new OpponentAdapter(opponentList);
 		opponentRecyclerView.setAdapter(opponentAdapter);
 	}
@@ -122,7 +112,11 @@ public class OpponentListFragment extends Fragment {
 	public void updateOpponentList(List<Opponent> opponentList) {
 		Preconditions.checkNotNull(opponentList);
 
-		if (this.opponentList.equals(opponentList)) {
+		if (this.opponentList == null) {
+			this.opponentList = new ArrayList<>();
+		}
+
+		if (!this.opponentList.equals(opponentList)) {
 			this.setOpponentList(opponentList);
 			updateUi();
 		}
@@ -179,8 +173,22 @@ public class OpponentListFragment extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-			// TODO Select opponent
-			Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
+			if (networkService == null) {
+				networkService = opponentsActivity.getNetworkService();
+			}
+
+			if (networkService != null) {
+				networkService.connect(getConfigForConnection(opponent));
+
+			}
+		}
+
+		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
+			Preconditions.checkNotNull(opponent);
+
+			WifiP2pConfig config = new WifiP2pConfig();
+			config.deviceAddress = opponent.getAddress();
+			return config;
 		}
 	}
 }

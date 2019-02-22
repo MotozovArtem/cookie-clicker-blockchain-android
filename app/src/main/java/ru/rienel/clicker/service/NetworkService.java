@@ -173,7 +173,8 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		manager.connect(channel, config, new ActionListener() {
 			@Override
 			public void onSuccess() {
-
+				Toast.makeText(NetworkService.this, "Connetction successfull", Toast.LENGTH_SHORT).show();
+				Log.d(TAG, "onSuccess: Connection successful");
 			}
 
 			@Override
