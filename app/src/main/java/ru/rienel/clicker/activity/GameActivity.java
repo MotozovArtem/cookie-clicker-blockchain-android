@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
+import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -57,10 +58,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private AlertDialog.Builder dialog;
 	private Context context;
 	private Repository<Block> blockRepository;
-	private MediaPlayer mediaPlayer;
 
 	SoundPool soundPool;
+	SoundPool backSoundPool;
 	int soundId;
+	int backSoundPoolId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,23 +79,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		context = GameActivity.this;
 
 		//Звук нажатия
+		backSoundPool = new SoundPool.Builder()
+				.setMaxStreams(1)
+				.setAudioAttributes(new AudioAttributes.Builder()
+						.setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_DELAYED)
+						.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+						.build())
+				.build();
+		backSoundPoolId = backSoundPool.load(this,R.raw.ora_vs_muda_v2,1);
+		backSoundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+				soundPool.play(backSoundPoolId,1,1,0,-1,1);
+			}
+		});
 		soundPool = new SoundPool.Builder().setMaxStreams(10).build();
 		soundPool. setOnLoadCompleteListener(this);
 		soundId = soundPool.load(this, R.raw.muda,1);
 
-
-
 		blockRepository = new BlockDaoImpl(this);
-
-		mediaPlayer = MediaPlayer.create(this,R.raw.ora_vc_madu);
-		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-			@Override
-			public void onCompletion(MediaPlayer mediaPlayer) {
-				mediaPlayer.stop();
-			}
-		});
-		mediaPlayer.start();
-
 		if (savedInstanceState == null) {   // приложение запущено впервые
 			donutPerClick = 1;
 			points = 0;
@@ -139,11 +143,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		dialog.setPositiveButton(R.string.continueGameDialog, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int arg1) {
 				finish();
-				mediaPlayer.stop();
 			}
 		});
 		dialog.setCancelable(false);
-
 	}
 
 
@@ -157,8 +159,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
-			timer = 3000;
+			timer = 30000;
 		}
+		backSoundPool.resume(1);
 
 		countDownTimer = new CountDownTimer(timer, 1000) {
 			public void onTick(long millisUntilFinished) {
@@ -239,6 +242,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (flagShop) {
 			countDownTimerBoost.cancel();
 		}
+		backSoundPool.pause(1);
 	}
 
 
