@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+	<TextView
+			android:layout_centerHorizontal="true"
+			android:id="@+id/dialog_title"
+			android:layout_alignParentTop="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/test_filler"
+			android:labelFor="@id/dialog_message"
+			style=""/>
+	<!-- TODO Create style for EndGame dialog title-->
+
+	<TextView
+			android:id="@+id/dialog_instruction"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dialog_title"
+			android:text="@string/dialog_instruction"/>
+
+	<EditText
+			android:id="@+id/dialog_message"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:inputType="text"
+			android:layout_alignParentStart="true"
+			android:hint="@string/dialog_message_for_opponent"
+			android:layout_below="@id/dialog_instruction"/>
+
+</RelativeLayout>

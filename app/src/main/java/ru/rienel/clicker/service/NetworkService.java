@@ -5,17 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.ActionListener;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
-import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
-import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.net.wifi.p2p.*;
+import android.net.wifi.p2p.WifiP2pManager.*;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
@@ -23,13 +14,11 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import ru.rienel.clicker.ActivityWithNetwork;
+import ru.rienel.clicker.activity.ActivityWithNetwork;
 import ru.rienel.clicker.common.ThreadPoolManager;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
-import ru.rienel.clicker.service.runnable.SendStreamRunable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -253,16 +242,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		if (activity != null) {
 			activity.updateThisDevice(OpponentFactory.buildFromWifiP2pDevice(device));
 		}
-	}
-
-	public String getFileInfo(Uri uri) throws IOException {
-		String fileInfo = "size:" + 0 + "name: fadfas";
-		return fileInfo;
-	}
-
-
-	public void handleSendStream(String host, int port, InputStream inputStream) {
-		threadPoolManager.execute(new SendStreamRunable(host, port, inputStream, this));
 	}
 
 	public ActivityWithNetwork getActivity() {

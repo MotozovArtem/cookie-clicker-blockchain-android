@@ -22,15 +22,18 @@ import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
+import ru.rienel.clicker.presenter.GamePresenter;
 
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView {
 
 	private static final String FORMAT = "%02d:%02d";
 	private static final String TAG = "GameActivity";
+
+	private GamePresenter presenter;
 
 	private TextView point;
 	private TextView newClick;
@@ -39,7 +42,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private TextView time;
 	private Button shop;
 	private ProgressBar progressBar;
-	private Integer points;
+	private Integer clicks;
 	private int donutPerClick;
 	private CountDownTimer countDownTimerBoost;
 	private boolean flagShop;
@@ -71,20 +74,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 		blockRepository = new BlockDaoImpl(this);
 
-		if (savedInstanceState == null) {   // приложение запущено впервые
-			donutPerClick = 1;
-			points = 0;
-			flagShop = false;
-			currentTime = 0;
-			currentTimeBoost = 0;
-		} else {
-			donutPerClick = savedInstanceState.getInt("dpc_state");
-			points = savedInstanceState.getInt("points_state");
-			flagShop = savedInstanceState.getBoolean("flagShop_state");
-			currentTime = savedInstanceState.getLong("currentTime_state");
-			currentTimeBoost = savedInstanceState.getLong("currentTimeBoost_state");
-		}
-
+		initializeActivityState(savedInstanceState);
 
 		newClick.setVisibility(View.INVISIBLE);
 		timeAnimation = AnimationUtils.loadAnimation(this, R.anim.timer_animation);
@@ -114,18 +104,38 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		dialog.setTitle(R.string.titleDialog);
 		dialog.setIcon(R.drawable.donut_icon);
 		dialog.setPositiveButton(R.string.continueGameDialog, new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int arg1) {
 				finish();
 			}
 		});
 		dialog.setCancelable(false);
+	}
 
+	private void initializeActivityState(Bundle savedInstanceState) {
+		if (savedInstanceState == null) {   // приложение запущено впервые
+			donutPerClick = 1;
+			clicks = 0;
+			flagShop = false;
+			currentTime = 0;
+			currentTimeBoost = 0;
+		} else {
+			loadInstanceState(savedInstanceState);
+		}
+	}
+
+	private void loadInstanceState(Bundle savedInstanceState) {
+		donutPerClick = savedInstanceState.getInt("dpc_state");
+		clicks = savedInstanceState.getInt("points_state");
+		flagShop = savedInstanceState.getBoolean("flagShop_state");
+		currentTime = savedInstanceState.getLong("currentTime_state");
+		currentTimeBoost = savedInstanceState.getLong("currentTimeBoost_state");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		point.setText(String.format(Locale.ENGLISH, "%d", points));
+		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
 		donutImage.startAnimation(rotateAnimation);
 		point.setTextColor(getResources().getColor(R.color.colorPoint));
 		if (currentTime != 0) {
@@ -135,25 +145,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		}
 
 		countDownTimer = new CountDownTimer(timer, 1000) {
+			@Override
 			public void onTick(long millisUntilFinished) {
 				if (millisUntilFinished <= 20000) {
 					clock.startAnimation(timeAnimation);
 				}
-				clock.setText("" + String.format(FORMAT,
-						TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(
-								TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
-						TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
-								TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+				clock.setText(String.format(Locale.getDefault(), FORMAT,
+						TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) -
+								TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
+						TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+								TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)))
+				);
 				currentTime = millisUntilFinished;
 			}
 
+			@Override
 			public void onFinish() {
 				if (flagShop) {
 					countDownTimerBoost.cancel();
 				}
 				donutImage.clearAnimation();
 				clock.setText(R.string.endGame);
-				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", points);
+				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", clicks);
 				dialog.setMessage(message);
 				dialog.show();
 				Block newBlock = BlockFactory.build(message, 100, new Date(System.currentTimeMillis()), "None",
@@ -215,12 +229,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("dpc_state", donutPerClick);
-		outState.putInt("points_state", points);
+		outState.putInt("points_state", clicks);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
 		outState.putLong("currentTimeBoost_state", currentTimeBoost);
@@ -229,11 +242,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		donutPerClick = savedInstanceState.getInt("dpc_state");
-		points = savedInstanceState.getInt("points_state");
-		flagShop = savedInstanceState.getBoolean("flagShop_state");
-		currentTime = savedInstanceState.getLong("currentTime_state");
-		currentTimeBoost = savedInstanceState.getLong("currentTimeBoost_state");
+		loadInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -246,14 +255,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void donutClick() {
-		this.points += this.donutPerClick;
-		point.setText(Integer.toString(points));
+		this.clicks += this.donutPerClick;
+		point.setText(clicks);
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 
 	private void showShopFragment() {
 		Intent intent = new Intent(this, ShopActivity.class);
-		intent.putExtra("points", points);
+		intent.putExtra("clicks", clicks);
 		intent.putExtra("donutPerClick", donutPerClick);
 		intent.putExtra("currentTime", currentTime);
 		startActivityForResult(intent, 1);
@@ -265,10 +274,28 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 			return;
 		}
 		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
-		points = data.getIntExtra("points", points);
+		clicks = data.getIntExtra("clicks", clicks);
 		flagShop = data.getBooleanExtra("flagShop", flagShop);
 		currentTime = data.getLongExtra("currentTime", currentTime);
 	}
 
+	@Override
+	public void showWin() {
 
+	}
+
+	@Override
+	public void hideWin() {
+
+	}
+
+	@Override
+	public void stopGame() {
+
+	}
+
+	@Override
+	public void startGame() {
+
+	}
 }

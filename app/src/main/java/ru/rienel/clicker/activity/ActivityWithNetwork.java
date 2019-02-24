@@ -1,4 +1,4 @@
-package ru.rienel.clicker;
+package ru.rienel.clicker.activity;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Handler;

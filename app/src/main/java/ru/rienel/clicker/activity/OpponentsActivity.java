@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import ru.rienel.clicker.ActivityWithNetwork;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
@@ -48,7 +47,6 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 
 		Intent serviceIntent = NetworkService.newIntent(this);
 		startService(serviceIntent);
-
 		bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -67,10 +65,9 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				Log.d(TAG, "onServiceConnected: called");
-				// We've binded to LocalService, cast the IBinder and get LocalService instance
 				NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
-				networkService = binder.getService(); //Get instance of your service!
-				networkService.registerActivity(OpponentsActivity.this); //Activity register in the service as client for callabcks!
+				networkService = binder.getService();
+				networkService.registerActivity(OpponentsActivity.this);
 				Log.d(TAG, "onServiceConnected: connected to service");
 			}
 
@@ -105,20 +102,6 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentById(R.id.opponent_fragment_container);
-		if (fragment != null) {
-//			networkService.discoverPeers();
-//			List<WifiP2pDevice> p2pDevices = networkService.getP2pDevices();
-//			List<Opponent> opponentList = new ArrayList<>(p2pDevices.size());
-//			for (WifiP2pDevice device: p2pDevices) {
-//				Opponent opponent = OpponentFactory.buildFromWifiP2pDevice(device);
-//				opponentList.add(opponent);
-//			}
-//			((OpponentListFragment) fragment).setOpponentList(opponentList);
-		}
 	}
 
 	@Override
@@ -148,19 +131,11 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 			Log.d(TAG, "handleMessage()  msg.what:" + msg.what);
 			switch (msg.what) {
 				case ConfigInfo.MSG_RECV_PEER_INFO:
-//					activity.getDetailFragment().showSendFileVeiw();
 					break;
-
 				case ConfigInfo.MSG_REPORT_SEND_PEER_INFO_RESULT:
-//					if (msg.arg1 == 0)
-//						activity.showToastTips("send peer's info successed.");
-//					else
-//						activity.showToastTips("send peer's info failed.");
 					break;
 				case ConfigInfo.MSG_REPORT_RECV_PEER_LIST:
-//					activity.showToastTips("receive peer list.");
 				default:
-//					activity.showToastTips("error msg id.");
 			}
 			super.handleMessage(msg);
 		}
