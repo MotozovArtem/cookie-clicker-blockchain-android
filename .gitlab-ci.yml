@@ -33,15 +33,11 @@ before_script:
 stages:
 - build
 
-lintDebug:
-  stage: build
-  script:
-  - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
-
 assembleDebug:
   stage: build
   script:
   - ./gradlew assembleDebug
   artifacts:
     paths:
-    - app/build/outputs/
+    - app/build/*.apk
+    name: "Coockie-clicker"

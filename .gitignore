@@ -12,9 +12,9 @@ local.properties
 
 #Build dir
 /build
-#.gradle
+.gradle
 #gradlew
-#gradlew.bat
+gradlew.bat
 #*/gradle/wrapper
 
 
