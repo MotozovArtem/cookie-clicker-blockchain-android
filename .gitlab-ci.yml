@@ -39,5 +39,5 @@ assembleDebug:
   - ./gradlew assembleDebug
   artifacts:
     paths:
-    - app/build/*.apk
+    - app/build/
     name: "Coockie-clicker"
