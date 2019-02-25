@@ -78,11 +78,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		newClick = findViewById(R.id.newClick);
 		context = GameActivity.this;
 
-		//Звук нажатия
+		// фоновая музыка
 		backSoundPool = new SoundPool.Builder()
 				.setMaxStreams(1)
 				.setAudioAttributes(new AudioAttributes.Builder()
-						.setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_DELAYED)
+						.setUsage(AudioAttributes.USAGE_MEDIA)
 						.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
 						.build())
 				.build();
@@ -93,6 +93,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 				soundPool.play(backSoundPoolId,1,1,0,-1,1);
 			}
 		});
+		//Звук нажатия
 		soundPool = new SoundPool.Builder().setMaxStreams(10).build();
 		soundPool. setOnLoadCompleteListener(this);
 		soundId = soundPool.load(this, R.raw.muda,1);
