@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +65,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	SoundPool backSoundPool;
 	int soundId;
 	int backSoundPoolId;
+	MediaPlayer mediaPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,24 +82,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		context = GameActivity.this;
 
 		// фоновая музыка
-		backSoundPool = new SoundPool.Builder()
-				.setMaxStreams(1)
-				.setAudioAttributes(new AudioAttributes.Builder()
-						.setUsage(AudioAttributes.USAGE_MEDIA)
-						.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-						.build())
-				.build();
-		backSoundPoolId = backSoundPool.load(this,R.raw.ora_vs_muda_v2,1);
-		backSoundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+		mediaPlayer = MediaPlayer.create(this,R.raw.epic_sax_guy_v3);
+		mediaPlayer.setLooping(true);
+		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override
-			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-				soundPool.play(backSoundPoolId,1,1,0,-1,1);
+			public void onCompletion(MediaPlayer mediaPlayer) {
+				mediaPlayer.stop();
+				mediaPlayer.release();
 			}
 		});
+
+
 		//Звук нажатия
-		soundPool = new SoundPool.Builder().setMaxStreams(10).build();
+		soundPool = new SoundPool.Builder().setMaxStreams(1).build();
 		soundPool. setOnLoadCompleteListener(this);
-		soundId = soundPool.load(this, R.raw.muda,1);
+		soundId = soundPool.load(this, R.raw.coockie,1);
 
 		blockRepository = new BlockDaoImpl(this);
 		if (savedInstanceState == null) {   // приложение запущено впервые
@@ -160,10 +160,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
-			timer = 30000;
+			timer = 60000;
 		}
-		backSoundPool.resume(1);
-
+		mediaPlayer.start();
 		countDownTimer = new CountDownTimer(timer, 1000) {
 			public void onTick(long millisUntilFinished) {
 				if (millisUntilFinished <= 20000) {
@@ -243,7 +242,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (flagShop) {
 			countDownTimerBoost.cancel();
 		}
-		backSoundPool.pause(1);
+		mediaPlayer.pause();
 	}
 
 
