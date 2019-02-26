@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +26,6 @@ import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +93,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		//Звук нажатия
 		soundPool = new SoundPool.Builder().setMaxStreams(1).build();
 		soundPool. setOnLoadCompleteListener(this);
-		soundId = soundPool.load(this, R.raw.coockie,1);
+		soundId = soundPool.load(this, R.raw.muda,1);
 
 		blockRepository = new BlockDaoImpl(this);
 		if (savedInstanceState == null) {   // приложение запущено впервые
