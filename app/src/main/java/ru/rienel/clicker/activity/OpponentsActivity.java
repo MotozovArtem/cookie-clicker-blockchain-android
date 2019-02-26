@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -170,28 +171,28 @@ public class OpponentsActivity extends AppCompatActivity implements DeviceAction
 	@Override
 	public void cancelDisconnect() {
 		Log.e(TAG, "cancelDisconnect.");
-//		WifiP2pManager manager = networkService.getManager();
-//		if (manager != null) {
-		final OpponentListFragment fragment = getFragment();
+		WifiP2pManager manager = networkService.getManager();
+		if (manager != null) {
+//			final OpponentListFragment fragment = getFragment();
 //			if (fragment.getDevice() == null
 //					|| fragment.getDevice().status == WifiP2pDevice.CONNECTED) {
-//				disconnect();
+//				this.disconnect();
 //			} else if (fragment.getDevice().status == WifiP2pDevice.AVAILABLE
 //					|| fragment.getDevice().status == WifiP2pDevice.INVITED) {
 //				networkService.cancelDisconnect();
 //			}
-//		}
+		}
 	}
 
 	@Override
 	public void connect(WifiP2pConfig config) {
-//		networkService.connect(config);
+		networkService.connect(config);
 	}
 
 	@Override
 	public void disconnect() {
-		resetPeers();
-//		networkService.removeGroup();
-//		networkService.discoverPeers();
+		this.resetPeers();
+		networkService.removeGroup();
+		networkService.discoverPeers();
 	}
 }

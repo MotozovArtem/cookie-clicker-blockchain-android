@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.presenter.GamePresenter;
+import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
 
 import java.util.Date;
 import java.util.Locale;
@@ -30,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView {
 
-	private static final String FORMAT = "%02d:%02d";
+	private static final String TIMER_TIME_FORMAT = "%02d:%02d";
 	private static final String TAG = "GameActivity";
 
 	private GamePresenter presenter;
@@ -56,7 +58,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private CountDownTimer countDownTimer;
 	private AlertDialog.Builder dialog;
 	private Context context;
+
 	private Repository<Block> blockRepository;
+	private EndGameDialogFragment dialogFragment;
+	private FragmentManager fragmentManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +156,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 					clock.startAnimation(timeAnimation);
 				}
 
-				clock.setText(String.format(Locale.getDefault(), FORMAT,
+				clock.setText(String.format(Locale.getDefault(), TIMER_TIME_FORMAT,
 						TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) -
 								TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
 						TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
@@ -256,7 +261,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 	private void donutClick() {
 		this.clicks += this.donutPerClick;
-		point.setText(clicks);
+		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 

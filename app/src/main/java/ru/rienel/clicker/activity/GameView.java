@@ -8,5 +8,4 @@ public interface GameView {
 	void stopGame();
 
 	void startGame();
-
 }
