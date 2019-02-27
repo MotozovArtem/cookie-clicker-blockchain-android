@@ -30,4 +30,4 @@ assembleDebug:
   artifacts:
     paths:
     - app/build/outputs/
-    name: "Coockie-clicker"
+    name: "Cookie-clicker"
