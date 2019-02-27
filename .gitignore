@@ -13,6 +13,10 @@ local.properties
 #Build dir
 /build
 .gradle
+#gradlew
+gradlew.bat
+#*/gradle/wrapper
+
 
 
 .DS_Store

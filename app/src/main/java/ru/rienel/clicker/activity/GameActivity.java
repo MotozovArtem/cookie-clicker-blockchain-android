@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentManager;
@@ -31,8 +34,9 @@ import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.presenter.GamePresenter;
 import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView, OnLoadCompleteListener {
 
+	private static final String FORMAT = "%02d:%02d";
 	private static final String TIMER_TIME_FORMAT = "%02d:%02d";
 	private static final String TAG = "GameActivity";
 
@@ -45,7 +49,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private TextView time;
 	private Button shop;
 	private ProgressBar progressBar;
-	private Integer clicks;
+	private Integer points;
 	private int donutPerClick;
 	private CountDownTimer countDownTimerBoost;
 	private boolean flagShop;
@@ -64,6 +68,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private EndGameDialogFragment dialogFragment;
 	private FragmentManager fragmentManager;
 
+	SoundPool soundPool;
+	SoundPool backSoundPool;
+	int soundId;
+	int backSoundPoolId;
+	MediaPlayer mediaPlayer;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +87,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		clock = findViewById(R.id.tvClock);
 		newClick = findViewById(R.id.newClick);
 		context = GameActivity.this;
+
+		// фоновая музыка
+		mediaPlayer = MediaPlayer.create(this,R.raw.epic_sax_guy_v3);
+		mediaPlayer.setLooping(true);
+		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mediaPlayer) {
+				mediaPlayer.stop();
+				mediaPlayer.release();
+			}
+		});
+
+
+		//Звук нажатия
+		soundPool = new SoundPool.Builder().setMaxStreams(1).build();
+		soundPool. setOnLoadCompleteListener(this);
+		soundId = soundPool.load(this, R.raw.muda,1);
 
 		blockRepository = new BlockDaoImpl(this);
 
@@ -141,22 +168,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onResume() {
 		super.onResume();
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+		point.setText(String.format(Locale.ENGLISH, "%d", points));
 		donutImage.startAnimation(rotateAnimation);
 		point.setTextColor(getResources().getColor(R.color.colorPoint));
 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
-			timer = 3000;
+			timer = 60000;
 		}
-
+		mediaPlayer.start();
 		countDownTimer = new CountDownTimer(timer, 1000) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				if (millisUntilFinished <= 20000) {
 					clock.startAnimation(timeAnimation);
 				}
-
 				clock.setText(String.format(Locale.getDefault(), TIMER_TIME_FORMAT,
 						TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) -
 								TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
@@ -173,7 +199,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 				}
 				donutImage.clearAnimation();
 				clock.setText(R.string.endGame);
-				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", clicks);
+				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", points);
 				dialog.setMessage(message);
 				dialog.show();
 				Block newBlock = BlockFactory.build(message, 100, new Date(System.currentTimeMillis()), "None",
@@ -233,13 +259,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (flagShop) {
 			countDownTimerBoost.cancel();
 		}
+		mediaPlayer.pause();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("dpc_state", donutPerClick);
-		outState.putInt("points_state", clicks);
+		outState.putInt("points_state", points);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
 		outState.putLong("currentTimeBoost_state", currentTimeBoost);
@@ -254,6 +281,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.imageDonut) {
+			soundPool.play(soundId, 1, 1, 0, 0, 1);
 			v.startAnimation(donutClickAnimation);
 		} else if (v.getId() == R.id.btnShop) {
 			showShopFragment();
@@ -261,14 +289,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private void donutClick() {
-		this.clicks += this.donutPerClick;
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+		this.points += this.donutPerClick;
+		point.setText(String.format(Locale.ENGLISH, "%d", points));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 
 	private void showShopFragment() {
 		Intent intent = new Intent(this, ShopActivity.class);
-		intent.putExtra("clicks", clicks);
+		intent.putExtra("points", points);
 		intent.putExtra("donutPerClick", donutPerClick);
 		intent.putExtra("currentTime", currentTime);
 		startActivityForResult(intent, 1);
@@ -280,7 +308,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 			return;
 		}
 		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
-		clicks = data.getIntExtra("clicks", clicks);
+		points = data.getIntExtra("points", points);
 		flagShop = data.getBooleanExtra("flagShop", flagShop);
 		currentTime = data.getLongExtra("currentTime", currentTime);
 	}
@@ -304,4 +332,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	public void startGame() {
 
 	}
+
+	@Override
+	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+
+	}
+
+
 }

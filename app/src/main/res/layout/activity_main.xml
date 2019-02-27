@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical"
+
     tools:context="ru.rienel.clicker.activity.GameActivity">
 
 
@@ -58,6 +59,7 @@
         android:background="@drawable/donut_vert"
         android:onClick="onClick"
         android:scaleType="center"
+        android:soundEffectsEnabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvClock" />
