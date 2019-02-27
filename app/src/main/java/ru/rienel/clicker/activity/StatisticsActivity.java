@@ -1,19 +1,18 @@
 package ru.rienel.clicker.activity;
 
+import java.util.Locale;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
 import android.widget.TextView;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.ui.view.BlockListFragment;
-
-import java.util.List;
-import java.util.Locale;
 
 public class StatisticsActivity extends AppCompatActivity {
 

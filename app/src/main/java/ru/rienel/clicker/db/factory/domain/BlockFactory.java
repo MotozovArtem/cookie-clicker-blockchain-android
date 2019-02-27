@@ -1,18 +1,21 @@
 package ru.rienel.clicker.db.factory.domain;
 
+import java.util.Date;
+
 import android.database.Cursor;
+
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
-import java.util.Date;
 
 public class BlockFactory {
 	public static Block build(Integer id, String message, Integer goal,
-	                   Date creationTime, String opponent, String hashOfPreviousBlock, String hashOfBlock) {
+	                          Date creationTime, String opponent, String hashOfPreviousBlock, String hashOfBlock) {
 		Block block = new Block();
 		block.setId(id);
 		block.setMessage(message);
 		block.setGoal(goal);
 		block.setCreationTime(creationTime);
+		block.setOpponent(opponent);
 		block.setHashOfPreviousBlock(hashOfPreviousBlock);
 		block.setHashOfBlock(hashOfBlock);
 		return block;
@@ -63,7 +66,7 @@ public class BlockFactory {
 	}
 
 	public static Block build(String message, Integer goal, Date creationTime,
-	                   String opponent, String hashOfPreviousBlock, String hashOfBlock) {
+	                          String opponent, String hashOfPreviousBlock, String hashOfBlock) {
 		return build(null,
 				message, goal, creationTime, opponent, hashOfPreviousBlock, hashOfBlock);
 	}

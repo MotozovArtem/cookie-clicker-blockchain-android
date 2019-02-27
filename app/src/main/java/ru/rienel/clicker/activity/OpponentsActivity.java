@@ -1,5 +1,8 @@
 package ru.rienel.clicker.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
@@ -24,9 +28,6 @@ import ru.rienel.clicker.service.ConfigInfo;
 import ru.rienel.clicker.service.DeviceActionListener;
 import ru.rienel.clicker.service.NetworkService;
 import ru.rienel.clicker.ui.view.OpponentListFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OpponentsActivity extends AppCompatActivity implements DeviceActionListener, ActivityWithNetwork {
 	public static final String TAG = OpponentsActivity.class.getName();

@@ -1,15 +1,5 @@
 package ru.rienel.clicker.common;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.util.Pair;
-import ru.rienel.clicker.activity.OpponentsActivity;
-import ru.rienel.clicker.service.ConfigInfo;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +12,17 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.util.Pair;
+
+import ru.rienel.clicker.activity.OpponentsActivity;
+import ru.rienel.clicker.service.ConfigInfo;
 
 public class Utility {
 	private static final String TAG = Utility.class.getName();

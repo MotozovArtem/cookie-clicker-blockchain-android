@@ -1,12 +1,12 @@
 package ru.rienel.clicker.service;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.concurrent.locks.ReentrantLock;
+
+import android.util.Log;
 
 public class HandleAcceptSocket implements Runnable {
 	private final Socket socket;

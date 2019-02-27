@@ -1,10 +1,10 @@
 package ru.rienel.clicker.net;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import android.util.Log;
 
 public class Server extends Thread {
 	private static final String TAG = "Server";

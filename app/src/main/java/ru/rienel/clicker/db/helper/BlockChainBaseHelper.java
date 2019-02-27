@@ -1,14 +1,15 @@
 package ru.rienel.clicker.db.helper;
 
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
-
-import java.util.Date;
 
 public class BlockChainBaseHelper extends SQLiteOpenHelper {
 	private static final int VERSION = 1;

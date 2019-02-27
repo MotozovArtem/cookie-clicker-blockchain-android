@@ -1,5 +1,9 @@
 package ru.rienel.clicker.activity;
 
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
@@ -25,10 +30,6 @@ import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.presenter.GamePresenter;
 import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
-
-import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView {
 

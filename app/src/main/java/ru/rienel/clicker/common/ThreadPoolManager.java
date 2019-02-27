@@ -1,20 +1,21 @@
 package ru.rienel.clicker.common;
 
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
-import android.os.Process;
-import android.util.Log;
-import ru.rienel.clicker.service.ConfigInfo;
-import ru.rienel.clicker.service.HandleAcceptSocket;
-import ru.rienel.clicker.service.NetworkService;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.os.Process;
+import android.util.Log;
+
+import ru.rienel.clicker.service.ConfigInfo;
+import ru.rienel.clicker.service.HandleAcceptSocket;
+import ru.rienel.clicker.service.NetworkService;
 
 public class ThreadPoolManager extends HandlerThread {
 	private final static String TAG = ThreadPoolManager.class.getName();

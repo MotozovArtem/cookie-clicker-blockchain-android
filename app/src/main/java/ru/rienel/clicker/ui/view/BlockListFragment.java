@@ -1,5 +1,10 @@
 package ru.rienel.clicker.ui.view;
 
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,21 +14,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class BlockListFragment extends Fragment {
 	private RecyclerView blockRecyclerView;

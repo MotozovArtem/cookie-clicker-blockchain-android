@@ -1,19 +1,20 @@
 package ru.rienel.clicker.db.domain.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.db.helper.BlockChainBaseHelper;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class BlockDaoImpl implements Repository<Block> {
 	private BlockChainBaseHelper dbHelper;

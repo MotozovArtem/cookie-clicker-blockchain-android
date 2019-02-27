@@ -1,5 +1,8 @@
 package ru.rienel.clicker.ui.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,14 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.OpponentsActivity;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OpponentListFragment extends Fragment {
 	private static final boolean HAS_MENU = true;

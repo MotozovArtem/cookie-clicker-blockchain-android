@@ -1,12 +1,26 @@
 package ru.rienel.clicker.service;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.*;
-import android.net.wifi.p2p.WifiP2pManager.*;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
@@ -14,15 +28,10 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
+
 import ru.rienel.clicker.activity.ActivityWithNetwork;
 import ru.rienel.clicker.common.ThreadPoolManager;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class NetworkService extends Service implements ChannelListener, WifiP2pNetworkServiceListener {
 	private static final String TAG = NetworkService.class.getName();

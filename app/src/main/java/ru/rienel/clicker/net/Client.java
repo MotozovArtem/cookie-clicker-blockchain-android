@@ -1,11 +1,11 @@
 package ru.rienel.clicker.net;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import android.util.Log;
 
 public class Client extends Thread {
 	private static final String TAG = "Client";

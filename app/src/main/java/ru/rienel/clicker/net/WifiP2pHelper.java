@@ -1,5 +1,9 @@
 package ru.rienel.clicker.net;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +17,9 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
-
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.os.Looper.getMainLooper;
 
