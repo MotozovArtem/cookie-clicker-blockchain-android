@@ -18,12 +18,11 @@ public class Server extends Thread {
 		try {
 			serverSocket = new ServerSocket(8888);
 			socket = serverSocket.accept();
+
 			sendReceiveHelper = new SendReceiveHelper(socket);
 			sendReceiveHelper.start();
 		} catch (IOException e) {
 			Log.w(TAG, "Error while run() ", e);
 		}
-
-
 	}
 }

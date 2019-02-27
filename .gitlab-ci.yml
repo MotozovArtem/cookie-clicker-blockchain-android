@@ -1,13 +1,3 @@
-#before_script:
-#  - apt-get update -qq && apt-get install -y -qq gradle
-#  - gradle -v
-#  - which gradle
-
-#build:
-#  script:
-#    - gradle -v
-#    - gradle -i -s build
-
 image: openjdk:8-jdk
 
 variables:

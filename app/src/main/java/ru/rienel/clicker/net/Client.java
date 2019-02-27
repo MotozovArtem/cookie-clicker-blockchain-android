@@ -11,27 +11,28 @@ public class Client extends Thread {
 	private static final String TAG = "Client";
 
 	private Socket socket;
+	private String hostAddr;
 	private InetAddress serverAddress;
 	private boolean isConnected;
+	private SendReceiveHelper sendReceiver;
 
-	public Client(InetAddress serverAddress) {
-		this.serverAddress = serverAddress;
+	public Client(InetAddress hostAddress) {
+		hostAddr = hostAddress.getHostAddress();
 		socket = new Socket();
-
 	}
 
 	@Override
 	public void run() {
-		super.run();
 		try {
-			socket.connect(new InetSocketAddress(serverAddress, 10000), 3000);
-			isConnected = true;
+			socket.connect(new InetSocketAddress(hostAddr, 8888), 500);
+			sendReceiver = new SendReceiveHelper(socket);
+			sendReceiver.start();
 		} catch (IOException e) {
 			Log.d(TAG, String.format("Could't connect to %s", serverAddress), e);
 		}
 	}
 
 	public boolean isConnected() {
-		return this.isConnected;
+		return isConnected;
 	}
 }
