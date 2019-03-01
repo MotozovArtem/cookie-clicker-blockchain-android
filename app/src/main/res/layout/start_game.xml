@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			xmlns:tools="http://schemas.android.com/tools"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_gravity="center"
-			android:background="#FFECECEC"
-			android:orientation="vertical"
-			tools:context="ru.rienel.clicker.activity.MainActivity"
-			android:columnCount="4"
-		>
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_gravity="center"
+	android:background="#FFECECEC"
+	android:orientation="vertical"
+	tools:context="ru.rienel.clicker.activity.MainActivity"
+	android:columnCount="4">
 
 	<TextView
 			android:id="@+id/startTitle"
@@ -58,6 +58,29 @@
 			android:layout_marginBottom="30dp"
 			android:text="@string/statistic"
 			android:drawableStart="@drawable/icon_diagramm"
+			/>
+
+	<Button
+			android:id="@+id/btnShop"
+			android:layout_width="match_parent"
+			style="@style/Widget.AppCompat.Button.Colored"
+			android:layout_column="0"
+			android:layout_row="4"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="30dp"
+			android:text="@string/shop"
+			android:drawableStart="@drawable/icon_sale"
+			/>
+	<Button
+			android:id="@+id/btnClearGameSaves"
+			android:layout_width="match_parent"
+			style="@style/Widget.AppCompat.Button.Colored"
+			android:layout_column="0"
+			android:layout_row="5"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginBottom="30dp"
+			android:text="@string/clearGameSaves"
+			android:drawableStart="@drawable/icon_sale"
 			/>
 
 </GridLayout>

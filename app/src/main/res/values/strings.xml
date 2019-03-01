@@ -25,4 +25,8 @@
     <string name="empty"/>
 	<string name="update">Update opponent list</string>
 	<string name="back">Back</string>
+    <string name="gameSaves">game_saves</string>
+    <string name="points">Points: </string>
+    <string name="DPC">Donuts Per Click: </string>
+    <string name="clearGameSaves">Clear game saves</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -59,16 +60,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private Repository<Block> blockRepository;
 
 	SoundPool soundPool;
-	SoundPool backSoundPool;
 	int soundId;
-	int backSoundPoolId;
 	MediaPlayer mediaPlayer;
+
+	SharedPreferences saves;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+		loadDPC();
+
+		points = 0;
 		point = findViewById(R.id.tvPoints);
 		shop = findViewById(R.id.btnShop);
 		time = findViewById(R.id.time);
@@ -78,7 +83,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		newClick = findViewById(R.id.newClick);
 		context = GameActivity.this;
 
-		// фоновая музыка
+		// Background sound
 		mediaPlayer = MediaPlayer.create(this,R.raw.epic_sax_guy_v3);
 		mediaPlayer.setLooping(true);
 		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -90,25 +95,25 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		});
 
 
-		//Звук нажатия
+		//Tap sound
 		soundPool = new SoundPool.Builder().setMaxStreams(1).build();
 		soundPool. setOnLoadCompleteListener(this);
 		soundId = soundPool.load(this, R.raw.muda,1);
 
 		blockRepository = new BlockDaoImpl(this);
-		if (savedInstanceState == null) {   // приложение запущено впервые
-			donutPerClick = 1;
-			points = 0;
-			flagShop = false;
-			currentTime = 0;
-			currentTimeBoost = 0;
-		} else {
-			donutPerClick = savedInstanceState.getInt("dpc_state");
-			points = savedInstanceState.getInt("points_state");
-			flagShop = savedInstanceState.getBoolean("flagShop_state");
-			currentTime = savedInstanceState.getLong("currentTime_state");
-			currentTimeBoost = savedInstanceState.getLong("currentTimeBoost_state");
-		}
+//		if (savedInstanceState == null) {   // app started at first
+//			donutPerClick = 1;
+//			points = 0;
+//			flagShop = false;
+//			currentTime = 0;
+//			currentTimeBoost = 0;
+//		} else {
+//			donutPerClick = savedInstanceState.getInt("dpc_state");
+//			points = savedInstanceState.getInt("points_state");
+//			flagShop = savedInstanceState.getBoolean("flagShop_state");
+//			currentTime = savedInstanceState.getLong("currentTime_state");
+//			currentTimeBoost = savedInstanceState.getLong("currentTimeBoost_state");
+//		}
 
 
 		newClick.setVisibility(View.INVISIBLE);
@@ -240,7 +245,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 			countDownTimerBoost.cancel();
 		}
 		mediaPlayer.pause();
+		savePoints(this.points);
 	}
+
+
 
 
 	@Override
@@ -268,8 +276,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (v.getId() == R.id.imageDonut) {
 			soundPool.play(soundId, 1, 1, 0, 0, 1);
 			v.startAnimation(donutClickAnimation);
-		} else if (v.getId() == R.id.btnShop) {
-			showShopFragment();
 		}
 	}
 
@@ -279,13 +285,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 
-	private void showShopFragment() {
-		Intent intent = new Intent(this, ShopActivity.class);
-		intent.putExtra("points", points);
-		intent.putExtra("donutPerClick", donutPerClick);
-		intent.putExtra("currentTime", currentTime);
-		startActivityForResult(intent, 1);
-	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -303,4 +303,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 
 	}
+
+	private void savePoints(int points) {
+		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = saves.edit();
+		int tempPoints = saves.getInt("points",0);
+		editor.putInt("points", points + tempPoints);
+		editor.apply();
+	}
+
+	private int loadDPC() {
+		this.donutPerClick = saves.getInt("DPC", 0);
+		return this.donutPerClick;
+	}
+
 }
