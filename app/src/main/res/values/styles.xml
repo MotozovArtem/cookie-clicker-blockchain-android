@@ -56,6 +56,7 @@
     <style name="TextStyle">
         <item name="android:textSize">25sp</item>
         <item name="android:textColor">#FFFFFF</item>
+        <item name="android:fontFamily">@font/goma_cookie</item>
     </style>
 
 
