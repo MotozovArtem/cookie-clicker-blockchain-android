@@ -1,63 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			xmlns:tools="http://schemas.android.com/tools"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_gravity="center"
-			android:background="#FFECECEC"
-			android:orientation="vertical"
-			tools:context="ru.rienel.clicker.activity.MainActivity"
-			android:columnCount="4"
-		>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#F3F0D1"
+	tools:context="ru.rienel.clicker.activity.MainActivity">
 
-	<TextView
-			android:id="@+id/startTitle"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/startTitle"
-			android:textColor="@color/colorTitle"
-			android:layout_marginBottom="50dp"
-			android:layout_column="0"
-			android:layout_row="0"
-			android:layout_gravity="fill_horizontal"
-			android:textSize="40sp"
-			android:gravity="center"
-			/>
+	<ImageView
+		android:id="@+id/imageDonut"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="30dp"
+		app:srcCompat="@drawable/donut_hor"
+        android:contentDescription="@string/imageofdonutText" />
 
-	<Button
+	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/activity_main"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/imageDonut"
+		android:layout_alignParentStart="true"
+		tools:context="ru.alexanderklimov.as22.MainActivity">
+
+		<Button
+			style="@style/TextStyle"
 			android:id="@+id/start"
-			android:layout_width="match_parent"
-			style="@style/ButtonStart"
-			android:layout_column="0"
-			android:layout_row="1"
-			android:layout_gravity="center_horizontal"
-			android:layout_marginBottom="30dp"
-			android:text="@string/newGame"
-			android:drawableStart="@drawable/icon_play"
-			/>
+			android:layout_width="300dp"
+			android:layout_height="75dp"
+			android:layout_centerInParent="true"
+			android:layout_marginTop="30dp"
+			android:background="@drawable/bbkg"
+			android:text="@string/new_gameText"
+			app:layout_constraintBottom_toTopOf="@+id/multiplayer"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="packed" />
 
-	<Button
+		<Button
 			android:id="@+id/multiplayer"
-			android:layout_width="match_parent"
-			style="@style/ButtonMultiplayer"
-			android:layout_column="0"
-			android:layout_row="2"
-			android:layout_gravity="center_horizontal"
-			android:layout_marginBottom="30dp"
-			android:text="@string/multiplayer"
-			android:drawableStart="@drawable/icon_network"
-			/>
+			android:layout_width="300dp"
+			android:layout_height="75dp"
+			android:layout_centerInParent="true"
+			android:background="@drawable/bbkg"
+			android:text="@string/multiplayerText"
+			style="@style/TextStyle"
+			app:layout_constraintBottom_toTopOf="@+id/statistic"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/start" />
 
-	<Button
+		<Button
 			android:id="@+id/statistic"
-			android:layout_width="match_parent"
-			style="@style/ButtonStart"
-			android:layout_column="0"
-			android:layout_row="3"
-			android:layout_gravity="center_horizontal"
-			android:layout_marginBottom="30dp"
-			android:text="@string/statistic"
-			android:drawableStart="@drawable/icon_diagramm"
-			/>
+			android:layout_width="300dp"
+			android:layout_height="75dp"
+			android:layout_below="@+id/multiplayer"
+			android:layout_centerInParent="true"
+			android:background="@drawable/bbkg"
+			android:text="@string/statisticText"
+			style="@style/TextStyle"
+			app:layout_constraintBottom_toTopOf="@+id/settings"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/multiplayer" />
 
-</GridLayout>
+		<Button
+			android:id="@+id/settings"
+			android:layout_width="300dp"
+			android:layout_height="75dp"
+			android:layout_centerInParent="true"
+			android:background="@drawable/bbkg"
+			android:text="@string/settings"
+			style="@style/TextStyle"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.495"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/statistic" />
+
+
+	</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

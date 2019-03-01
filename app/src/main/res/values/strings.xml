@@ -33,4 +33,9 @@
 	<string name="you_lose">You lose…</string>
 	<string name="you_win">You win!!!</string>
 	<string name="dialog_message_for_opponent">Message for opponent</string>
+    <string name="settings">Settings</string>
+	<string name="statisticText">Statistic</string>
+	<string name="multiplayerText">Multiplayer</string>
+	<string name="new_gameText">New game</string>
+	<string name="imageofdonutText">imageOfDonut</string>
 </resources>
