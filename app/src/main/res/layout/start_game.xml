@@ -7,13 +7,14 @@
 	android:background="#F3F0D1"
 	tools:context="ru.rienel.clicker.activity.MainActivity">
 
+
 	<ImageView
 		android:id="@+id/imageDonut"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:layout_marginTop="30dp"
-		app:srcCompat="@drawable/donut_hor"
+		android:layout_marginTop="20dp"
+		app:srcCompat="@drawable/donutbez2"
         android:contentDescription="@string/imageofdonutText" />
 
 	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
