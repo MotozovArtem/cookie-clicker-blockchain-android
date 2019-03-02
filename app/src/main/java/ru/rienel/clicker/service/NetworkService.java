@@ -1,9 +1,11 @@
 package ru.rienel.clicker.service;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
 import android.app.Service;
@@ -35,20 +37,20 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	private final IntentFilter intentFilter = new IntentFilter();
 
+	private PropertyChangeSupport changeSupport;
+
 	private NetworkServiceBinder binder = new NetworkServiceBinder();
-	private boolean retryChannel;
 	private ThreadPoolManager threadPoolManager;
-	private WifiP2pManager manager;
+	private WifiP2pManager wifiP2pManager;
 
 	private Channel channel;
 	private BroadcastReceiver receiver;
-	private List<WifiP2pDevice> p2pDevices = new ArrayList<>();
-	private WifiP2pDevice localDevice;
+	private List<WifiP2pDevice> p2pDevices;
 
-	private NetworkServiceListener serviceListener;
 	private CountDownLatch startRecvFileSignal;
 
 	private boolean isP2pEnabled;
+	private boolean retryChannel;
 
 	public static Intent newIntent(Context context) {
 		return new Intent(context, NetworkService.class);
@@ -64,11 +66,15 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-		manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+		wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
 		channel = initialize(this, getMainLooper(), this);
 
 		receiver = new WifiAppBroadcastReceiver(this, this);
 		registerReceiver(receiver, intentFilter);
+
+		p2pDevices = new ArrayList<>();
+
+		changeSupport = new PropertyChangeSupport(this);
 
 		try {
 			threadPoolManager = new ThreadPoolManager(this, ConfigInfo.LISTEN_PORT, 5);
@@ -78,12 +84,7 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	}
 
 	private Channel initialize(Context context, Looper looper, ChannelListener listener) {
-		return manager.initialize(context, looper, listener);
-	}
-
-	private void initServiceThread() {
-		Log.d(TAG, "initServiceThread: ");
-		threadPoolManager.init();
+		return wifiP2pManager.initialize(context, looper, listener);
 	}
 
 	@Override
@@ -110,7 +111,7 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	@Override
 	public void onChannelDisconnected() {
 
-		if (manager != null && !retryChannel) {
+		if (wifiP2pManager != null && !retryChannel) {
 			Toast.makeText(this, "Channel lost. Trying again",
 					Toast.LENGTH_LONG).show();
 			resetPeers();
@@ -119,7 +120,7 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		} else {
 			Toast.makeText(
 					this,
-					"Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.",
+					"Severe! Channel is probably lost permanently. Try Disable/Re-Enable P2P.",
 					Toast.LENGTH_LONG).show();
 		}
 	}
@@ -131,20 +132,23 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	public void discoverPeers() {
 		if (!isP2pEnabled) {
 			Toast.makeText(this, "P2P off", Toast.LENGTH_SHORT).show();
+			Log.d(TAG, "discoverPeers: P2P off");
 		} else {
-			manager.discoverPeers(channel, new ActionListener() {
+			wifiP2pManager.discoverPeers(channel, new ActionListener() {
 				@Override
 				public void onSuccess() {
 					Toast.makeText(NetworkService.this,
 							"Discovery Initiated",
 							Toast.LENGTH_SHORT).show();
+					Log.d(TAG, "onSuccess: Discovery initiated");
 				}
 
 				@Override
 				public void onFailure(int reason) {
 					Toast.makeText(NetworkService.this,
-							"Discovery Failed : " + reason,
+							String.format(Locale.ENGLISH, "Discovery Failed : %d", reason),
 							Toast.LENGTH_SHORT).show();
+					Log.d(TAG, String.format(Locale.ENGLISH, "onFailure: Discovery Failed : %d", reason));
 				}
 			});
 		}
@@ -153,14 +157,13 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return super.onStartCommand(intent, flags, startId);
-
 	}
 
 	public void connect(WifiP2pConfig config) {
-		manager.connect(channel, config, new ActionListener() {
+		wifiP2pManager.connect(channel, config, new ActionListener() {
 			@Override
 			public void onSuccess() {
-				Toast.makeText(NetworkService.this, "Connetction successfull", Toast.LENGTH_SHORT).show();
+				Toast.makeText(NetworkService.this, "Connection successful", Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "onSuccess: Connection successful");
 			}
 
@@ -168,13 +171,13 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 			public void onFailure(int reason) {
 				Toast.makeText(NetworkService.this, "Connect failed. Retry.",
 						Toast.LENGTH_SHORT).show();
-				Log.d(TAG, "onFailure: connect failed" + reason);
+				Log.d(TAG, String.format("onFailure: connect failed %d", reason));
 			}
 		});
 	}
 
 	public void cancelDisconnect() {
-		manager.cancelConnect(channel, new ActionListener() {
+		wifiP2pManager.cancelConnect(channel, new ActionListener() {
 			@Override
 			public void onSuccess() {
 				Toast.makeText(NetworkService.this, "Aborting connection",
@@ -194,71 +197,28 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	}
 
 	public void requestPeers(PeerListListener listListener) {
-		manager.requestPeers(channel, listListener);
+		wifiP2pManager.requestPeers(channel, listListener);
 	}
 
 	public void requestConnectionInfo(ConnectionInfoListener infoListener) {
-		manager.requestConnectionInfo(channel, infoListener);
+		wifiP2pManager.requestConnectionInfo(channel, infoListener);
 	}
 
 	public void removeGroup() {
-		manager.removeGroup(channel, new ActionListener() {
-
+		wifiP2pManager.removeGroup(channel, new ActionListener() {
 			@Override
 			public void onSuccess() {
 			}
 
 			@Override
 			public void onFailure(int reason) {
-				Log.e(TAG, "Disconnect failed. Reason :" + reason);
+				Log.e(TAG, String.format(Locale.ENGLISH, "Disconnect failed. Reason :%d", reason));
 			}
 		});
 	}
 
-	public void bindListener(NetworkServiceListener listener) {
-		serviceListener = listener;
-	}
-
-	@Override
-	public void updateThisDevice(WifiP2pDevice device) {
-		localDevice = device;
-	}
-
-
 	public List<WifiP2pDevice> getP2pDevices() {
 		return p2pDevices;
-	}
-
-	public WifiP2pManager getManager() {
-		return manager;
-	}
-
-	public void setManager(WifiP2pManager manager) {
-		this.manager = manager;
-	}
-
-	public Channel getChannel() {
-		return channel;
-	}
-
-	public void setChannel(Channel channel) {
-		this.channel = channel;
-	}
-
-	public BroadcastReceiver getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(BroadcastReceiver receiver) {
-		this.receiver = receiver;
-	}
-
-	public IntentFilter getIntentFilter() {
-		return intentFilter;
-	}
-
-	private void cleanupServiceThread() {
-		threadPoolManager.cleanup();
 	}
 
 	public boolean isP2pEnabled() {
@@ -271,17 +231,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
-		final InetAddress groupOnwerAddress = info.groupOwnerAddress;
-
-		if (info.groupFormed && info.isGroupOwner) {
-//			connectionStatus.setText(R.string.host);
-//			serverClass = new ServerClass();
-//			serverClass.start();
-		} else if (info.groupFormed) {
-//			connectionStatus.setText(R.string.client);
-//			clientClass = new ClientClass(groupOnwerAddress);
-//			clientClass.start();
-		}
 	}
 
 	@Override
@@ -290,18 +239,32 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		if (listSize == 0) {
 			Log.d(TAG, "onPeersAvailable: Devices not found");
 			Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_LONG).show();
+			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
 			p2pDevices.clear();
+
+			changeSupport.firePropertyChange("p2pDevices", oldDevices, p2pDevices);
 		}
 
 		if (!p2pDevices.equals(peers.getDeviceList())) {
 			Log.d(TAG, String.format("onPeersAvailable: Found %d devices", listSize));
+			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
+
 			p2pDevices.clear();
 			p2pDevices.addAll(peers.getDeviceList());
+
+			changeSupport.firePropertyChange("p2pDevices", oldDevices, p2pDevices);
 		}
 	}
 
-	public class NetworkServiceBinder extends Binder {
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.addPropertyChangeListener(listener);
+	}
 
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public class NetworkServiceBinder extends Binder {
 		public NetworkService getService() {
 			return NetworkService.this;
 		}

@@ -18,7 +18,6 @@ public class OpponentsActivity extends AppCompatActivity {
 
 	private OpponentListFragment opponentListFragment;
 	private OpponentsPresenter presenter;
-
 	private ServiceConnection connection;
 
 	@Override
@@ -31,32 +30,23 @@ public class OpponentsActivity extends AppCompatActivity {
 		setSupportActionBar(opponentToolbar);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		OpponentListFragment fragment =
+		opponentListFragment =
 				(OpponentListFragment) fragmentManager.findFragmentById(R.id.opponent_fragment_container);
 
-		if (fragment == null) {
-			fragment = new OpponentListFragment();
+		if (opponentListFragment == null) {
+			opponentListFragment = new OpponentListFragment();
 			fragmentManager.beginTransaction()
-					.add(R.id.opponent_fragment_container, fragment)
+					.add(R.id.opponent_fragment_container, opponentListFragment)
 					.commit();
 		}
 
 		presenter = new OpponentsPresenter(opponentListFragment);
 
-		connection = presenter.getServiceConnection();
+		connection = presenter.newServiceConnection();
 
 		Intent serviceIntent = NetworkService.newIntent(this);
 		startService(serviceIntent);
 		bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);
-	}
-
-	private OpponentListFragment getFragment() {
-		if (opponentListFragment == null) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			opponentListFragment = (OpponentListFragment) fragmentManager
-					.findFragmentById(R.id.opponent_fragment_container);
-		}
-		return opponentListFragment;
 	}
 
 	@Override
@@ -65,29 +55,4 @@ public class OpponentsActivity extends AppCompatActivity {
 		unbindService(connection);
 		Log.d(TAG, "onDestroy: Service unbinded");
 	}
-
-//	static private class ActivityHandler extends Handler {
-//		private static final String TAG = "ActivityHandler";
-//		private OpponentsActivity activity;
-//
-//		ActivityHandler(OpponentsActivity activity) {
-//			this.activity = activity;
-//		}
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			Log.d(TAG, "handleMessage()  msg.what:" + msg.what);
-//			switch (msg.what) {
-//				case ConfigInfo.MSG_RECV_PEER_INFO:
-//					break;
-//				case ConfigInfo.MSG_REPORT_SEND_PEER_INFO_RESULT:
-//					break;
-//				case ConfigInfo.MSG_REPORT_RECV_PEER_LIST:
-//				default:
-//			}
-//			super.handleMessage(msg);
-//		}
-//	}
-//
-//	private Handler handler = new ActivityHandler(this);
 }

@@ -60,8 +60,6 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(
 					WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-			service.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
-					WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
 			Log.d(TAG, "P2P this device changed - wifiP2pDevice:" + wifiP2pDevice.toString());
 		} else {
 			Log.d(TAG, "Unmatched P2P change action - " + action);

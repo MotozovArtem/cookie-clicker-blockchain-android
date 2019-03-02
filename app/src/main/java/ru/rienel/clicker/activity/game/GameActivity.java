@@ -67,11 +67,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private EndGameDialogFragment dialogFragment;
 	private FragmentManager fragmentManager;
 
-	SoundPool soundPool;
-	SoundPool backSoundPool;
-	int soundId;
-	int backSoundPoolId;
-	MediaPlayer mediaPlayer;
+	private SoundPool soundPool;
+	private SoundPool backSoundPool;
+	private int soundId;
+	private int backSoundPoolId;
+	private MediaPlayer mediaPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		context = GameActivity.this;
 
 		// фоновая музыка
-		mediaPlayer = MediaPlayer.create(this,R.raw.epic_sax_guy_v3);
+		mediaPlayer = MediaPlayer.create(this, R.raw.epic_sax_guy_v3);
 		mediaPlayer.setLooping(true);
 		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			@Override
@@ -101,8 +101,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 		//Звук нажатия
 		soundPool = new SoundPool.Builder().setMaxStreams(1).build();
-		soundPool. setOnLoadCompleteListener(this);
-		soundId = soundPool.load(this, R.raw.muda,1);
+		soundPool.setOnLoadCompleteListener(this);
+		soundId = soundPool.load(this, R.raw.muda, 1);
 
 		blockRepository = new BlockDaoImpl(this);
 

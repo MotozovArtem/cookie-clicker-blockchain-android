@@ -27,12 +27,15 @@ import ru.rienel.clicker.service.NetworkService;
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
 	private static final boolean HAS_MENU = true;
 
-	private RecyclerView opponentRecyclerView;
 	private OpponentAdapter opponentAdapter;
+
+	private RecyclerView opponentRecyclerView;
 	private List<Opponent> opponentList;
-	private OpponentsActivity opponentsActivity;
-	private NetworkService networkService;
-	private OpponentsPresenter presenter;
+
+	private OpponentsContract.Presenter presenter;
+
+	public OpponentListFragment() {
+	}
 
 	@Nullable
 	@Override
@@ -42,13 +45,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		opponentRecyclerView = view.findViewById(R.id.opponent_recycler_view);
 		opponentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-		if (opponentsActivity == null) {
-			opponentsActivity = (OpponentsActivity) getActivity();
-		}
-
-//		if (opponentsActivity != null) {
-//			networkService = opponentsActivity.getNetworkService();
-//		}
 		updateUi();
 		return view;
 	}
@@ -57,11 +53,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_item_update:
-				if (networkService == null) {
-//					networkService = opponentsActivity.getNetworkService();
-				}
-				networkService.discoverPeers();
-				updateUi();
+				presenter.scanNetwork();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -102,14 +94,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		}
 	}
 
-	public List<Opponent> getOpponentList() {
-		return opponentList;
-	}
-
-	public void setOpponentList(List<Opponent> opponentList) {
-		this.opponentList = opponentList;
-	}
-
 	public void updateOpponentList(List<Opponent> opponentList) {
 		Preconditions.checkNotNull(opponentList);
 
@@ -123,14 +107,27 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		}
 	}
 
+	public List<Opponent> getOpponentList() {
+		return opponentList;
+	}
+
+	public void setOpponentList(List<Opponent> opponentList) {
+		this.opponentList = opponentList;
+	}
+
 	@Override
 	public void setPresenter(OpponentsContract.Presenter presenter) {
-
+		this.presenter = presenter;
 	}
 
 	@Override
 	public void showOpponents() {
+		updateUi();
+	}
 
+	@Override
+	public void updateOpponentsList(List<Opponent> opponentList) {
+		this.opponentList = opponentList;
 	}
 
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {
@@ -184,14 +181,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 		@Override
 		public void onClick(View v) {
-			if (networkService == null) {
-//				networkService = opponentsActivity.getNetworkService();
-			}
-
-			if (networkService != null) {
-				networkService.connect(getConfigForConnection(opponent));
-
-			}
 		}
 
 		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
