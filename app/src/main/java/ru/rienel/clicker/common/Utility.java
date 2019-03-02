@@ -21,7 +21,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 
-import ru.rienel.clicker.activity.OpponentsActivity;
+import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.service.ConfigInfo;
 
 public class Utility {

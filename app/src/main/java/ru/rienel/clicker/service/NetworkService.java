@@ -24,14 +24,11 @@ import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import ru.rienel.clicker.activity.ActivityWithNetwork;
 import ru.rienel.clicker.common.ThreadPoolManager;
-import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 
 public class NetworkService extends Service implements ChannelListener, WifiP2pNetworkServiceListener {
 	private static final String TAG = NetworkService.class.getName();
@@ -48,7 +45,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	private List<WifiP2pDevice> p2pDevices = new ArrayList<>();
 	private WifiP2pDevice localDevice;
 
-	private ActivityWithNetwork activity;
 	private NetworkServiceListener serviceListener;
 	private CountDownLatch startRecvFileSignal;
 
@@ -130,13 +126,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 	public void resetPeers() {
 		p2pDevices.clear();
-		if (activity != null) {
-			activity.resetPeers();
-		}
-	}
-
-	public void registerActivity(ActivityWithNetwork activity) {
-		this.activity = activity;
 	}
 
 	public void discoverPeers() {
@@ -217,7 +206,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 
 			@Override
 			public void onSuccess() {
-//				((OpponentsActivity) activity).onDisconnect();
 			}
 
 			@Override
@@ -227,20 +215,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		});
 	}
 
-	public void postRecvPeerList(int count) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_REPORT_RECV_PEER_LIST;
-		msg.arg1 = count;
-		activity.getHandler().sendMessage(msg);
-	}
-
-	public void postSendPeerInfoResult(int result) {
-		Message msg = new Message();
-		msg.what = ConfigInfo.MSG_REPORT_SEND_PEER_INFO_RESULT;
-		msg.arg1 = result;
-		activity.getHandler().sendMessage(msg);
-	}
-
 	public void bindListener(NetworkServiceListener listener) {
 		serviceListener = listener;
 	}
@@ -248,14 +222,8 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	@Override
 	public void updateThisDevice(WifiP2pDevice device) {
 		localDevice = device;
-		if (activity != null) {
-			activity.updateThisDevice(OpponentFactory.buildFromWifiP2pDevice(device));
-		}
 	}
 
-	public ActivityWithNetwork getActivity() {
-		return activity;
-	}
 
 	public List<WifiP2pDevice> getP2pDevices() {
 		return p2pDevices;
@@ -330,8 +298,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 			p2pDevices.clear();
 			p2pDevices.addAll(peers.getDeviceList());
 		}
-		activity.updatePeers(
-				new ArrayList<>(peers.getDeviceList()));
 	}
 
 	public class NetworkServiceBinder extends Binder {

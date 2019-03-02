@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F3F0D1"
 
-    tools:context="ru.rienel.clicker.activity.MainActivity">
+    tools:context="ru.rienel.clicker.activity.main.MainActivity">
 
 <RelativeLayout
     android:layout_width="match_parent"

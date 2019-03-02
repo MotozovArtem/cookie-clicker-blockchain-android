@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.activity.game.GameActivity;
+import ru.rienel.clicker.activity.opponents.OpponentsActivity;
+import ru.rienel.clicker.activity.statistics.StatisticsActivity;
 
 public class MainActivity extends AppCompatActivity {
 	private Button startGame;

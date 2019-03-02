@@ -1,4 +1,4 @@
-package ru.rienel.clicker.ui.view;
+package ru.rienel.clicker.activity.opponents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.rienel.clicker.R;
-import ru.rienel.clicker.activity.OpponentsActivity;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
 
-public class OpponentListFragment extends Fragment {
+public class OpponentListFragment extends Fragment implements OpponentsContract.View {
 	private static final boolean HAS_MENU = true;
 
 	private RecyclerView opponentRecyclerView;
@@ -33,6 +32,7 @@ public class OpponentListFragment extends Fragment {
 	private List<Opponent> opponentList;
 	private OpponentsActivity opponentsActivity;
 	private NetworkService networkService;
+	private OpponentsPresenter presenter;
 
 	@Nullable
 	@Override
@@ -46,9 +46,9 @@ public class OpponentListFragment extends Fragment {
 			opponentsActivity = (OpponentsActivity) getActivity();
 		}
 
-		if (opponentsActivity != null) {
-			networkService = opponentsActivity.getNetworkService();
-		}
+//		if (opponentsActivity != null) {
+//			networkService = opponentsActivity.getNetworkService();
+//		}
 		updateUi();
 		return view;
 	}
@@ -58,7 +58,7 @@ public class OpponentListFragment extends Fragment {
 		switch (item.getItemId()) {
 			case R.id.menu_item_update:
 				if (networkService == null) {
-					networkService = opponentsActivity.getNetworkService();
+//					networkService = opponentsActivity.getNetworkService();
 				}
 				networkService.discoverPeers();
 				updateUi();
@@ -123,6 +123,16 @@ public class OpponentListFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void setPresenter(OpponentsContract.Presenter presenter) {
+
+	}
+
+	@Override
+	public void showOpponents() {
+
+	}
+
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {
 		private List<Opponent> opponentList;
 
@@ -175,7 +185,7 @@ public class OpponentListFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			if (networkService == null) {
-				networkService = opponentsActivity.getNetworkService();
+//				networkService = opponentsActivity.getNetworkService();
 			}
 
 			if (networkService != null) {

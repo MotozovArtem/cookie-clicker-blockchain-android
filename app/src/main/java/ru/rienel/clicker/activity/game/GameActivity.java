@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.game;
 
 import java.util.Date;
 import java.util.Locale;
@@ -26,12 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.activity.shop.ShopActivity;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
-import ru.rienel.clicker.presenter.GamePresenter;
 import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener, GameView, OnLoadCompleteListener {

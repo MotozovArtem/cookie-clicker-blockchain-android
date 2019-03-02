@@ -1,4 +1,4 @@
-package ru.rienel.clicker.ui.view;
+package ru.rienel.clicker.activity.statistics;
 
 import java.text.DateFormat;
 import java.util.GregorianCalendar;
@@ -22,7 +22,7 @@ import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 
-public class BlockListFragment extends Fragment {
+public class BlockListFragment extends Fragment implements StatisticsContract.View{
 	private RecyclerView blockRecyclerView;
 	private BlockAdapter blockAdapter;
 	private Repository<Block> blockRepository;
@@ -45,6 +45,11 @@ public class BlockListFragment extends Fragment {
 		List<Block> blockList = blockRepository.findAll();
 		blockAdapter = new BlockAdapter(blockList);
 		blockRecyclerView.setAdapter(blockAdapter);
+	}
+
+	@Override
+	public void setPresenter(StatisticsContract.Presenter presenter) {
+
 	}
 
 	private class BlockAdapter extends RecyclerView.Adapter<BlockListFragment.BlockHolder> {

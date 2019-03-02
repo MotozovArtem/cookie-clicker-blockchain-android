@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.statistics;
 
 import java.util.Locale;
 
@@ -12,7 +12,6 @@ import ru.rienel.clicker.R;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
-import ru.rienel.clicker.ui.view.BlockListFragment;
 
 public class StatisticsActivity extends AppCompatActivity {
 

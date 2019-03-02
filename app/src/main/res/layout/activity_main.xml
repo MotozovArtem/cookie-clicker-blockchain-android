@@ -9,7 +9,7 @@
     android:background="#F3F0D1"
     android:orientation="vertical"
 
-    tools:context="ru.rienel.clicker.activity.GameActivity">
+    tools:context="ru.rienel.clicker.activity.game.GameActivity">
 
 
     <TextView

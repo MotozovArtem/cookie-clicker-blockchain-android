@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.game;
 
 public interface GameView {
 	void showWin();

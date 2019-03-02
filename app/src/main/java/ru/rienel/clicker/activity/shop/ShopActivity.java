@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.shop;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.activity.game.GameActivity;
 
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 

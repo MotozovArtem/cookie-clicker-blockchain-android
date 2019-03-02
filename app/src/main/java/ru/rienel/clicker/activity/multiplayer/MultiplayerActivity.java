@@ -1,4 +1,4 @@
-package ru.rienel.clicker.activity;
+package ru.rienel.clicker.activity.multiplayer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
