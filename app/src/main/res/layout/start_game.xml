@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F0D1"
+
+    tools:context="ru.rienel.clicker.activity.MainActivity">
+
+<RelativeLayout
+    android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="#F3F0D1"
-	tools:context="ru.rienel.clicker.activity.MainActivity">
+    android:layout_marginTop="30dp"
+    android:layout_marginStart="40dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginBottom="5dp"
+    >
 
+    <ImageView
+        android:id="@+id/imageDonut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/imageofdonutText"
+        app:srcCompat="@drawable/donut"
+       />
 
-	<ImageView
-		android:id="@+id/imageDonut"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="20dp"
-		app:srcCompat="@drawable/donutbez2"
-        android:contentDescription="@string/imageofdonutText" />
-
-	<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		xmlns:tools="http://schemas.android.com/tools"
 		android:id="@+id/activity_main"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_below="@+id/imageDonut"
-		android:layout_alignParentStart="true"
-		tools:context="ru.alexanderklimov.as22.MainActivity">
+		android:layout_alignParentStart="true">
+
 
 		<Button
-			style="@style/TextStyle"
+            style="@style/TextStyle"
 			android:id="@+id/start"
-			android:layout_width="300dp"
-			android:layout_height="75dp"
+			android:layout_width="match_parent"
+			android:layout_height="65dp"
 			android:layout_centerInParent="true"
-			android:layout_marginTop="30dp"
-			android:background="@drawable/bbkg"
+			android:background="@drawable/buttons_style"
 			android:text="@string/new_gameText"
 			app:layout_constraintBottom_toTopOf="@+id/multiplayer"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -46,10 +54,10 @@
 
 		<Button
 			android:id="@+id/multiplayer"
-			android:layout_width="300dp"
-			android:layout_height="75dp"
+			android:layout_width="match_parent"
+			android:layout_height="65dp"
 			android:layout_centerInParent="true"
-			android:background="@drawable/bbkg"
+			android:background="@drawable/buttons_style"
 			android:text="@string/multiplayerText"
 			style="@style/TextStyle"
 			app:layout_constraintBottom_toTopOf="@+id/statistic"
@@ -61,11 +69,11 @@
 
 		<Button
 			android:id="@+id/statistic"
-			android:layout_width="300dp"
-			android:layout_height="75dp"
+			android:layout_width="match_parent"
+			android:layout_height="65dp"
 			android:layout_below="@+id/multiplayer"
 			android:layout_centerInParent="true"
-			android:background="@drawable/bbkg"
+			android:background="@drawable/buttons_style"
 			android:text="@string/statisticText"
 			style="@style/TextStyle"
 			app:layout_constraintBottom_toTopOf="@+id/settings"
@@ -77,10 +85,10 @@
 
 		<Button
 			android:id="@+id/settings"
-			android:layout_width="300dp"
-			android:layout_height="75dp"
+			android:layout_width="match_parent"
+			android:layout_height="65dp"
 			android:layout_centerInParent="true"
-			android:background="@drawable/bbkg"
+			android:background="@drawable/buttons_style"
 			android:text="@string/settings"
 			style="@style/TextStyle"
 			app:layout_constraintBottom_toBottomOf="parent"
@@ -91,6 +99,9 @@
 			app:layout_constraintTop_toBottomOf="@+id/statistic" />
 
 
-	</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
 
 </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

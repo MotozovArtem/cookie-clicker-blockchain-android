@@ -56,7 +56,7 @@
         android:id="@+id/imageDonut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/donut_vert"
+        android:background="@drawable/donut_for_game"
         android:onClick="onClick"
         android:scaleType="center"
         android:soundEffectsEnabled="false"
