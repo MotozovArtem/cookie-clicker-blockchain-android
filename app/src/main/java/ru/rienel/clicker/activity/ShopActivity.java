@@ -13,7 +13,7 @@ import ru.rienel.clicker.R;
 
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
-	private int dpc;
+	private int donutPerTap;
 	private int points;
 	private long currentTime;
 	private boolean flagShop = false;
@@ -43,7 +43,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		textViewPoints = findViewById(R.id.textView1);
 		textViewDPC = findViewById(R.id.textView2);
 		textViewPoints.setText(String.valueOf(getResources().getString(R.string.points) + this.points));
-		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.dpc));
+		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerTap));
 
 		currentTime = getIntent().getLongExtra("currentTime", 60000);
 		checkingPoints();
@@ -55,20 +55,21 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.btn_2) {
-			flagShop = updateDps(2, 10);
-			checkingPoints();
-			//showDonutFragment();
-		} else if (v.getId() == R.id.btn_4) {
-			flagShop = updateDps(4, 20);
-			checkingPoints();
-			//showDonutFragment();
-		} else if (v.getId() == R.id.btn_5) {
-			flagShop = updateDps(5, 30);
-			checkingPoints();
-			//showDonutFragment();
-		} else if (v.getId() == R.id.btnBack) {
-			showDonutFragment();
+        if (v.getId() == R.id.btn_2) {
+            int tempTap = saves.getInt("tempTap",0);
+            saves.edit().putInt("tempTap", tempTap + 1).apply();
+            updatePoints(10);
+            updateTextView();
+            checkingPoints();
+        } else if (v.getId() == R.id.btn_4) {
+            int tempAutoTap = saves.getInt("tempAutoTap",0);
+            saves.edit().putInt("tempAutoTap", tempAutoTap + 1).apply();
+            updatePoints(20);
+            updateTextView();
+            checkingPoints();
+        } else if (v.getId() == R.id.btnBack) {
+//        	startActivity(new Intent(this, MainActivity.class));
+        	finish();
 		}
 	}
 
@@ -81,12 +82,12 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private boolean updateDps(int dpc, int points) {
-		this.dpc = this.dpc + dpc;
-		updatePoints(points);
-		updateTextView();
-		return true;
-	}
+//	private boolean updateDps(int donutPerTap, int points) {
+//		this.donutPerTap = this.donutPerTap + donutPerTap;
+//		updatePoints(points);
+//		updateTextView();
+//		return true;
+//	}
 
 	private void updatePoints(int points) {
 		this.points -= points;
@@ -104,7 +105,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 			if (points >= 20) {
 				plus4Donut.setEnabled(true);
 				if (points >= 30) {
-					plus5Donut.setEnabled(true);
+					plus5Donut.setEnabled(false);
 				} else {
 					plus5Donut.setEnabled(false);
 				}
@@ -122,7 +123,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("dpc_state", dpc);
+		outState.putInt("dpc_state", donutPerTap);
 		outState.putInt("points_state", points);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
@@ -131,7 +132,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		dpc = savedInstanceState.getInt("dpc_state");
+		donutPerTap = savedInstanceState.getInt("dpc_state");
 		points = savedInstanceState.getInt("points_state");
 		flagShop = savedInstanceState.getBoolean("flagShop_state");
 		currentTime = savedInstanceState.getLong("currentTime_state");
@@ -141,13 +142,13 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
 		editor.putInt("points", points);
-		editor.putInt("DPC", dpc);
+		editor.putInt("donutPerTap", dpc);
 		editor.apply();
 	}
 
 	private void loadGameSaves () {
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
-			this.dpc = saves.getInt("DPC",0);
+			this.donutPerTap = saves.getInt("donutPerTap",0);
 			this.points = saves.getInt("points", 0);
 
 	}
@@ -161,12 +162,13 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onPause() {
 		super.onPause();
-		saveGameSaves(this.points, this.dpc);
+		saveGameSaves(this.points, this.donutPerTap);
 	}
 
 	private void updateTextView() {
 		textViewPoints.setText(String.valueOf(getResources().getString(R.string.points) + this.points));
-		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.dpc));
+		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerTap));
 	}
+
 }
 

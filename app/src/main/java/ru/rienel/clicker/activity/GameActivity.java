@@ -44,7 +44,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private Button shop;
 	private ProgressBar progressBar;
 	private Integer points;
-	private int donutPerClick;
+	private int donutPerTap;
 	private CountDownTimer countDownTimerBoost;
 	private boolean flagShop;
 	private long timer;
@@ -58,12 +58,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	private AlertDialog.Builder dialog;
 	private Context context;
 	private Repository<Block> blockRepository;
+	private Button incTap;
+	private Button autoTap;
+	private int tempTap;
+	private int tempAutoTap;
 
-	SoundPool soundPool;
-	int soundId;
-	MediaPlayer mediaPlayer;
+	private SoundPool soundPool;
+	private int soundId;
+	private MediaPlayer mediaPlayer;
 
-	SharedPreferences saves;
+	private SharedPreferences saves;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		setContentView(R.layout.activity_main);
 
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
-		loadDPC();
+		loadGameSaves();
+		incTap = findViewById(R.id.btnIncTap);
+		autoTap = findViewById(R.id.btnAutoTap);
+		checkPurchasedItem(incTap, autoTap);
 
 		points = 0;
 		point = findViewById(R.id.tvPoints);
@@ -102,13 +109,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 		blockRepository = new BlockDaoImpl(this);
 //		if (savedInstanceState == null) {   // app started at first
-//			donutPerClick = 1;
+//			donutPerTap = 1;
 //			points = 0;
 //			flagShop = false;
 //			currentTime = 0;
 //			currentTimeBoost = 0;
 //		} else {
-//			donutPerClick = savedInstanceState.getInt("dpc_state");
+//			donutPerTap = savedInstanceState.getInt("dpc_state");
 //			points = savedInstanceState.getInt("points_state");
 //			flagShop = savedInstanceState.getBoolean("flagShop_state");
 //			currentTime = savedInstanceState.getLong("currentTime_state");
@@ -224,7 +231,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 					progressBar.setVisibility(View.GONE);
 					currentTimeBoost = 0;
 					timeBoost = 20000;
-					donutPerClick = 1;
+					donutPerTap = 1;
 					flagShop = false;
 				}
 			};
@@ -254,7 +261,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("dpc_state", donutPerClick);
+		outState.putInt("dpc_state", donutPerTap);
 		outState.putInt("points_state", points);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
@@ -264,7 +271,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		donutPerClick = savedInstanceState.getInt("dpc_state");
+		donutPerTap = savedInstanceState.getInt("dpc_state");
 		points = savedInstanceState.getInt("points_state");
 		flagShop = savedInstanceState.getBoolean("flagShop_state");
 		currentTime = savedInstanceState.getLong("currentTime_state");
@@ -276,13 +283,46 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (v.getId() == R.id.imageDonut) {
 			soundPool.play(soundId, 1, 1, 0, 0, 1);
 			v.startAnimation(donutClickAnimation);
+		} else if (v.getId() == R.id.btnIncTap) {
+			this.donutPerTap += 2;
+			this.tempTap-= 1;
+			saves.edit().putInt("tempTap", this.tempTap).apply();
+			checkPurchasedItem(incTap, autoTap);
+			new CountDownTimer(10000, 1000) {
+
+				@Override
+				public void onTick(long l) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					donutPerTap -= 2;
+				}
+			}.start();
+		} else if (v.getId() == R.id.btnAutoTap) {
+			this.tempAutoTap-= 1;
+			saves.edit().putInt("tempAutoTap", this.tempAutoTap).apply();
+			checkPurchasedItem(incTap, autoTap);
+			new CountDownTimer(10000, 1000) {
+
+				@Override
+				public void onTick(long l) {
+					donutClick();
+				}
+
+				@Override
+				public void onFinish() {
+
+				}
+			}.start();
 		}
 	}
 
 	private void donutClick() {
-		this.points += this.donutPerClick;
+		this.points += this.donutPerTap;
 		point.setText(Integer.toString(points));
-		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
+		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerTap));
 	}
 
 
@@ -292,7 +332,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (data == null) {
 			return;
 		}
-		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
+		donutPerTap = data.getIntExtra("donutPerTap", donutPerTap);
 		points = data.getIntExtra("points", points);
 		flagShop = data.getBooleanExtra("flagShop", flagShop);
 		currentTime = data.getLongExtra("currentTime", currentTime);
@@ -312,9 +352,33 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		editor.apply();
 	}
 
-	private int loadDPC() {
-		this.donutPerClick = saves.getInt("DPC", 0);
-		return this.donutPerClick;
+	private void loadGameSaves() {
+		this.donutPerTap = saves.getInt("donutPerTap", 0);
+		this.tempTap = saves.getInt("tempTap", 0);
+		this.tempAutoTap = saves.getInt("tempAutoTap", 0);
 	}
+
+	private void checkPurchasedItem(Button incTap, Button autoTap) {
+		if (tempTap > 0) {
+			incTap.setEnabled(true);
+//			incTap.setText(R.string.IncTap + " " + tempTap);
+			String message = getResources().getString(R.string.IncTap) + " -" + tempTap;
+			incTap.setText(message);
+		} else {
+			incTap.setEnabled(false);
+			incTap.setText(R.string.IncTap);
+		}
+
+		if (tempAutoTap > 0) {
+			autoTap.setEnabled(true);
+//			autoTap.setText(R.string.AutoTap + " " + tempAutoTap);
+			String message = getResources().getString(R.string.AutoTap) + " -" + tempAutoTap;
+			autoTap.setText(message);
+		} else {
+			autoTap.setEnabled(false);
+			autoTap.setText(R.string.AutoTap);
+		}
+	}
+
 
 }

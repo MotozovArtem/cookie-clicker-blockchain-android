@@ -59,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
 			SharedPreferences.Editor editor = saves.edit();
 			editor.putBoolean("hasVisited", true);
 			editor.putInt("points", 0);
-			editor.putInt("DPC", 1);
+			editor.putInt("donutPerTap", 1);
+			editor.putInt("tempTap",0); // Increment tap temporary (purchased for comman points)
+			editor.putInt("tempAutoTap",0); // Auto tap temporary (purchased for comman points)
+			editor.putInt("mPoints", 0); // Multiplayer Points
 			editor.apply();
 			return true;
 		}

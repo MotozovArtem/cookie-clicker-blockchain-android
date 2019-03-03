@@ -86,6 +86,27 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageDonut" />
 
+    <Button
+        android:id="@+id/btnIncTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/IncTap"
+        android:onClick="onClick"
+        style="@style/Widget.AppCompat.Button.Colored"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPoints"
+        />
+
+    <Button
+        android:id="@+id/btnAutoTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/AutoTap"
+        android:onClick="onClick"
+        style="@style/Widget.AppCompat.Button.Colored"
+        app:layout_constraintLeft_toRightOf="@id/btnIncTap"
+        app:layout_constraintTop_toBottomOf="@id/tvPoints"
+        />
 
 
 
