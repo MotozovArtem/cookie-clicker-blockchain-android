@@ -3,7 +3,7 @@ package ru.rienel.clicker.common;
 public class Preconditions {
 	public static void checkNotNull(Object o) {
 		if (o == null) {
-			throw new IllegalArgumentException("Argument should be noy null");
+			throw new IllegalArgumentException("Argument should be not null");
 		}
 	}
 

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:id="@+id/game_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#fff"
+		android:orientation="horizontal"
+		tools:context="ru.rienel.clicker.activity.game.GameActivity">
+
+
+	<TextView
+			android:id="@+id/title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/title"
+			android:textColor="@color/colorTitle"
+			android:textSize="30sp"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
+
+	<TextView
+			android:id="@+id/time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			app:layout_constraintTop_toBottomOf="@id/title"/>
+
+	<ProgressBar
+			android:id="@+id/progressBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:max="20"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/time"/>
+
+
+	<TextView
+			android:id="@+id/stopwatch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="000"
+			android:textColor="@color/colorTitle"
+			android:textSize="32sp"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toLeftOf="@id/donut"
+			app:layout_constraintTop_toBottomOf="@id/progressBar"/>
+
+
+	<ImageView
+			android:id="@+id/donut"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/donut_hor"
+			android:onClick="onClick"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/stopwatch"/>
+
+	<TextView
+			android:id="@+id/newClick"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="@id/donut"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toBottomOf="@id/donut"
+			android:textSize="26sp"
+			android:textColor="@color/colorToast"/>
+
+	<TextView
+			android:id="@+id/tvPoints"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="32sp"
+			app:layout_constraintLeft_toLeftOf="@id/btnShop"
+			app:layout_constraintRight_toRightOf="@id/btnShop"
+			app:layout_constraintTop_toBottomOf="@id/progressBar"
+			app:layout_constraintBottom_toTopOf="@id/btnShop"
+			android:text="000"/>
+
+	<Button
+			android:id="@+id/btnShop"
+			style="@style/Widget.AppCompat.Button.Colored"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="onClick"
+			android:text="@string/shop"
+			android:drawableLeft="@drawable/icon_sale"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintLeft_toRightOf="@id/donut"
+			app:layout_constraintTop_toBottomOf="@id/progressBar"
+			app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>

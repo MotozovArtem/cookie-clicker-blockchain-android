@@ -34,7 +34,7 @@ public class OpponentsActivity extends AppCompatActivity {
 				(OpponentListFragment) fragmentManager.findFragmentById(R.id.opponent_fragment_container);
 
 		if (opponentListFragment == null) {
-			opponentListFragment = new OpponentListFragment();
+			opponentListFragment = OpponentListFragment.newInstance();
 			fragmentManager.beginTransaction()
 					.add(R.id.opponent_fragment_container, opponentListFragment)
 					.commit();

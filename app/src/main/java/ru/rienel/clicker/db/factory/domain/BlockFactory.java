@@ -4,7 +4,7 @@ import java.util.Date;
 
 import android.database.Cursor;
 
-import ru.rienel.clicker.db.domain.AppDbSchema.BlocksTable;
+import ru.rienel.clicker.db.domain.AppDataBaseSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 
 public class BlockFactory {

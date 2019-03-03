@@ -1,6 +1,6 @@
 package ru.rienel.clicker.db.domain;
 
-public class AppDbSchema {
+public class AppDataBaseSchema {
 	public static final class BlocksTable{
 		public static final String NAME = "blocks";
 

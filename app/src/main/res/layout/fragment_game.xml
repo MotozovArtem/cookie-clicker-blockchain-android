@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#F3F0D1">
+
+	<TextView
+			android:id="@+id/title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/title"
+			android:textColor="@color/colorTitle"
+			android:textSize="40sp"
+			android:layout_centerHorizontal="true"/>
+
+	<TextView
+			android:id="@+id/time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@id/title"
+			android:textSize="18sp"/>
+
+	<ProgressBar
+			android:id="@+id/progressBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:max="20"
+			android:layout_below="@id/time"
+			android:layout_centerHorizontal="true"/>
+
+
+	<TextView
+			android:id="@+id/stopwatch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@id/progressBar"
+			android:textColor="@color/colorTitle"
+			android:textSize="32sp"/>
+
+
+	<ImageView
+			android:id="@+id/donut"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/stopwatch"
+			android:background="@drawable/donut_for_game"
+			android:scaleType="center"
+			android:soundEffectsEnabled="false"
+			android:layout_centerHorizontal="true"/>
+
+	<TextView
+			android:id="@+id/newClick"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"
+			android:textSize="26sp"
+			android:textColor="@color/colorToast"/>
+
+	<TextView
+			android:id="@+id/tvPoints"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="20dp"
+			android:paddingTop="20dp"
+			android:textSize="32sp"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@id/donut"/>
+</RelativeLayout>

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
-import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
 	private static final boolean HAS_MENU = true;
@@ -33,6 +32,10 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	private List<Opponent> opponentList;
 
 	private OpponentsContract.Presenter presenter;
+
+	public static OpponentListFragment newInstance() {
+		return new OpponentListFragment();
+	}
 
 	public OpponentListFragment() {
 	}

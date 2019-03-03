@@ -2,7 +2,6 @@ package ru.rienel.clicker.service;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -30,9 +30,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import ru.rienel.clicker.common.ThreadPoolManager;
-
-public class NetworkService extends Service implements ChannelListener, WifiP2pNetworkServiceListener {
+public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
 	private static final String TAG = NetworkService.class.getName();
 
 	private final IntentFilter intentFilter = new IntentFilter();
@@ -40,7 +38,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	private PropertyChangeSupport changeSupport;
 
 	private NetworkServiceBinder binder = new NetworkServiceBinder();
-	private ThreadPoolManager threadPoolManager;
 	private WifiP2pManager wifiP2pManager;
 
 	private Channel channel;
@@ -69,18 +66,12 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 		wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
 		channel = initialize(this, getMainLooper(), this);
 
-		receiver = new WifiAppBroadcastReceiver(this, this);
+		receiver = new WifiAppBroadcastReceiver(this, this, this);
 		registerReceiver(receiver, intentFilter);
 
 		p2pDevices = new ArrayList<>();
 
 		changeSupport = new PropertyChangeSupport(this);
-
-		try {
-			threadPoolManager = new ThreadPoolManager(this, ConfigInfo.LISTEN_PORT, 5);
-		} catch (IOException e) {
-			Log.e(TAG, "onCreate: ", e);
-		}
 	}
 
 	private Channel initialize(Context context, Looper looper, ChannelListener listener) {
@@ -91,7 +82,6 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	public void onDestroy() {
 		Log.d(TAG, "onDestroy: started");
 		super.onDestroy();
-		threadPoolManager.myDestroy();
 	}
 
 	@Nullable
@@ -267,6 +257,67 @@ public class NetworkService extends Service implements ChannelListener, WifiP2pN
 	public class NetworkServiceBinder extends Binder {
 		public NetworkService getService() {
 			return NetworkService.this;
+		}
+	}
+
+	public static class WifiAppBroadcastReceiver extends BroadcastReceiver {
+
+		private static final String TAG = WifiAppBroadcastReceiver.class.getName();
+
+		private NetworkService service;
+		private WifiP2pManager.PeerListListener peerListListener;
+		private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
+
+		public WifiAppBroadcastReceiver(NetworkService service,
+		                                WifiP2pManager.PeerListListener peerListListener,
+		                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
+			super();
+			this.service = service;
+			this.peerListListener = peerListListener;
+			this.connectionInfoListener = connectionInfoListener;
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
+
+				int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
+				if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+					service.setP2pEnabled(true);
+					service.discoverPeers();
+				} else {
+					service.setP2pEnabled(false);
+					service.resetPeers();
+
+				}
+				Log.d(TAG, "P2P state changed - state:" + state);
+			} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+				if (service.isP2pEnabled()) {
+					service.requestPeers(peerListListener);
+				}
+				Log.d(TAG, "P2P peers changed");
+			} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
+				if (!service.isP2pEnabled()) {
+					return;
+				}
+
+				NetworkInfo networkInfo = intent
+						.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+				if (networkInfo.isConnected()) {
+					service.requestConnectionInfo(connectionInfoListener);
+				} else {
+					service.resetPeers();
+					service.discoverPeers();
+				}
+				Log.d(TAG, "P2P connection changed - networkInfo:" + networkInfo.toString());
+			} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+				WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(
+						WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+				Log.d(TAG, "P2P this device changed - wifiP2pDevice:" + wifiP2pDevice.toString());
+			} else {
+				Log.d(TAG, "Unmatched P2P change action - " + action);
+			}
 		}
 	}
 }
