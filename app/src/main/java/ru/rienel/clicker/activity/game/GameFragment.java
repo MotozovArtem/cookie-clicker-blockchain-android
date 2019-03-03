@@ -157,11 +157,17 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 				/*TODO: get message from End game dialog fragment*/
 				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", clicks);
 
-				presenter.finishGame(message);
+				presenter.finishGame(message, 100); // TODO: set level
 //				dialog.setMessage(message);
 //				dialog.show();
 			}
 		};
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		loadInstanceState(savedInstanceState);
 	}
 
 	@Override

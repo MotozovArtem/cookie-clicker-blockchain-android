@@ -57,8 +57,8 @@ public class GamePresenter implements GameContract.Presenter {
 	}
 
 	@Override
-	public void finishGame(String message) {
-		Block newBlock = BlockFactory.build(message, 100,
+	public void finishGame(String message, Integer goal) {
+		Block newBlock = BlockFactory.build(message, goal,
 				new Date(System.currentTimeMillis()), "None",
 				"none", "HASH");
 		try {

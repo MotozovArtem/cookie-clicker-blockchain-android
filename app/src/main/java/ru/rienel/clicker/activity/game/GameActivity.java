@@ -30,11 +30,4 @@ public class GameActivity extends AppCompatActivity {
 
 		gamePresenter = new GamePresenter(fragment);
 	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		// fixme: Migrate restore instance state to GameFragment
-		// loadInstanceState(savedInstanceState);
-	}
 }

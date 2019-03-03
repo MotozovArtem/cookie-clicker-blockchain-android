@@ -23,6 +23,6 @@ public interface GameContract {
 
 		void handleClick();
 
-		void finishGame(String message);
+		void finishGame(String message, Integer goal);
 	}
 }
