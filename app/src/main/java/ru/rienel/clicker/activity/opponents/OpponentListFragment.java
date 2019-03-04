@@ -184,6 +184,9 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 		@Override
 		public void onClick(View v) {
+			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
+
+			presenter.handleOnOpponentListClick(p2pConfig);
 		}
 
 		private WifiP2pConfig getConfigForConnection(Opponent opponent) {

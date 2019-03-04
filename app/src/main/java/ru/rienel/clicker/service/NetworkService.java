@@ -116,7 +116,10 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	}
 
 	public void resetPeers() {
+		List<WifiP2pDevice> devices = new ArrayList<>(p2pDevices);
 		p2pDevices.clear();
+
+		changeSupport.firePropertyChange("p2pDevices", devices, p2pDevices);
 	}
 
 	public void discoverPeers() {
@@ -177,8 +180,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 			@Override
 			public void onFailure(int reason) {
-				Toast.makeText(
-						NetworkService.this,
+				Toast.makeText(NetworkService.this,
 						"Connect abort request failed. Reason Code: "
 								+ reason, Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "onFailure: connect abort request failed. Reason code" + reason);
@@ -264,7 +266,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 		private static final String TAG = WifiAppBroadcastReceiver.class.getName();
 
-		private NetworkService service;
+		private NetworkService networkService;
 		private WifiP2pManager.PeerListListener peerListListener;
 		private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
 
@@ -272,7 +274,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		                                WifiP2pManager.PeerListListener peerListListener,
 		                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
 			super();
-			this.service = service;
+			this.networkService = service;
 			this.peerListListener = peerListListener;
 			this.connectionInfoListener = connectionInfoListener;
 		}
@@ -284,31 +286,30 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 				int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 				if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-					service.setP2pEnabled(true);
-					service.discoverPeers();
+					networkService.setP2pEnabled(true);
+					networkService.discoverPeers();
 				} else {
-					service.setP2pEnabled(false);
-					service.resetPeers();
-
+					networkService.setP2pEnabled(false);
+					networkService.resetPeers();
 				}
 				Log.d(TAG, "P2P state changed - state:" + state);
 			} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-				if (service.isP2pEnabled()) {
-					service.requestPeers(peerListListener);
+				if (networkService.isP2pEnabled()) {
+					networkService.requestPeers(peerListListener);
 				}
 				Log.d(TAG, "P2P peers changed");
 			} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-				if (!service.isP2pEnabled()) {
+				if (!networkService.isP2pEnabled()) {
 					return;
 				}
 
 				NetworkInfo networkInfo = intent
 						.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 				if (networkInfo.isConnected()) {
-					service.requestConnectionInfo(connectionInfoListener);
+					networkService.requestConnectionInfo(connectionInfoListener);
 				} else {
-					service.resetPeers();
-					service.discoverPeers();
+					networkService.resetPeers();
+					networkService.discoverPeers();
 				}
 				Log.d(TAG, "P2P connection changed - networkInfo:" + networkInfo.toString());
 			} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {

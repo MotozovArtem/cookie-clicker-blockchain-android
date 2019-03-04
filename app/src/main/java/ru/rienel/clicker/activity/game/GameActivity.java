@@ -17,7 +17,6 @@ public class GameActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity);
 
-
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		GameFragment fragment = (GameFragment) fragmentManager.findFragmentById(R.id.game_container);
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.IBinder;
 import android.util.Log;
@@ -72,5 +73,12 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		updateOpponents();
+	}
+
+	@Override
+	public void handleOnOpponentListClick(WifiP2pConfig config) {
+		Preconditions.checkNotNull(config);
+
+		networkService.connect(config);
 	}
 }
