@@ -15,12 +15,14 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
 	private int donutPerTap;
 	private int points;
+	private int mPoints;
 	private long currentTime;
 	private boolean flagShop = false;
 
-	private Button plus2Donut;
-	private Button plus4Donut;
+	private Button temporaryTap;
+	private Button temporaryAutoTap;
 	private Button plus5Donut;
+	private TextView textViewMPoints;
 	private TextView textViewPoints;
 	private TextView textViewDPC;
 	private SharedPreferences saves;
@@ -32,44 +34,48 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shop_activity);
 
-		plus2Donut = findViewById(R.id.btn_2);
-		plus4Donut = findViewById(R.id.btn_4);
+		temporaryTap = findViewById(R.id.btn_2);
+		temporaryAutoTap = findViewById(R.id.btn_4);
 		plus5Donut = findViewById(R.id.btn_5);
-		plus2Donut.setEnabled(false);
-		plus4Donut.setEnabled(false);
+		temporaryTap.setEnabled(false);
+		temporaryAutoTap.setEnabled(false);
 		plus5Donut.setEnabled(false);
 
 		loadGameSaves();
-		textViewPoints = findViewById(R.id.textView1);
-		textViewDPC = findViewById(R.id.textView2);
-		textViewPoints.setText(String.valueOf(getResources().getString(R.string.points) + this.points));
-		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerTap));
+		textViewPoints = findViewById(R.id.pointsTextView);
+		textViewMPoints = findViewById(R.id.mPointsTextView);
+		textViewDPC = findViewById(R.id.donutPerClickTextView);
+		updateTextView();
+
 
 		currentTime = getIntent().getLongExtra("currentTime", 60000);
 		checkingPoints();
-
-
-
 
 	}
 
 	@Override
 	public void onClick(View v) {
-        if (v.getId() == R.id.btn_2) {
-            int tempTap = saves.getInt("tempTap",0);
-            saves.edit().putInt("tempTap", tempTap + 1).apply();
-            updatePoints(10);
-            updateTextView();
-            checkingPoints();
-        } else if (v.getId() == R.id.btn_4) {
-            int tempAutoTap = saves.getInt("tempAutoTap",0);
-            saves.edit().putInt("tempAutoTap", tempAutoTap + 1).apply();
-            updatePoints(20);
-            updateTextView();
-            checkingPoints();
-        } else if (v.getId() == R.id.btnBack) {
+		if (v.getId() == R.id.btn_2) {
+			int tempTap = saves.getInt("tempTap", 0);
+			saves.edit().putInt("tempTap", tempTap + 1).apply();
+			updatePoints(10);
+			updateTextView();
+			checkingPoints();
+		} else if (v.getId() == R.id.btn_4) {
+			int tempAutoTap = saves.getInt("tempAutoTap", 0);
+			saves.edit().putInt("tempAutoTap", tempAutoTap + 1).apply();
+			updatePoints(20);
+			updateTextView();
+			checkingPoints();
+		} else if (v.getId() == 0) {  // TODO chahge "0" on multiplayer tap button from XML
+			updateDonutPerTap(1,100);
+		} else if (v.getId() == 0) { // TODO change "0" on multiplaer auto tap button from XML
+			int multiplayerAutoTap = saves.getInt("mAutoTap",0);
+			saves.edit().putInt("mAutoTap", multiplayerAutoTap + 1).apply();
+			updateMPoints(300);
+		} else if (v.getId() == R.id.btnBack) {
 //        	startActivity(new Intent(this, MainActivity.class));
-        	finish();
+			finish();
 		}
 	}
 
@@ -80,44 +86,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-
-//	private boolean updateDps(int donutPerTap, int points) {
-//		this.donutPerTap = this.donutPerTap + donutPerTap;
-//		updatePoints(points);
-//		updateTextView();
-//		return true;
-//	}
-
-	private void updatePoints(int points) {
-		this.points -= points;
-	}
-
-	private void showDonutFragment() {
-		Intent intent = new Intent(this, GameActivity.class);
-		setResult(RESULT_OK, intent);
-		finish();
-	}
-
-	private void checkingPoints() {
-		if (points >= 10) {
-			plus2Donut.setEnabled(true);
-			if (points >= 20) {
-				plus4Donut.setEnabled(true);
-				if (points >= 30) {
-					plus5Donut.setEnabled(false);
-				} else {
-					plus5Donut.setEnabled(false);
-				}
-			} else {
-				plus4Donut.setEnabled(false);
-				plus5Donut.setEnabled(false);
-			}
-		} else {
-			plus2Donut.setEnabled(false);
-			plus4Donut.setEnabled(false);
-			plus5Donut.setEnabled(false);
-		}
 	}
 
 	@Override
@@ -138,21 +106,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		currentTime = savedInstanceState.getLong("currentTime_state");
 	}
 
-	private void saveGameSaves(int points, int dpc) {
-		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = saves.edit();
-		editor.putInt("points", points);
-		editor.putInt("donutPerTap", dpc);
-		editor.apply();
-	}
-
-	private void loadGameSaves () {
-		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
-			this.donutPerTap = saves.getInt("donutPerTap",0);
-			this.points = saves.getInt("points", 0);
-
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -162,12 +115,72 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onPause() {
 		super.onPause();
-		saveGameSaves(this.points, this.donutPerTap);
+		saveGameSaves(this.points, this.donutPerTap, this.mPoints);
+	}
+
+	private boolean updateDonutPerTap(int donutPerTap, int mPoints) {
+		this.donutPerTap -=  donutPerTap;
+		updateMPoints(mPoints);
+		updateTextView();
+		return true;
+	}
+
+	private void updatePoints(int points) {
+		this.points -= points;
+	}
+
+	private void updateMPoints (int mPoints) {
+		this.mPoints -= mPoints;
+	}
+
+	private void showDonutFragment() {
+		Intent intent = new Intent(this, GameActivity.class);
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
+	private void checkingPoints() {
+		if (points >= 10) {
+			temporaryTap.setEnabled(true);
+			if (points >= 20) {
+				temporaryAutoTap.setEnabled(true);
+				if (points >= 30) {
+					plus5Donut.setEnabled(false);
+				} else {
+					plus5Donut.setEnabled(false);
+				}
+			} else {
+				temporaryAutoTap.setEnabled(false);
+				plus5Donut.setEnabled(false);
+			}
+		} else {
+			temporaryTap.setEnabled(false);
+			temporaryAutoTap.setEnabled(false);
+			plus5Donut.setEnabled(false);
+		}
+	}
+
+	private void saveGameSaves(int points, int dpc, int mPoints) {
+		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = saves.edit();
+		editor.putInt("points", points);
+		editor.putInt("donutPerTap", dpc);
+		editor.putInt("mPoints", mPoints);
+		editor.apply();
+	}
+
+	private void loadGameSaves () {
+		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+			this.donutPerTap = saves.getInt("donutPerTap",0);
+			this.points = saves.getInt("points", 0);
+			this.mPoints = saves.getInt("mPoints",0);
+
 	}
 
 	private void updateTextView() {
 		textViewPoints.setText(String.valueOf(getResources().getString(R.string.points) + this.points));
 		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerTap));
+		textViewMPoints.setText(String.valueOf(getResources().getString(R.string.multiplayer_points) + this.mPoints));
 	}
 
 }

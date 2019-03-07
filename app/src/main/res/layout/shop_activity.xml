@@ -88,7 +88,7 @@
             android:textSize="24sp"
             android:textColor="@color/btnText" />
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/pointsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -99,14 +99,25 @@
             />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/donutPerClickTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView1"
+            app:layout_constraintTop_toBottomOf="@id/pointsTextView"
             android:text="@string/DPC"
+            />
+
+        <TextView
+            android:id="@+id/mPointsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/donutPerClickTextView"
+            android:text="@string/multiplayer_points"
             />
 
     </android.support.constraint.ConstraintLayout>

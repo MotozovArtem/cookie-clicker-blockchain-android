@@ -319,11 +319,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-	private void donutClick() {
-		this.points += this.donutPerTap;
-		point.setText(Integer.toString(points));
-		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerTap));
-	}
+
 
 
 
@@ -342,6 +338,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 
+	}
+
+	private void donutClick() {
+		this.points += this.donutPerTap;
+		point.setText(Integer.toString(points));
+		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerTap));
 	}
 
 	private void savePoints(int points) {
