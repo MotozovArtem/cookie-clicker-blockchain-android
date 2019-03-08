@@ -167,7 +167,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
-		loadInstanceState(savedInstanceState);
+		if (savedInstanceState != null) {
+			loadInstanceState(savedInstanceState);
+		}
 	}
 
 	@Override
