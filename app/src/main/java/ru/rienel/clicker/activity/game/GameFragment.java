@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,7 +156,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 				donutImage.clearAnimation();
 				clock.setText(R.string.endGame);
 				/*TODO: get message from End game dialog fragment*/
-				String message = String.format(Locale.ENGLISH, "Вы набрали %d очков", clicks);
+				String message = String.format(Locale.ENGLISH, "You earned %d clicks", clicks);
 
 				presenter.finishGame(message, 100); // TODO: set level
 //				dialog.setMessage(message);
@@ -199,7 +200,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
 		donutImage.startAnimation(rotateAnimation);
 		point.setTextColor(getResources().getColor(R.color.colorPoint));
-		if (currentTime != 0) {
+ 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
 			timer = 60000;
