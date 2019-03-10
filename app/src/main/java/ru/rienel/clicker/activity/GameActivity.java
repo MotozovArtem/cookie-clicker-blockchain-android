@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Bundle;
@@ -65,8 +64,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 	private SoundPool soundPool;
 	private int soundId;
-	private MediaPlayer mediaPlayer;
-
+	private SoundPool backgroundSound;
+	private int backgroundSoundId;
 	private SharedPreferences saves;
 
 	@Override
@@ -91,15 +90,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		context = GameActivity.this;
 
 		// Background sound
-		mediaPlayer = MediaPlayer.create(this,R.raw.epic_sax_guy_v3);
-		mediaPlayer.setLooping(true);
-		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+		backgroundSound = new SoundPool.Builder().setMaxStreams(1).build();
+		backgroundSound.setOnLoadCompleteListener(new OnLoadCompleteListener() {
 			@Override
-			public void onCompletion(MediaPlayer mediaPlayer) {
-				mediaPlayer.stop();
-				mediaPlayer.release();
+			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+						backgroundSound.play(backgroundSoundId,1,1,0,-1,1);
+
 			}
 		});
+		backgroundSoundId = backgroundSound.load(this, R.raw.epic_sax_guy_v6,1);
 
 
 		//Tap sound
@@ -171,7 +170,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		} else {
 			timer = 60000;
 		}
-		mediaPlayer.start();
+		backgroundSound.resume(1);
 		countDownTimer = new CountDownTimer(timer, 1000) {
 			public void onTick(long millisUntilFinished) {
 				if (millisUntilFinished <= 20000) {
@@ -251,8 +250,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		if (flagShop) {
 			countDownTimerBoost.cancel();
 		}
-		mediaPlayer.pause();
-		savePoints(this.points);
+	backgroundSound.pause(1);
+	savePoints(this.points);
 	}
 
 
