@@ -15,7 +15,6 @@ import android.util.Log;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
-import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
@@ -77,7 +76,13 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 		List<Opponent> opponentList = new ArrayList<>(devices.size());
 		for (WifiP2pDevice device : devices) {
-			opponentList.add(OpponentFactory.buildFromWifiP2pDevice(device));
+			Opponent opponent = new Opponent();
+			opponent.setName(device.deviceName);
+			opponent.setMacAddress(device.deviceAddress);
+			networkService.requestConnectionInfo(info -> {
+				opponent.setIpAddress(info.groupOwnerAddress);
+			});
+			opponentList.add(opponent);
 		}
 		opponentsView.updateOpponentsList(opponentList);
 		opponentsView.showOpponents();

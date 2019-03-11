@@ -192,7 +192,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
 			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
-			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getAddress());
+			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
 			startActivity(toGameActivity);
 		}
 
@@ -200,7 +200,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			Preconditions.checkNotNull(opponent);
 
 			WifiP2pConfig config = new WifiP2pConfig();
-			config.deviceAddress = opponent.getAddress();
+			config.deviceAddress = opponent.getMacAddress();
 			return config;
 		}
 	}

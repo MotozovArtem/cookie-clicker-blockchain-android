@@ -2,6 +2,7 @@ package ru.rienel.clicker.activity.opponents;
 
 import java.util.List;
 
+import android.content.Context;
 import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pConfig;
 
@@ -14,6 +15,8 @@ public interface OpponentsContract {
 		void showOpponents();
 
 		void updateOpponentsList(List<Opponent> opponentList);
+
+		Context getContext();
 	}
 
 	interface Presenter extends BasePresenter {

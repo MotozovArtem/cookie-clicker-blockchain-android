@@ -32,6 +32,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import ru.rienel.clicker.common.PropertiesUpdatedName;
+import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 
 public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
 	private static final String TAG = NetworkService.class.getName();
@@ -228,12 +229,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
 		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
 
-		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, 0, 1);
-
-//		if (info.groupFormed && !info.isGroupOwner) {
-//			clientClass = new ClientClass(groupOwnerAddress);
-//			clientClass.start();
-//		}
+//		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, null, OpponentFactory.build(""));
 	}
 
 	@Override

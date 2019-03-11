@@ -43,7 +43,7 @@ public class GamePresenter implements GameContract.Presenter {
 	private Thread serverThread;
 	private Thread sendReceiveThread;
 
-	public GamePresenter(GameContract.View gameView, GameType gameType, String address) {
+	public GamePresenter(GameContract.View gameView, GameType gameType, InetAddress address) {
 		Preconditions.checkNotNull(gameView);
 		Preconditions.checkNotNull(gameType);
 
@@ -53,13 +53,6 @@ public class GamePresenter implements GameContract.Presenter {
 
 		if (GameType.MULTIPLAYER == gameType) {
 			signalHandler = new SignalHandler();
-
-			try {
-				opponentAddress = InetAddress.getByName(address);
-			} catch (UnknownHostException e) {
-				Log.e(TAG, "GamePresenter(Multiplayer): ", e);
-				gameView.errorMultiplayer(e);
-			}
 
 			if (opponentAddress != null) {
 				clientThread = clientFactory.newThread(Client.newInstanceTo(opponentAddress));

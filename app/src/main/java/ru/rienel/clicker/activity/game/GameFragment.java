@@ -117,7 +117,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	}
 
 	private void initializeActivityState(Bundle savedInstanceState) {
-		if (savedInstanceState == null) {   // приложение запущено впервые
+		if (savedInstanceState == null) {
 			donutPerClick = 1;
 			clicks = 0;
 			flagShop = false;

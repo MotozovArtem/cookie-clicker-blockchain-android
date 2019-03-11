@@ -1,10 +1,12 @@
 package ru.rienel.clicker.db.domain;
 
+import java.net.InetAddress;
 import java.util.Objects;
 
 public class Opponent {
 	private String name;
-	private String address;
+	private String macAddress;
+	private InetAddress ipAddress;
 
 	public Opponent() {
 	}
@@ -17,14 +19,21 @@ public class Opponent {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
+	public InetAddress getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(InetAddress ipAddress) {
+		this.ipAddress = ipAddress;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -36,11 +45,11 @@ public class Opponent {
 		}
 		Opponent opponent = (Opponent) o;
 		return Objects.equals(name, opponent.name) &&
-				Objects.equals(address, opponent.address);
+				Objects.equals(macAddress, opponent.macAddress);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, address);
+		return Objects.hash(name, macAddress);
 	}
 }

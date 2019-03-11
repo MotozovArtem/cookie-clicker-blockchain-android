@@ -1,5 +1,7 @@
 package ru.rienel.clicker.activity.game;
 
+import java.net.InetAddress;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -32,11 +34,11 @@ public class GameActivity extends AppCompatActivity {
 		Intent intent = getIntent();
 
 		GameType gameType = null;
-		String address = null;
+		InetAddress address = null;
 
 		if (intent != null) {
 			gameType = (GameType) intent.getSerializableExtra(INTENT_GAME_TYPE);
-			address = intent.getStringExtra(INTENT_ADDRESS);
+			address = (InetAddress) intent.getSerializableExtra(INTENT_ADDRESS);
 		}
 		if (gameType == null) {
 			gameType = GameType.SINGLEPLAYER;

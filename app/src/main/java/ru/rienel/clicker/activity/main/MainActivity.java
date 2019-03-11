@@ -12,10 +12,12 @@ import ru.rienel.clicker.activity.game.GameActivity;
 import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 	private Button startGame;
 	private Button statistics;
 	private Button multiplayer;
+
+	private MainContract.Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
 		statistics = findViewById(R.id.statistic);
 		multiplayer = findViewById(R.id.multiplayer);
 
-		startGame.setOnClickListener(buildChageActivityOnClickListener(this, GameActivity.class));
-		statistics.setOnClickListener(buildChageActivityOnClickListener(this, StatisticsActivity.class));
-		multiplayer.setOnClickListener(buildChageActivityOnClickListener(this, OpponentsActivity.class));
+		startGame.setOnClickListener(buildChangeActivityOnClickListener(this, GameActivity.class));
+		statistics.setOnClickListener(buildChangeActivityOnClickListener(this, StatisticsActivity.class));
+		multiplayer.setOnClickListener(buildChangeActivityOnClickListener(this, OpponentsActivity.class));
 	}
 
-	private View.OnClickListener buildChageActivityOnClickListener(final Context context,
-	                                                               final Class<?> activityClass) {
+	private View.OnClickListener buildChangeActivityOnClickListener(final Context context,
+	                                                                final Class<?> activityClass) {
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -42,4 +44,8 @@ public class MainActivity extends AppCompatActivity {
 		};
 	}
 
+	@Override
+	public void setPresenter(MainContract.Presenter presenter) {
+		this.presenter = presenter;
+	}
 }
