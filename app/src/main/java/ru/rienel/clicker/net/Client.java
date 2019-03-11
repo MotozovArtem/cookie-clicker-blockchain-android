@@ -48,11 +48,13 @@ public class Client implements Runnable {
 			Log.e(TAG, "Runtime: ", e);
 			throw new RuntimeException("Client thread run failed", e);
 		}
-
-
 	}
 
 	public boolean isConnected() {
 		return connected;
+	}
+
+	public Socket getClientSocket() {
+		return clientSocket;
 	}
 }

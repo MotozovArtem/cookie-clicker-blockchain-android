@@ -12,6 +12,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +27,12 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
+import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
 
 public class GameFragment extends Fragment implements GameContract.View, SoundPool.OnLoadCompleteListener {
 	private static final String TIMER_TIME_FORMAT = "%02d:%02d";
 	private static final String TAG = GameFragment.class.getName();
+	private static final String DIALOG_ERROR = ErrorMultiplayerDialogFragment.class.getName();
 
 	private GameContract.Presenter presenter;
 
@@ -56,7 +59,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private int soundId;
 	private MediaPlayer mediaPlayer;
 
-	private EndGameDialogFragment dialogFragment;
+	private EndGameDialogFragment endGameDialogFragment;
+	private ErrorMultiplayerDialogFragment errorDialogFragment;
 
 	public static GameFragment newInstance() {
 		return new GameFragment();
@@ -84,7 +88,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		soundId = soundPool.load(getActivity(), R.raw.muda, 1);
 
 		mediaPlayer = newMediaPlayer();
-
 		donutImage.setOnClickListener(newOnDonutClickListener());
 
 		initializeActivityState(savedInstanceState);
@@ -200,7 +203,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
 		donutImage.startAnimation(rotateAnimation);
 		point.setTextColor(getResources().getColor(R.color.colorPoint));
- 		if (currentTime != 0) {
+		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
 			timer = 60000;
@@ -235,6 +238,17 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	@Override
 	public void setNewClick(Integer donutPerClick) {
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
+	}
+
+	@Override
+	public void errorMultiplayer(Throwable e) {
+		ErrorMultiplayerDialogFragment dialogFragment = ErrorMultiplayerDialogFragment.newInstance(e);
+		FragmentManager manager = getFragmentManager();
+		if (manager != null) {
+			dialogFragment.show(getFragmentManager(), DIALOG_ERROR);
+		} else {
+			Log.e(TAG, "errorMultiplayer: FRAGMENT MANGER IS NULL!!!");
+		}
 	}
 
 	public View.OnClickListener newOnDonutClickListener() {

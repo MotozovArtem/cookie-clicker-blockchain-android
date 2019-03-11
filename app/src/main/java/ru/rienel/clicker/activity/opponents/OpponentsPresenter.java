@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import ru.rienel.clicker.common.Preconditions;
+import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.service.NetworkService;
@@ -40,17 +41,6 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		networkService.discoverPeers();
 	}
 
-	private void updateOpponents() {
-		List<WifiP2pDevice> devices = networkService.getP2pDevices();
-
-		List<Opponent> opponentList = new ArrayList<>(devices.size());
-		for (WifiP2pDevice device : devices) {
-			opponentList.add(OpponentFactory.buildFromWifiP2pDevice(device));
-		}
-		opponentsView.updateOpponentsList(opponentList);
-		opponentsView.showOpponents();
-	}
-
 	@Override
 	public ServiceConnection newServiceConnection() {
 		return new ServiceConnection() {
@@ -72,7 +62,25 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		updateOpponents();
+		switch (evt.getPropertyName()) {
+			case PropertiesUpdatedName.P2P_DEVICES:
+				this.updateOpponents();
+				break;
+			case PropertiesUpdatedName.CONNECTION_INFO:
+				// TODO Update concrete opponent IP address (comes from WifiP2pInfo)
+				break;
+		}
+	}
+
+	private void updateOpponents() {
+		List<WifiP2pDevice> devices = networkService.getP2pDevices();
+
+		List<Opponent> opponentList = new ArrayList<>(devices.size());
+		for (WifiP2pDevice device : devices) {
+			opponentList.add(OpponentFactory.buildFromWifiP2pDevice(device));
+		}
+		opponentsView.updateOpponentsList(opponentList);
+		opponentsView.showOpponents();
 	}
 
 	@Override

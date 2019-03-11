@@ -14,6 +14,8 @@ public interface GameContract {
 		void setPoints(Integer clicks);
 
 		void setNewClick(Integer donutPerClick);
+
+		void errorMultiplayer(Throwable e);
 	}
 
 	interface Presenter extends BasePresenter {

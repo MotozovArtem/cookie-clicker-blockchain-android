@@ -2,6 +2,7 @@ package ru.rienel.clicker.service;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,8 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
+
+import ru.rienel.clicker.common.PropertiesUpdatedName;
 
 public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
 	private static final String TAG = NetworkService.class.getName();
@@ -223,6 +226,14 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
+		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
+
+		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, 0, 1);
+
+//		if (info.groupFormed && !info.isGroupOwner) {
+//			clientClass = new ClientClass(groupOwnerAddress);
+//			clientClass.start();
+//		}
 	}
 
 	@Override
@@ -232,9 +243,10 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 			Log.d(TAG, "onPeersAvailable: Devices not found");
 			Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_LONG).show();
 			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
+
 			p2pDevices.clear();
 
-			changeSupport.firePropertyChange("p2pDevices", oldDevices, p2pDevices);
+			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
 		}
 
 		if (!p2pDevices.equals(peers.getDeviceList())) {
@@ -244,7 +256,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 			p2pDevices.clear();
 			p2pDevices.addAll(peers.getDeviceList());
 
-			changeSupport.firePropertyChange("p2pDevices", oldDevices, p2pDevices);
+			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
 		}
 	}
 

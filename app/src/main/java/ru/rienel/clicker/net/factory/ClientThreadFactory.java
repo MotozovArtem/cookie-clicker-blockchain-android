@@ -1,4 +1,4 @@
-package ru.rienel.clicker.net;
+package ru.rienel.clicker.net.factory;
 
 import java.util.concurrent.ThreadFactory;
 
