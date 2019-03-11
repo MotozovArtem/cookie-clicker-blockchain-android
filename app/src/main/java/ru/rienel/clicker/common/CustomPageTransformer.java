@@ -19,6 +19,7 @@ public class CustomPageTransformer implements ViewPager.PageTransformer {
         }
         view.setScaleY(1-Math.abs(position));
         view.setScaleX(1-Math.abs(position));
+
     }
 
 }
