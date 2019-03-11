@@ -18,11 +18,13 @@ import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
 import ru.rienel.clicker.common.DialogDonut;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 	private Button startGame;
 	private Button statistics;
 	private Button multiplayer;
 	private ImageView imageDonut;
+
+	private MainContract.Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
 				startActivity(intent);
 			}
 		};
+	}
+
+
+	@Override
+	public void setPresenter(MainContract.Presenter presenter) {
+		this.presenter = presenter;
 	}
 
 }
