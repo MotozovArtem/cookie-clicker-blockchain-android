@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-
 import android.widget.TextView;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.game.GameActivity;
 

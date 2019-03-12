@@ -2,7 +2,6 @@ package ru.rienel.clicker.activity.game;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import android.util.Log;

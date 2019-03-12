@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.content.SharedPreferences;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -55,9 +55,16 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private Animation donutClickAnimation;
 	private CountDownTimer countDownTimer;
 
+	private Button incTap;
+	private Button autoTap;
+	private int tempTap;
+	private int tempAutoTap;
+
 	private SoundPool soundPool;
 	private int soundId;
-	private MediaPlayer mediaPlayer;
+	private SoundPool backgroundSound;
+	private int backgroundSoundId;
+	private SharedPreferences saves;
 
 	private EndGameDialogFragment endGameDialogFragment;
 	private ErrorMultiplayerDialogFragment errorDialogFragment;
@@ -70,6 +77,16 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_game, container, false);
+
+		saves = root.getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+		loadGameSaves();
+		incTap = root.findViewById(R.id.btnIncTap);
+		incTap.setOnClickListener(newOnIncrementTapClickListener());
+		autoTap = root.findViewById(R.id.btnAutoTap);
+		autoTap.setOnClickListener(newOnAutoTapClickListener());
+		checkPurchasedItem(incTap, autoTap);
+
+		clicks = 0;
 		point = root.findViewById(R.id.tvPoints);
 		shop = root.findViewById(R.id.btnShop);
 		time = root.findViewById(R.id.time);
@@ -84,10 +101,41 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		rotateAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.donut_rotate);
 		donutClickAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.donut_on_click_animation);
 
+		//Tap sound
 		soundPool = newSoundPool();
 		soundId = soundPool.load(getActivity(), R.raw.muda, 1);
 
-		mediaPlayer = newMediaPlayer();
+		// Background sound
+		backgroundSound = new SoundPool.Builder().setMaxStreams(1).build();
+		backgroundSound.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+				backgroundSound.play(backgroundSoundId, 1, 1, 0, -1, 1);
+
+			}
+		});
+
+		donutClickAnimation.setAnimationListener(new Animation.AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				donutClick();
+				newClick.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				newClick.setVisibility(View.INVISIBLE);
+				donutImage.startAnimation(rotateAnimation);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+		});
+
+		backgroundSoundId = backgroundSound.load(this.getContext(), R.raw.epic_sax_guy_v6, 1);
+
 		donutImage.setOnClickListener(newOnDonutClickListener());
 
 		initializeActivityState(savedInstanceState);
@@ -103,17 +151,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		soundPool.setOnLoadCompleteListener((thisSoundPool, sampleId, status) -> {
 		});
 		return soundPool;
-	}
-
-	private MediaPlayer newMediaPlayer() {
-		// Background sound
-		MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.epic_sax_guy_v3);
-		mediaPlayer.setLooping(true);
-		mediaPlayer.setOnCompletionListener(thisMediaPlayer -> {
-			thisMediaPlayer.stop();
-			thisMediaPlayer.release();
-		});
-		return mediaPlayer;
 	}
 
 	private void initializeActivityState(Bundle savedInstanceState) {
@@ -168,6 +205,13 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		};
 	}
 
+
+	private void donutClick() {
+		this.clicks += this.donutPerClick;
+		point.setText(Integer.toString(clicks));
+		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
+	}
+
 	@Override
 	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
 		super.onViewStateRestored(savedInstanceState);
@@ -186,20 +230,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		donutImage.clearAnimation();
-		countDownTimer.cancel();
-		if (flagShop) {
-			countDownTimerBoost.cancel();
-		}
-		mediaPlayer.pause();
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
-
+		backgroundSound.resume(1);
 		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
 		donutImage.startAnimation(rotateAnimation);
 		point.setTextColor(getResources().getColor(R.color.colorPoint));
@@ -208,10 +241,19 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		} else {
 			timer = 60000;
 		}
-
 		countDownTimer = newCountDownTimer();
+	}
 
-		mediaPlayer.start();
+	@Override
+	public void onPause() {
+		super.onPause();
+		donutImage.clearAnimation();
+		countDownTimer.cancel();
+		if (flagShop) {
+			countDownTimerBoost.cancel();
+		}
+		backgroundSound.pause(1);
+		savePoints(this.clicks);
 	}
 
 	@Override
@@ -257,6 +299,83 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			soundPool.play(soundId, 1, 1, 0, 0, 1);
 			view.startAnimation(donutClickAnimation);
 		};
+	}
+
+	public View.OnClickListener newOnIncrementTapClickListener() {
+		return view -> {
+			this.donutPerClick += 2;
+			this.tempTap -= 1;
+			saves.edit().putInt("tempTap", this.tempTap).apply();
+			checkPurchasedItem(incTap, autoTap);
+			new CountDownTimer(10000, 1000) {
+
+				@Override
+				public void onTick(long l) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					donutPerClick -= 2;
+				}
+			}.start();
+		};
+	}
+
+	public View.OnClickListener newOnAutoTapClickListener() {
+		return view -> {
+			this.tempAutoTap -= 1;
+			saves.edit().putInt("tempAutoTap", this.tempAutoTap).apply();
+			checkPurchasedItem(incTap, autoTap);
+			new CountDownTimer(10000, 1000) {
+
+				@Override
+				public void onTick(long l) {
+					donutClick();
+				}
+
+				@Override
+				public void onFinish() {
+
+				}
+			}.start();
+		};
+	}
+
+	private void loadGameSaves() {
+		this.donutPerClick = saves.getInt("donutPerClick", 0);
+		this.tempTap = saves.getInt("tempTap", 0);
+		this.tempAutoTap = saves.getInt("tempAutoTap", 0);
+	}
+
+	private void checkPurchasedItem(Button incTap, Button autoTap) {
+		if (tempTap > 0) {
+			incTap.setEnabled(true);
+//			incTap.setText(R.string.IncTap + " " + tempTap);
+			String message = getResources().getString(R.string.IncTap) + " -" + tempTap;
+			incTap.setText(message);
+		} else {
+			incTap.setEnabled(false);
+			incTap.setText(R.string.IncTap);
+		}
+
+		if (tempAutoTap > 0) {
+			autoTap.setEnabled(true);
+//			autoTap.setText(R.string.AutoTap + " " + tempAutoTap);
+			String message = getResources().getString(R.string.AutoTap) + " -" + tempAutoTap;
+			autoTap.setText(message);
+		} else {
+			autoTap.setEnabled(false);
+			autoTap.setText(R.string.AutoTap);
+		}
+	}
+
+	private void savePoints(int points) {
+		saves = getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = saves.edit();
+		int tempPoints = saves.getInt("clicks", 0);
+		editor.putInt("clicks", points + tempPoints);
+		editor.apply();
 	}
 
 	@Override

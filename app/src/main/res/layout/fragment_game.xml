@@ -70,4 +70,22 @@
 			android:textSize="32sp"
 			android:layout_centerHorizontal="true"
 			android:layout_below="@id/donut"/>
+
+
+	<Button
+			android:id="@+id/btnIncTap"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/IncTap"
+			android:layout_below="@id/donut"
+			style="@style/Widget.AppCompat.Button.Colored"/>
+
+	<Button
+			android:id="@+id/btnAutoTap"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/AutoTap"
+			android:layout_below="@id/donut"
+			android:layout_toEndOf="@id/btnIncTap"
+			style="@style/Widget.AppCompat.Button.Colored"/>
 </RelativeLayout>

@@ -32,7 +32,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import ru.rienel.clicker.common.PropertiesUpdatedName;
-import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 
 public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
 	private static final String TAG = NetworkService.class.getName();

@@ -7,9 +7,8 @@
 			android:layout_gravity="center"
 			android:background="#F3F0D1"
 			android:orientation="vertical"
-			tools:context="ru.rienel.clicker.activity.MainActivity"
-			android:columnCount="4"
->
+			tools:context="ru.rienel.clicker.activity.main.MainActivity"
+			android:columnCount="4">
 
 	<RelativeLayout
 			android:layout_width="match_parent"
@@ -17,16 +16,14 @@
 			android:layout_marginTop="30dp"
 			android:layout_marginStart="40dp"
 			android:layout_marginEnd="40dp"
-			android:layout_marginBottom="5dp"
-	>
+			android:layout_marginBottom="5dp">
 		<ImageView
 				android:id="@+id/donut"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerHorizontal="true"
 				android:contentDescription="@string/imageofdonutText"
-				app:srcCompat="@drawable/donut"
-		/>
+				app:srcCompat="@drawable/donut"/>
 
 		<android.support.constraint.ConstraintLayout
 				xmlns:android="http://schemas.android.com/apk/res/android"
@@ -104,25 +101,26 @@
 			<Button
 					android:id="@+id/btnShop"
 					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
 					style="@style/Widget.AppCompat.Button.Colored"
 					android:layout_column="0"
 					android:layout_row="4"
 					android:layout_gravity="center_horizontal"
 					android:layout_marginBottom="30dp"
 					android:text="@string/shop"
-					android:drawableStart="@drawable/icon_sale"
-			/>
+					android:drawableStart="@drawable/icon_sale"/>
+
 			<Button
 					android:id="@+id/btnClearGameSaves"
 					android:layout_width="match_parent"
-					style="@style/Widget.AppCompat.Button.Colored"
+					android:layout_height="wrap_content"
 					android:layout_column="0"
 					android:layout_row="5"
 					android:layout_gravity="center_horizontal"
 					android:layout_marginBottom="30dp"
 					android:text="@string/clearGameSaves"
-					android:drawableStart="@drawable/icon_sale"
-			/>
+					style="@style/Widget.AppCompat.Button.Colored"
+					android:drawableStart="@drawable/icon_sale"/>
 		</android.support.constraint.ConstraintLayout>
 
 	</RelativeLayout>
