@@ -1,5 +1,8 @@
 package ru.rienel.clicker.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -17,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.rienel.clicker.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 

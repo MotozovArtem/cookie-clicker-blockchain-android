@@ -1,13 +1,10 @@
-package ru.rienel.clicker.common;
+package ru.rienel.clicker.ui.dialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-
-
-import ru.rienel.clicker.R;
-import ru.rienel.clicker.activity.game.GameFragment;
-import ru.rienel.clicker.activity.main.MainContract;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.rienel.clicker.R;
+import ru.rienel.clicker.activity.game.GameFragment;
+import ru.rienel.clicker.activity.main.MainContract;
+import ru.rienel.clicker.common.CarouselPicker;
+import ru.rienel.clicker.common.ImageDonut;
 
-public class DialogDonut extends DialogFragment {
-
-
+public class DonutDialogFragment extends DialogFragment {
 
     private static final String TAG = GameFragment.class.getName();
     private int idSelectDonut;

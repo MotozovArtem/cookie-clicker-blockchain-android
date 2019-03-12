@@ -5,20 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.ImageView;
-
 
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.game.GameActivity;
 import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.activity.shop.ShopActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
-import ru.rienel.clicker.common.DialogDonut;
+import ru.rienel.clicker.ui.dialog.DonutDialogFragment;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 	private Button startGame;
@@ -29,8 +26,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	private MainContract.Presenter presenter;
 	private ImageView imageDonut;
-
-	private MainContract.Presenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +44,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		multiplayer.setOnClickListener(buildChangeActivityOnClickListener(this, OpponentsActivity.class));
 		shop.setOnClickListener(buildChangeActivityOnClickListener(this, ShopActivity.class));
 		clear.setOnClickListener(newOnClearGamesSavesClickListener());
+		imageDonut.setOnClickListener(newOnImageDonutClickListnener());
 
 		checkFirstLoadGameSaves();
-		startGame.setOnClickListener(buildChageActivityOnClickListener(this, GameActivity.class));
-		statistics.setOnClickListener(buildChageActivityOnClickListener(this, StatisticsActivity.class));
-		multiplayer.setOnClickListener(buildChageActivityOnClickListener(this, OpponentsActivity.class));
-		imageDonut.setOnClickListener(newOnImageDonutClickListnener());
 	}
 
 
 	public View.OnClickListener newOnImageDonutClickListnener() {
 		return (v) -> {
-			DialogDonut dialog = new DialogDonut();
+			DonutDialogFragment dialog = new DonutDialogFragment();
 			dialog.show(getSupportFragmentManager(), "custom");
 		};
 	}

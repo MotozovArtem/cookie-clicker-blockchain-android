@@ -1,10 +1,8 @@
 package ru.rienel.clicker.common;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-
-
-import android.content.Context;
 
 public class CustomPageTransformer implements ViewPager.PageTransformer {
 
