@@ -36,6 +36,32 @@ public class CarouselPicker extends ViewPager {
         return super.dispatchNestedPrePerformAccessibilityAction(action, arguments);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        int height = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            int h = child.getMeasuredHeight();
+            if (h > height) height = h;
+        }
+
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int w = getMeasuredWidth();
+        setPageMargin((int) (-100/ divisor));
+
+
+    }
+
+    @Override
+    public void setAdapter(PagerAdapter adapter) {
+        super.setAdapter(adapter);
+        this.setOffscreenPageLimit(adapter.getCount());
+    }
+
     public CarouselPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         initAttributes(context, attrs);
@@ -76,31 +102,7 @@ public class CarouselPicker extends ViewPager {
         this.setFadingEdgeLength(0);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int height = 0;
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-            int h = child.getMeasuredHeight();
-            if (h > height) height = h;
-        }
-
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int w = getMeasuredWidth();
-        setPageMargin((int) (-100/ divisor));
-
-
-    }
-
-    @Override
-    public void setAdapter(PagerAdapter adapter) {
-        super.setAdapter(adapter);
-        this.setOffscreenPageLimit(adapter.getCount());
-    }
 
     public static class CarouselViewAdapter extends PagerAdapter {
 
@@ -108,16 +110,6 @@ public class CarouselPicker extends ViewPager {
         Context context;
         int drawable;
         int textColor = 0;
-
-        public CarouselViewAdapter(Context context, List<PickerItem> items, int drawable) {
-            this.context = context;
-            this.drawable = drawable;
-            this.items = items;
-            if (this.drawable == 0) {
-                this.drawable = R.layout.swipe_page;
-            }
-        }
-
 
         @Override
         public int getCount() {
@@ -154,14 +146,6 @@ public class CarouselPicker extends ViewPager {
             return view;
         }
 
-        public int getTextColor() {
-            return textColor;
-        }
-
-        public void setTextColor(@ColorInt int textColor) {
-            this.textColor = textColor;
-        }
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
@@ -171,6 +155,25 @@ public class CarouselPicker extends ViewPager {
         public boolean isViewFromObject(View view, Object object) {
             return (view == object);
         }
+
+        public CarouselViewAdapter(Context context, List<PickerItem> items, int drawable) {
+            this.context = context;
+            this.drawable = drawable;
+            this.items = items;
+            if (this.drawable == 0) {
+                this.drawable = R.layout.swipe_page;
+            }
+        }
+
+        public int getTextColor() {
+            return textColor;
+        }
+
+        public void setTextColor(@ColorInt int textColor) {
+            this.textColor = textColor;
+        }
+
+
 
         private int dpToPx(int dp) {
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -198,15 +201,6 @@ public class CarouselPicker extends ViewPager {
         private String text;
         private int textSize;
 
-        public TextItem(String text, int textSize) {
-            this.text = text;
-            this.textSize = textSize;
-        }
-
-        public String getText() {
-            return text;
-        }
-
         @Override
         public int getDrawable() {
             return 0;
@@ -216,6 +210,17 @@ public class CarouselPicker extends ViewPager {
         public boolean hasDrawable() {
             return false;
         }
+
+        public TextItem(String text, int textSize) {
+            this.text = text;
+            this.textSize = textSize;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+
 
         public int getTextSize() {
             return textSize;
@@ -233,10 +238,6 @@ public class CarouselPicker extends ViewPager {
         @DrawableRes
         private int drawable;
 
-        public DrawableItem(@DrawableRes int drawable) {
-            this.drawable = drawable;
-        }
-
         @Override
         public String getText() {
             return null;
@@ -250,6 +251,10 @@ public class CarouselPicker extends ViewPager {
         @Override
         public boolean hasDrawable() {
             return true;
+        }
+
+        public DrawableItem(@DrawableRes int drawable) {
+            this.drawable = drawable;
         }
     }
 

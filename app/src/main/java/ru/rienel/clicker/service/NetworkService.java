@@ -77,10 +77,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		changeSupport = new PropertyChangeSupport(this);
 	}
 
-	private Channel initialize(Context context, Looper looper, ChannelListener listener) {
-		return wifiP2pManager.initialize(context, looper, listener);
-	}
-
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "onDestroy: started");
@@ -118,6 +114,46 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		}
 	}
 
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return super.onStartCommand(intent, flags, startId);
+	}
+
+	@Override
+	public void onConnectionInfoAvailable(WifiP2pInfo info) {
+		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
+
+//		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, null, OpponentFactory.build(""));
+	}
+
+	@Override
+	public void onPeersAvailable(WifiP2pDeviceList peers) {
+		int listSize = peers.getDeviceList().size();
+		if (listSize == 0) {
+			Log.d(TAG, "onPeersAvailable: Devices not found");
+			Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_LONG).show();
+			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
+
+			p2pDevices.clear();
+
+			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
+		}
+
+		if (!p2pDevices.equals(peers.getDeviceList())) {
+			Log.d(TAG, String.format("onPeersAvailable: Found %d devices", listSize));
+			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
+
+			p2pDevices.clear();
+			p2pDevices.addAll(peers.getDeviceList());
+
+			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
+		}
+	}
+
+	private Channel initialize(Context context, Looper looper, ChannelListener listener) {
+		return wifiP2pManager.initialize(context, looper, listener);
+	}
+
 	public void resetPeers() {
 		List<WifiP2pDevice> devices = new ArrayList<>(p2pDevices);
 		p2pDevices.clear();
@@ -148,11 +184,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 				}
 			});
 		}
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		return super.onStartCommand(intent, flags, startId);
 	}
 
 	public void connect(WifiP2pConfig config) {
@@ -224,37 +255,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		isP2pEnabled = p2pEnabled;
 	}
 
-	@Override
-	public void onConnectionInfoAvailable(WifiP2pInfo info) {
-		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
-
-//		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, null, OpponentFactory.build(""));
-	}
-
-	@Override
-	public void onPeersAvailable(WifiP2pDeviceList peers) {
-		int listSize = peers.getDeviceList().size();
-		if (listSize == 0) {
-			Log.d(TAG, "onPeersAvailable: Devices not found");
-			Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_LONG).show();
-			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
-
-			p2pDevices.clear();
-
-			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
-		}
-
-		if (!p2pDevices.equals(peers.getDeviceList())) {
-			Log.d(TAG, String.format("onPeersAvailable: Found %d devices", listSize));
-			List<WifiP2pDevice> oldDevices = new ArrayList<>(p2pDevices);
-
-			p2pDevices.clear();
-			p2pDevices.addAll(peers.getDeviceList());
-
-			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
-		}
-	}
-
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.addPropertyChangeListener(listener);
 	}
@@ -276,15 +276,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		private NetworkService networkService;
 		private WifiP2pManager.PeerListListener peerListListener;
 		private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
-
-		public WifiAppBroadcastReceiver(NetworkService service,
-		                                WifiP2pManager.PeerListListener peerListListener,
-		                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
-			super();
-			this.networkService = service;
-			this.peerListListener = peerListListener;
-			this.connectionInfoListener = connectionInfoListener;
-		}
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -326,6 +317,15 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 			} else {
 				Log.d(TAG, "Unmatched P2P change action - " + action);
 			}
+		}
+
+		public WifiAppBroadcastReceiver(NetworkService service,
+										WifiP2pManager.PeerListListener peerListListener,
+										WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
+			super();
+			this.networkService = service;
+			this.peerListListener = peerListListener;
+			this.connectionInfoListener = connectionInfoListener;
 		}
 	}
 }

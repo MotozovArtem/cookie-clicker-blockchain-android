@@ -62,7 +62,7 @@
 			android:textColor="@color/colorToast"/>
 
 	<TextView
-			android:id="@+id/tvPoints"
+			android:id="@+id/tvClicks"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="20dp"
@@ -76,16 +76,16 @@
 			android:id="@+id/btnIncTap"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/IncTap"
-			android:layout_below="@id/donut"
+			android:text="@string/IncClick"
+			android:layout_below="@id/tvClicks"
 			style="@style/Widget.AppCompat.Button.Colored"/>
 
 	<Button
 			android:id="@+id/btnAutoTap"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/AutoTap"
-			android:layout_below="@id/donut"
+			android:text="@string/AutoClick"
+			android:layout_below="@id/tvClicks"
 			android:layout_toEndOf="@id/btnIncTap"
 			style="@style/Widget.AppCompat.Button.Colored"/>
 </RelativeLayout>

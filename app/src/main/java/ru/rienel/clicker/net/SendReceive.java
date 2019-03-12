@@ -32,6 +32,10 @@ public class SendReceive implements Runnable {
 		}
 	}
 
+	public void write(byte[] bytes) throws IOException {
+		outputStream.write(bytes);
+	}
+
 	@Override
 	public void run() {
 		byte[] buffer = new byte[BUFFER_LENGTH];
@@ -47,9 +51,5 @@ public class SendReceive implements Runnable {
 				Log.e(TAG, "run: IOException", e);
 			}
 		}
-	}
-
-	public void write(byte[] bytes) throws IOException {
-		outputStream.write(bytes);
 	}
 }

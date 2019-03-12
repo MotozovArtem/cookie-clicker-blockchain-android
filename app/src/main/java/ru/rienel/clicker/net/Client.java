@@ -35,6 +35,14 @@ public class Client implements Runnable {
 		this.serverAddress = new InetSocketAddress(serverAddress, Configuration.SERVER_PORT);
 	}
 
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public Socket getClientSocket() {
+		return clientSocket;
+	}
+
 	@Override
 	public void run() {
 		if (clientSocket == null) {
@@ -48,13 +56,5 @@ public class Client implements Runnable {
 			Log.e(TAG, "Runtime: ", e);
 			throw new RuntimeException("Client thread run failed", e);
 		}
-	}
-
-	public boolean isConnected() {
-		return connected;
-	}
-
-	public Socket getClientSocket() {
-		return clientSocket;
 	}
 }

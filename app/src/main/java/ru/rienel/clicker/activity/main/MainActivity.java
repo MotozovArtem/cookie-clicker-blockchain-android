@@ -49,6 +49,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		checkFirstLoadGameSaves();
 	}
 
+	@Override
+	public void setPresenter(MainContract.Presenter presenter) {
+		this.presenter = presenter;
+	}
+
+	@Override
+	public void replaceDonut(int resourceId) {
+		imageDonut.setImageResource(resourceId);
+	}
 
 	public View.OnClickListener newOnImageDonutClickListnener() {
 		return (v) -> {
@@ -71,12 +80,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		if (!hasVisited) {
 			SharedPreferences.Editor editor = saves.edit();
 			editor.putBoolean("hasVisited", true);
-			editor.putInt("points", 5000000);
-			editor.putInt("donutPerTap", 1);            // Increase only for multiplayer points; defoult value is "1";
-			editor.putInt("mAutoTap", 1);            // Counter of Auto tap's (purchased for multiplayer points)
-			editor.putInt("tempTap", 0);                // Counter of temporary increment tap's  (purchased for comman points)
-			editor.putInt("tempAutoTap", 0);            // Counter of temporary Auto tap's  (purchased for comman points)
-			editor.putInt("mPoints", 1000000000);    // Multiplayer Points
+			editor.putInt("clicks", 0);
+			editor.putInt("donutPerClicks", 1);            // Increase only for multiplayer clicks; defoult value is "1";
+			editor.putInt("mAutoClicks", 1);            // Counter of Auto tap's (purchased for multiplayer clicks)
+			editor.putInt("tempClicks", 0);                // Counter of temporary increment tap's  (purchased for comman clicks)
+			editor.putInt("tempAutoClicks", 0);            // Counter of temporary Auto tap's  (purchased for comman clicks)
+			editor.putInt("mClicks", 1000000000);    // Multiplayer Clicks
 			editor.apply();
 			return true;
 		}
@@ -94,13 +103,4 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		};
 	}
 
-	@Override
-	public void setPresenter(MainContract.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void replaceDonut(int resourceId) {
-		imageDonut.setImageResource(resourceId);
-	}
 }

@@ -83,6 +83,21 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		opponentRecyclerView.setAdapter(opponentAdapter);
 	}
 
+	@Override
+	public void setPresenter(OpponentsContract.Presenter presenter) {
+		this.presenter = presenter;
+	}
+
+	@Override
+	public void showOpponents() {
+		updateUi();
+	}
+
+	@Override
+	public void updateOpponentsList(List<Opponent> opponentList) {
+		this.opponentList = opponentList;
+	}
+
 	public void clearOpponents() {
 		opponentList.clear();
 	}
@@ -118,21 +133,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	}
 
 	public void setOpponentList(List<Opponent> opponentList) {
-		this.opponentList = opponentList;
-	}
-
-	@Override
-	public void setPresenter(OpponentsContract.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void showOpponents() {
-		updateUi();
-	}
-
-	@Override
-	public void updateOpponentsList(List<Opponent> opponentList) {
 		this.opponentList = opponentList;
 	}
 
@@ -172,6 +172,17 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		private ImageView thumbnail;
 		private TextView name;
 
+		@Override
+		public void onClick(View v) {
+			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
+			presenter.handleOnOpponentListClick(p2pConfig);
+
+			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
+			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
+			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
+			startActivity(toGameActivity);
+		}
+
 		public OpponentHolder(@NonNull View itemView) {
 			super(itemView);
 
@@ -183,17 +194,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		public void bind(Opponent opponent) {
 			this.opponent = opponent;
 			name.setText(opponent.getName());
-		}
-
-		@Override
-		public void onClick(View v) {
-			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
-			presenter.handleOnOpponentListClick(p2pConfig);
-
-			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
-			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
-			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
-			startActivity(toGameActivity);
 		}
 
 		private WifiP2pConfig getConfigForConnection(Opponent opponent) {

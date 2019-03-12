@@ -5,10 +5,10 @@
 
 	<string name="clicked">+1</string>
 	<string name="title">Donut clicker</string>
-	<string name="backToGame">Back to menu</string>
+	<string name="backToMenu">Back to menu</string>
 	<string name="name">Buy donuts per click!</string>
-	<string name="description_2">Increment tap +2 (-10 points)</string>
-	<string name="description_4">Auto tap (-20 points)</string>
+	<string name="tempIncrementButton">Increment tap +2 (-10 points)</string>
+	<string name="tempAutoClickButton">Auto tap (-20 points)</string>
 	<string name="description_5">+5 donuts (-30 points)</string>
 	<string name="shop">Go to shop</string>
 	<string name="shopTitle">Shop</string>
@@ -40,11 +40,11 @@
 	<string name="imageofdonutText">imageOfDonut</string>
 	<string name="warning_title">Warning</string>
     <string name="gameSaves">game_saves</string>
-    <string name="points">Points: </string>
-    <string name="DPC">Donuts Per Tap: </string>
+    <string name="clicks">Clicks: </string>
+    <string name="DPC">Donuts Per Click: </string>
     <string name="clearGameSaves">Clear game saves</string>
-    <string name="IncTap">Increment Tap</string>
-    <string name="AutoTap">Auto Tap</string>
-    <string name="multiplayer_points">Multiplayer Points: </string>
+    <string name="IncClick">Increment Click</string>
+    <string name="AutoClick">Auto Click</string>
+    <string name="multiplayer_clicks">Multiplayer Clicks: </string>
     <string name="select">Select</string>
 </resources>

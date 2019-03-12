@@ -87,7 +87,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		checkPurchasedItem(incTap, autoTap);
 
 		clicks = 0;
-		point = root.findViewById(R.id.tvPoints);
+		point = root.findViewById(R.id.tvClicks);
 		shop = root.findViewById(R.id.btnShop);
 		time = root.findViewById(R.id.time);
 		progressBar = root.findViewById(R.id.progressBar);
@@ -143,6 +143,104 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		return root;
 	}
 
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (savedInstanceState != null) {
+			loadInstanceState(savedInstanceState);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("dpc_state", donutPerClick);
+		outState.putInt("clicks_state", clicks);
+		outState.putBoolean("flagShop_state", flagShop);
+		outState.putLong("currentTime_state", currentTime);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		backgroundSound.resume(1);
+		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+		donutImage.startAnimation(rotateAnimation);
+		point.setTextColor(getResources().getColor(R.color.colorPoint));
+		if (currentTime != 0) {
+			timer = currentTime;
+		} else {
+			timer = 60000;
+		}
+		countDownTimer = newCountDownTimer();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		donutImage.clearAnimation();
+		countDownTimer.cancel();
+		if (flagShop) {
+			countDownTimerBoost.cancel();
+		}
+		backgroundSound.pause(1);
+		saveClicks(this.clicks);
+	}
+
+	@Override
+	public void setPresenter(GameContract.Presenter presenter) {
+		Preconditions.checkNotNull(presenter);
+		this.presenter = presenter;
+	}
+
+	@Override
+	public void showEndGameDialog() {
+
+	}
+
+	@Override
+	public Context getActivityContext() {
+		return this.getActivity();
+	}
+
+	@Override
+	public void setClicks(Integer clicks) {
+		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+	}
+
+	@Override
+	public void setNewClick(Integer donutPerClick) {
+		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
+	}
+
+	@Override
+	public void errorMultiplayer(Throwable e) {
+		ErrorMultiplayerDialogFragment dialogFragment = ErrorMultiplayerDialogFragment.newInstance(e);
+		FragmentManager manager = getFragmentManager();
+		if (manager != null) {
+			dialogFragment.show(getFragmentManager(), DIALOG_ERROR);
+		} else {
+			Log.e(TAG, "errorMultiplayer: FRAGMENT MANGER IS NULL!!!");
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data == null) {
+			return;
+		}
+		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
+		clicks = data.getIntExtra("clicks", clicks);
+		flagShop = data.getBooleanExtra("flagShop", flagShop);
+		currentTime = data.getLongExtra("currentTime", currentTime);
+	}
+
+	@Override
+	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+
+	}
+
 	private SoundPool newSoundPool() {
 		// Click sound
 		SoundPool soundPool = new SoundPool.Builder()
@@ -166,7 +264,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private void loadInstanceState(Bundle savedInstanceState) {
 		donutPerClick = savedInstanceState.getInt("dpc_state");
-		clicks = savedInstanceState.getInt("points_state");
+		clicks = savedInstanceState.getInt("clicks_state");
 		flagShop = savedInstanceState.getBoolean("flagShop_state");
 		currentTime = savedInstanceState.getLong("currentTime_state");
 	}
@@ -210,87 +308,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		this.clicks += this.donutPerClick;
 		point.setText(Integer.toString(clicks));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
-	}
-
-	@Override
-	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-		super.onViewStateRestored(savedInstanceState);
-		if (savedInstanceState != null) {
-			loadInstanceState(savedInstanceState);
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(@NonNull Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("dpc_state", donutPerClick);
-		outState.putInt("points_state", clicks);
-		outState.putBoolean("flagShop_state", flagShop);
-		outState.putLong("currentTime_state", currentTime);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		backgroundSound.resume(1);
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
-		donutImage.startAnimation(rotateAnimation);
-		point.setTextColor(getResources().getColor(R.color.colorPoint));
-		if (currentTime != 0) {
-			timer = currentTime;
-		} else {
-			timer = 60000;
-		}
-		countDownTimer = newCountDownTimer();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		donutImage.clearAnimation();
-		countDownTimer.cancel();
-		if (flagShop) {
-			countDownTimerBoost.cancel();
-		}
-		backgroundSound.pause(1);
-		savePoints(this.clicks);
-	}
-
-	@Override
-	public void setPresenter(GameContract.Presenter presenter) {
-		Preconditions.checkNotNull(presenter);
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void showEndGameDialog() {
-
-	}
-
-	@Override
-	public Context getActivityContext() {
-		return this.getActivity();
-	}
-
-	@Override
-	public void setPoints(Integer clicks) {
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
-	}
-
-	@Override
-	public void setNewClick(Integer donutPerClick) {
-		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
-	}
-
-	@Override
-	public void errorMultiplayer(Throwable e) {
-		ErrorMultiplayerDialogFragment dialogFragment = ErrorMultiplayerDialogFragment.newInstance(e);
-		FragmentManager manager = getFragmentManager();
-		if (manager != null) {
-			dialogFragment.show(getFragmentManager(), DIALOG_ERROR);
-		} else {
-			Log.e(TAG, "errorMultiplayer: FRAGMENT MANGER IS NULL!!!");
-		}
 	}
 
 	public View.OnClickListener newOnDonutClickListener() {
@@ -352,46 +369,30 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		if (tempTap > 0) {
 			incTap.setEnabled(true);
 //			incTap.setText(R.string.IncTap + " " + tempTap);
-			String message = getResources().getString(R.string.IncTap) + " -" + tempTap;
+			String message = getResources().getString(R.string.IncClick) + " -" + tempTap;
 			incTap.setText(message);
 		} else {
 			incTap.setEnabled(false);
-			incTap.setText(R.string.IncTap);
+			incTap.setText(R.string.IncClick);
 		}
 
 		if (tempAutoTap > 0) {
 			autoTap.setEnabled(true);
 //			autoTap.setText(R.string.AutoTap + " " + tempAutoTap);
-			String message = getResources().getString(R.string.AutoTap) + " -" + tempAutoTap;
+			String message = getResources().getString(R.string.AutoClick) + " -" + tempAutoTap;
 			autoTap.setText(message);
 		} else {
 			autoTap.setEnabled(false);
-			autoTap.setText(R.string.AutoTap);
+			autoTap.setText(R.string.AutoClick);
 		}
 	}
 
-	private void savePoints(int points) {
+	private void saveClicks(int clicks) {
 		saves = getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
-		int tempPoints = saves.getInt("clicks", 0);
-		editor.putInt("clicks", points + tempPoints);
+		int tempClicks = saves.getInt("clicks", 0);
+		editor.putInt("clicks", clicks + tempClicks);
 		editor.apply();
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (data == null) {
-			return;
-		}
-		donutPerClick = data.getIntExtra("donutPerClick", donutPerClick);
-		clicks = data.getIntExtra("clicks", clicks);
-		flagShop = data.getBooleanExtra("flagShop", flagShop);
-		currentTime = data.getLongExtra("currentTime", currentTime);
-	}
-
-	@Override
-	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-
-	}
 }

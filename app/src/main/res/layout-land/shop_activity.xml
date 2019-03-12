@@ -22,8 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/btn_2"
-            app:layout_constraintRight_toRightOf="@id/btn_2"
+            app:layout_constraintLeft_toLeftOf="@id/tempIncrementTap"
+            app:layout_constraintRight_toRightOf="@id/tempIncrementTap"
             android:textSize="40sp"
             android:textColor="@color/colorTitle"
             android:textStyle="bold"
@@ -42,20 +42,20 @@
 
 
         <Button
-            android:id="@+id/btn_2"
+            android:id="@+id/tempIncrementTap"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nameShop"
-            android:text="@string/description_2" />
+            android:text="@string/tempIncrementButton" />
 
         <Button
-            android:id="@+id/btn_4"
+            android:id="@+id/tempAutoTap"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_2"
-            android:text="@string/description_4" />
+            app:layout_constraintTop_toBottomOf="@id/tempIncrementTap"
+            android:text="@string/tempAutoClickButton" />
 
 
         <Button
@@ -63,7 +63,7 @@
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_4"
+            app:layout_constraintTop_toBottomOf="@id/tempAutoTap"
             android:text="@string/description_5" />
 
         <Button
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@id/btn_5"
             android:layout_marginTop="20dp"
             android:background="@color/btnBack"
-            android:text="@string/backToGame"
+            android:text="@string/backToMenu"
             android:onClick="onClick"
             android:drawableLeft="@drawable/icon_back"
             android:paddingRight="10dp"

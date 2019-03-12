@@ -21,8 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/btn_2"
-            app:layout_constraintRight_toRightOf="@id/btn_2"
+            app:layout_constraintLeft_toLeftOf="@id/tempIncrementTap"
+            app:layout_constraintRight_toRightOf="@id/tempIncrementTap"
             android:textSize="40sp"
             android:textColor="@color/colorTitle"
             android:textStyle="bold"
@@ -41,22 +41,22 @@
 
 
         <Button
-            android:id="@+id/btn_2"
+            android:id="@+id/tempIncrementTap"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nameShop"
-            android:text="@string/description_2"
+            android:text="@string/tempIncrementButton"
             android:onClick="onClick"
             />
 
         <Button
-            android:id="@+id/btn_4"
+            android:id="@+id/tempAutoTap"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_2"
-            android:text="@string/description_4"
+            app:layout_constraintTop_toBottomOf="@id/tempIncrementTap"
+            android:text="@string/tempAutoClickButton"
             android:onClick="onClick"
             />
 
@@ -66,7 +66,7 @@
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_4"
+            app:layout_constraintTop_toBottomOf="@id/tempAutoTap"
             android:text="@string/description_5"
             android:onClick="onClick"
             />
@@ -82,20 +82,20 @@
             android:drawableLeft="@drawable/icon_back"
             android:layout_marginTop="20dp"
             android:background="@color/btnBack"
-            android:text="@string/backToGame"
+            android:text="@string/backToMenu"
             android:paddingRight="10dp"
             android:onClick="onClick"
             android:textSize="24sp"
             android:textColor="@color/btnText" />
         <TextView
-            android:id="@+id/pointsTextView"
+            android:id="@+id/clicksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnBack"
-            android:text="@string/points"
+            android:text="@string/clicks"
             />
 
         <TextView
@@ -105,19 +105,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pointsTextView"
+            app:layout_constraintTop_toBottomOf="@id/clicksTextView"
             android:text="@string/DPC"
             />
 
         <TextView
-            android:id="@+id/mPointsTextView"
+            android:id="@+id/mClicksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/donutPerClickTextView"
-            android:text="@string/multiplayer_points"
+            android:text="@string/multiplayer_clicks"
             />
 
     </android.support.constraint.ConstraintLayout>

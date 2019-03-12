@@ -86,6 +86,11 @@ public class BlockListFragment extends Fragment implements StatisticsContract.Vi
 		private TextView blockMessage;
 		private TextView dateOfCreate;
 
+		@Override
+		public void onClick(View v) {
+			Toast.makeText(getActivity(), "KONO DIO DA", Toast.LENGTH_SHORT).show();
+		}
+
 		public BlockHolder(@NonNull View itemView) {
 			super(itemView);
 			blockNumber = itemView.findViewById(R.id.block_number);
@@ -115,11 +120,6 @@ public class BlockListFragment extends Fragment implements StatisticsContract.Vi
 			DateFormat format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.UK);
 			format.setCalendar(GregorianCalendar.getInstance());
 			return format.format(block.getCreationTime());
-		}
-
-		@Override
-		public void onClick(View v) {
-			Toast.makeText(getActivity(), "KONO DIO DA", Toast.LENGTH_SHORT).show();
 		}
 	}
 }

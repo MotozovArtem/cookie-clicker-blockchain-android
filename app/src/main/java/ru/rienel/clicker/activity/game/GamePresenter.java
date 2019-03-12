@@ -42,6 +42,39 @@ public class GamePresenter implements GameContract.Presenter {
 	private Thread serverThread;
 	private Thread sendReceiveThread;
 
+	@Override
+	public void start() {
+	}
+
+	@Override
+	public void startGame() {
+	}
+
+	@Override
+	public void sendSignalToOpponent() {
+
+	}
+
+
+	@Override
+	public void handleClick() {
+		this.clicks += DONUT_PER_CLICK;
+		gameView.setClicks(clicks);
+		gameView.setNewClick(DONUT_PER_CLICK);
+	}
+
+	@Override
+	public void finishGame(String message, Integer goal) {
+		Block newBlock = BlockFactory.build(message, goal,
+				new Date(System.currentTimeMillis()), "None",
+				"none", "HASH");
+		try {
+			blockRepository.add(newBlock);
+		} catch (DaoException e) {
+			Log.i(TAG, "Failed add new block", e);
+		}
+	}
+
 	public GamePresenter(GameContract.View gameView, GameType gameType, InetAddress address) {
 		Preconditions.checkNotNull(gameView);
 		Preconditions.checkNotNull(gameType);
@@ -64,38 +97,5 @@ public class GamePresenter implements GameContract.Presenter {
 			}
 		}
 		gameView.setPresenter(this);
-	}
-
-	@Override
-	public void start() {
-	}
-
-	@Override
-	public void startGame() {
-	}
-
-	@Override
-	public void sendSignalToOpponent() {
-
-	}
-
-
-	@Override
-	public void handleClick() {
-		this.clicks += DONUT_PER_CLICK;
-		gameView.setPoints(clicks);
-		gameView.setNewClick(DONUT_PER_CLICK);
-	}
-
-	@Override
-	public void finishGame(String message, Integer goal) {
-		Block newBlock = BlockFactory.build(message, goal,
-				new Date(System.currentTimeMillis()), "None",
-				"none", "HASH");
-		try {
-			blockRepository.add(newBlock);
-		} catch (DaoException e) {
-			Log.i(TAG, "Failed add new block", e);
-		}
 	}
 }

@@ -23,14 +23,6 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
 
-	public OpponentsPresenter(OpponentsContract.View opponentsView) {
-		Preconditions.checkNotNull(opponentsView);
-
-		this.opponentsView = opponentsView;
-
-		opponentsView.setPresenter(this);
-	}
-
 	@Override
 	public void start() {
 	}
@@ -71,6 +63,13 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		}
 	}
 
+	@Override
+	public void handleOnOpponentListClick(WifiP2pConfig config) {
+		Preconditions.checkNotNull(config);
+
+		networkService.connect(config);
+	}
+
 	private void updateOpponents() {
 		List<WifiP2pDevice> devices = networkService.getP2pDevices();
 
@@ -88,10 +87,12 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		opponentsView.showOpponents();
 	}
 
-	@Override
-	public void handleOnOpponentListClick(WifiP2pConfig config) {
-		Preconditions.checkNotNull(config);
+	public OpponentsPresenter(OpponentsContract.View opponentsView) {
+		Preconditions.checkNotNull(opponentsView);
 
-		networkService.connect(config);
+		this.opponentsView = opponentsView;
+
+		opponentsView.setPresenter(this);
 	}
+
 }

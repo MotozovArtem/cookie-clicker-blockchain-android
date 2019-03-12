@@ -23,17 +23,6 @@ public class BlockDaoImpl implements Repository<Block> {
 		dbHelper = new BlockChainBaseHelper(context);
 	}
 
-	private ContentValues getValues(Block model) {
-		ContentValues values = new ContentValues();
-		values.put(BlocksTable.Columns.ID, model.getId());
-		values.put(BlocksTable.Columns.MESSAGE, model.getMessage());
-		values.put(BlocksTable.Columns.GOAL, model.getGoal());
-		values.put(BlocksTable.Columns.CREATION_TIME, model.getCreationTime().getTime());
-		values.put(BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK, model.getHashOfPreviousBlock());
-		values.put(BlocksTable.Columns.HASH_OF_BLOCK, model.getHashOfBlock());
-		return values;
-	}
-
 	@Override
 	public void add(Block model) throws DaoException {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -123,5 +112,16 @@ public class BlockDaoImpl implements Repository<Block> {
 		int count = cursor.getInt(0);
 		cursor.close();
 		return count;
+	}
+
+	private ContentValues getValues(Block model) {
+		ContentValues values = new ContentValues();
+		values.put(BlocksTable.Columns.ID, model.getId());
+		values.put(BlocksTable.Columns.MESSAGE, model.getMessage());
+		values.put(BlocksTable.Columns.GOAL, model.getGoal());
+		values.put(BlocksTable.Columns.CREATION_TIME, model.getCreationTime().getTime());
+		values.put(BlocksTable.Columns.HASH_OF_PREVIOUS_BLOCK, model.getHashOfPreviousBlock());
+		values.put(BlocksTable.Columns.HASH_OF_BLOCK, model.getHashOfBlock());
+		return values;
 	}
 }

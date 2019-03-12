@@ -11,7 +11,7 @@ public interface GameContract {
 
 		Context getActivityContext();
 
-		void setPoints(Integer clicks);
+		void setClicks(Integer clicks);
 
 		void setNewClick(Integer donutPerClick);
 

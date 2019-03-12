@@ -35,6 +35,12 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 		db.insert(BlocksTable.NAME, null, contentValues);
 	}
 
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE " + BlocksTable.NAME);
+		onCreate(db);
+	}
+
 	private ContentValues createContentValuesForGenesisBlock(SQLiteDatabase db) {
 		Block genesisBlock = new BlockFactory().build("Genesis block",
 				0, new Date(System.currentTimeMillis() - 1000),
@@ -50,9 +56,5 @@ public class BlockChainBaseHelper extends SQLiteOpenHelper {
 		return contentValues;
 	}
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE " + BlocksTable.NAME);
-		onCreate(db);
-	}
+
 }
