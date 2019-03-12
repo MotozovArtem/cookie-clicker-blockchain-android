@@ -6,14 +6,16 @@ import android.app.Dialog;
 
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.game.GameFragment;
+import ru.rienel.clicker.activity.main.MainContract;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,15 @@ public class DialogDonut extends DialogFragment {
 
 
     private static final String TAG = GameFragment.class.getName();
+    private int idSelectDonut;
+    private MainContract.View mainContract;
+    private Button selectButton;
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mainContract = (MainContract.View) context;
+    }
 
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,11 +46,11 @@ public class DialogDonut extends DialogFragment {
         carouselPicker = view.findViewById(R.id.carousel);
 
         List<CarouselPicker.PickerItem> imageItems = new ArrayList<>();
-        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.pink_donut_dialog));
-        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.apple_dialog));
-        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.burger_dialog));
-        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.yellow_donut_dialog));
-        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.blue_donut_dialog));
+        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.pink_donut_menu));
+        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.apple_menu));
+        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.burger_menu));
+        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.yellow_donut_menu));
+        imageItems.add(new CarouselPicker.DrawableItem(R.drawable.blue_donut_menu));
 
 
         CarouselPicker.CarouselViewAdapter imageAdapter = new CarouselPicker.CarouselViewAdapter(this.getContext(), imageItems, 0);
@@ -57,7 +67,7 @@ public class DialogDonut extends DialogFragment {
 
             @Override
             public void onPageSelected(int position) {
-                Log.i(TAG, Integer.toString(position));
+                idSelectDonut = position;
             }
 
             @Override
@@ -66,9 +76,23 @@ public class DialogDonut extends DialogFragment {
             }
         });
 
+
+        selectButton = view.findViewById(R.id.select_donut);
+        View.OnClickListener selectListner = v -> {
+            for (ImageDonut donut : ImageDonut.values()){
+                if (donut.keyForDialog == idSelectDonut) {
+                    mainContract.replaceDonut(donut.resourceId);
+                    break;
+                }
+            }
+        };
+
+        selectButton.setOnClickListener(selectListner);
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .create();
     }
+
+
 }
 

@@ -71,4 +71,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		this.presenter = presenter;
 	}
 
+
+
+	@Override
+	public void replaceDonut(int resourceId) {
+		imageDonut.setImageResource(resourceId);
+	}
 }

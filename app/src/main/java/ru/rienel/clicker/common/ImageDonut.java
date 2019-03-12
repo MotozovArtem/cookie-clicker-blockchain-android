@@ -3,11 +3,11 @@ package ru.rienel.clicker.common;
 import ru.rienel.clicker.R;
 
 public enum ImageDonut {
-    PINK_DONUT(R.drawable.pink_donut_dialog, 1),
-    APPLE(R.drawable.apple_dialog, 2),
-    BURGER(R.drawable.burger_dialog, 3),
-    YELLOW_DONUT(R.drawable.yellow_donut_dialog, 4),
-    BLUE_DONUT(R.drawable.blue_donut_dialog, 5);
+    PINK_DONUT(R.drawable.pink_donut_menu, 0),
+    APPLE(R.drawable.apple_menu, 1),
+    BURGER(R.drawable.burger_menu, 2),
+    YELLOW_DONUT(R.drawable.yellow_donut_menu, 3),
+    BLUE_DONUT(R.drawable.blue_donut_menu, 4);
 
 
     public int resourceId;

@@ -17,14 +17,13 @@
     android:layout_marginBottom="5dp"
     >
 
-    <ImageView
-        android:id="@+id/donut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/imageofdonutText"
-        app:srcCompat="@drawable/donut"
-       />
+	<ImageView
+		android:id="@+id/donut"
+		android:layout_width="192dp"
+		android:layout_height="202dp"
+		android:layout_centerHorizontal="true"
+		android:contentDescription="@string/imageofdonutText"
+		app:srcCompat="@drawable/pink_donut_menu" />
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
