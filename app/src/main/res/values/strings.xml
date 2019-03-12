@@ -46,4 +46,5 @@
     <string name="IncTap">Increment Tap</string>
     <string name="AutoTap">Auto Tap</string>
     <string name="multiplayer_points">Multiplayer Points: </string>
+    <string name="select">Select</string>
 </resources>
