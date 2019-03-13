@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.game.GameFragment;
@@ -26,6 +27,11 @@ public class DonutDialogFragment extends DialogFragment {
     private int idSelectDonut;
     private MainContract.View mainContract;
     private Button selectButton;
+    private ImageView rightArrow, leftArrow;
+
+
+
+
 
     @Override
     public void onAttach(Context context){
@@ -42,6 +48,10 @@ public class DonutDialogFragment extends DialogFragment {
         CarouselPicker carouselPicker = null;
 
         carouselPicker = view.findViewById(R.id.carousel);
+        selectButton = view.findViewById(R.id.select_donut);
+        leftArrow = view.findViewById(R.id.left_arrow);
+        rightArrow = view.findViewById(R.id.right_arrow);
+
 
         List<CarouselPicker.PickerItem> imageItems = new ArrayList<>();
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.pink_donut_menu));
@@ -50,6 +60,8 @@ public class DonutDialogFragment extends DialogFragment {
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.yellow_donut_menu));
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.blue_donut_menu));
 
+
+        setVisibilityArrow(rightArrow, leftArrow, 0, imageItems.size());
 
         CarouselPicker.CarouselViewAdapter imageAdapter = new CarouselPicker.CarouselViewAdapter(this.getContext(), imageItems, 0);
 
@@ -66,6 +78,7 @@ public class DonutDialogFragment extends DialogFragment {
             @Override
             public void onPageSelected(int position) {
                 idSelectDonut = position;
+                setVisibilityArrow(rightArrow, leftArrow, position, imageItems.size());
             }
 
             @Override
@@ -75,22 +88,41 @@ public class DonutDialogFragment extends DialogFragment {
         });
 
 
-        selectButton = view.findViewById(R.id.select_donut);
-        View.OnClickListener selectListner = v -> {
+        View.OnClickListener selectListener = v -> {
             for (ImageDonut donut : ImageDonut.values()){
                 if (donut.keyForDialog == idSelectDonut) {
                     mainContract.replaceDonut(donut.resourceId);
+                    this.dismiss();
                     break;
                 }
             }
         };
 
-        selectButton.setOnClickListener(selectListner);
+        CarouselPicker finalCarouselPicker = carouselPicker;
+        View.OnClickListener setNextPosition = v -> {
+            finalCarouselPicker.setCurrentItem(idSelectDonut + 1);
+        };
+
+
+        View.OnClickListener setAntecedentPosition = v -> {
+            finalCarouselPicker.setCurrentItem(idSelectDonut - 1);
+        };
+
+        selectButton.setOnClickListener(selectListener);
+        rightArrow.setOnClickListener(setNextPosition);
+        leftArrow.setOnClickListener(setAntecedentPosition);
+
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .create();
     }
 
 
+    public void setVisibilityArrow(ImageView rArrow, ImageView lArrow, int position, int countDonut){
+        if (position == 0) lArrow.setVisibility(View.INVISIBLE);
+        else lArrow.setVisibility(View.VISIBLE);
+        if (position == countDonut - 1) rArrow.setVisibility(View.INVISIBLE);
+        else rArrow.setVisibility(View.VISIBLE);
+    }
 }
 
