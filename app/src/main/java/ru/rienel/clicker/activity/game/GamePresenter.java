@@ -55,7 +55,6 @@ public class GamePresenter implements GameContract.Presenter {
 
 	}
 
-
 	@Override
 	public void handleClick() {
 		this.clicks += DONUT_PER_CLICK;
@@ -88,12 +87,15 @@ public class GamePresenter implements GameContract.Presenter {
 
 			if (opponentAddress != null) {
 				clientThread = clientFactory.newThread(Client.newInstanceTo(opponentAddress));
+				clientThread.start();
 				try {
 					serverThread = serverFactory.newThread(new Server(signalHandler));
+					serverThread.start();
 				} catch (IOException e) {
 					Log.e(TAG, "GamePresenter(Multiplayer)", e);
 				}
 				sendReceiveThread = sendReceiveFactory.newThread(new SendReceive(client.getClientSocket(), signalHandler));
+				sendReceiveThread.start();
 			}
 		}
 		gameView.setPresenter(this);

@@ -23,6 +23,12 @@ public class ErrorMultiplayerDialogFragment extends DialogFragment {
 	private ScrollView message;
 	private Throwable causedByException;
 
+	public static ErrorMultiplayerDialogFragment newInstance(Throwable e) {
+		ErrorMultiplayerDialogFragment dialogFragment = new ErrorMultiplayerDialogFragment();
+		dialogFragment.setCausedByException(e);
+		return dialogFragment;
+	}
+
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -40,12 +46,6 @@ public class ErrorMultiplayerDialogFragment extends DialogFragment {
 				.setView(view)
 				.setPositiveButton(android.R.string.ok, getOnClickListener())
 				.create();
-	}
-
-	public static ErrorMultiplayerDialogFragment newInstance(Throwable e) {
-		ErrorMultiplayerDialogFragment dialogFragment = new ErrorMultiplayerDialogFragment();
-		dialogFragment.setCausedByException(e);
-		return dialogFragment;
 	}
 
 	private DialogInterface.OnClickListener getOnClickListener() {

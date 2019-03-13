@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pManager;
 
 import ru.rienel.clicker.activity.BasePresenter;
 import ru.rienel.clicker.activity.BaseView;
@@ -24,6 +25,8 @@ public interface OpponentsContract {
 
 		ServiceConnection newServiceConnection();
 
-		void handleOnOpponentListClick(WifiP2pConfig config);
+		void handleOnOpponentListClick(WifiP2pConfig config, WifiP2pManager.ActionListener actionListener);
+
+		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
 	}
 }

@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -64,10 +65,14 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void handleOnOpponentListClick(WifiP2pConfig config) {
+	public void handleOnOpponentListClick(WifiP2pConfig config, WifiP2pManager.ActionListener actionListener) {
 		Preconditions.checkNotNull(config);
+		networkService.connect(config, actionListener);
+	}
 
-		networkService.connect(config);
+	@Override
+	public void handleCancelConnection(WifiP2pManager.ActionListener actionListener) {
+		networkService.cancelDisconnect(actionListener);
 	}
 
 	private void updateOpponents() {

@@ -186,40 +186,12 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		}
 	}
 
-	public void connect(WifiP2pConfig config) {
-		wifiP2pManager.connect(channel, config, new ActionListener() {
-			@Override
-			public void onSuccess() {
-				Toast.makeText(NetworkService.this, "Connection successful", Toast.LENGTH_SHORT).show();
-				Log.d(TAG, "onSuccess: Connection successful");
-			}
-
-			@Override
-			public void onFailure(int reason) {
-				Toast.makeText(NetworkService.this, "Connect failed. Retry.",
-						Toast.LENGTH_SHORT).show();
-				Log.d(TAG, String.format("onFailure: connect failed %d", reason));
-			}
-		});
+	public void connect(WifiP2pConfig config, ActionListener actionListener) {
+		wifiP2pManager.connect(channel, config, actionListener);
 	}
 
-	public void cancelDisconnect() {
-		wifiP2pManager.cancelConnect(channel, new ActionListener() {
-			@Override
-			public void onSuccess() {
-				Toast.makeText(NetworkService.this, "Aborting connection",
-						Toast.LENGTH_SHORT).show();
-				Log.d(TAG, "onSuccess: Aborting connection");
-			}
-
-			@Override
-			public void onFailure(int reason) {
-				Toast.makeText(NetworkService.this,
-						"Connect abort request failed. Reason Code: "
-								+ reason, Toast.LENGTH_SHORT).show();
-				Log.d(TAG, "onFailure: connect abort request failed. Reason code" + reason);
-			}
-		});
+	public void cancelDisconnect(ActionListener actionListener) {
+		wifiP2pManager.cancelConnect(channel, actionListener);
 	}
 
 	public void requestPeers(PeerListListener listListener) {
@@ -320,8 +292,8 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		}
 
 		public WifiAppBroadcastReceiver(NetworkService service,
-										WifiP2pManager.PeerListListener peerListListener,
-										WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
+		                                WifiP2pManager.PeerListListener peerListListener,
+		                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
 			super();
 			this.networkService = service;
 			this.peerListListener = peerListListener;

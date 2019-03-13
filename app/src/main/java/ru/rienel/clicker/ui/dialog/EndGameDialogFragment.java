@@ -20,6 +20,14 @@ public class EndGameDialogFragment extends DialogFragment {
 	private TextView dialogTitle;
 	private EditText dialogMessage;
 
+	public static EndGameDialogFragment newInstance(Boolean isWin) {
+		Bundle args = new Bundle();
+		args.putSerializable(ARG_TITLE_TYPE, isWin);
+		EndGameDialogFragment fragment = new EndGameDialogFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -37,14 +45,6 @@ public class EndGameDialogFragment extends DialogFragment {
 				.setTitle(R.string.round_over)
 				.setPositiveButton(android.R.string.ok, getOnClickListener())
 				.create();
-	}
-
-	public static EndGameDialogFragment newInstance(Boolean isWin) {
-		Bundle args = new Bundle();
-		args.putSerializable(ARG_TITLE_TYPE, isWin);
-		EndGameDialogFragment fragment = new EndGameDialogFragment();
-		fragment.setArguments(args);
-		return fragment;
 	}
 
 	private int getResourceIdByState(Boolean isWin) {

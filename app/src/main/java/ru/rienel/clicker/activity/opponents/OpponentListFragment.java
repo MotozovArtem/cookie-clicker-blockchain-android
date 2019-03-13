@@ -3,7 +3,6 @@ package ru.rienel.clicker.activity.opponents;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,19 +20,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ru.rienel.clicker.R;
-import ru.rienel.clicker.activity.game.GameActivity;
-import ru.rienel.clicker.activity.game.GameType;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
 
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
 	private static final boolean HAS_MENU = true;
 
 	private OpponentAdapter opponentAdapter;
-
 	private RecyclerView opponentRecyclerView;
 	private List<Opponent> opponentList;
-
 	private OpponentsContract.Presenter presenter;
 
 	public static OpponentListFragment newInstance() {
@@ -175,12 +171,13 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		@Override
 		public void onClick(View v) {
 			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
-			presenter.handleOnOpponentListClick(p2pConfig);
+			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, p2pConfig);
+			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
 
-			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
-			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
-			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
-			startActivity(toGameActivity);
+//			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
+//			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
+//			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
+//			startActivity(toGameActivity);
 		}
 
 		public OpponentHolder(@NonNull View itemView) {

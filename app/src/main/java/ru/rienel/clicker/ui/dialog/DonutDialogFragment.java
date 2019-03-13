@@ -41,7 +41,6 @@ public class DonutDialogFragment extends DialogFragment {
 
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_changing, null);
 

@@ -47,4 +47,6 @@
     <string name="AutoClick">Auto Click</string>
     <string name="multiplayer_clicks">Multiplayer Clicks: </string>
     <string name="select">Select</string>
+	<string name="cancel">Cancel</string>
+	<string name="waiting_opponent">Waiting opponent...</string>
 </resources>
