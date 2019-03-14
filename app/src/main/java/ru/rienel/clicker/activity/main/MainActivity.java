@@ -15,7 +15,11 @@ import ru.rienel.clicker.activity.game.GameActivity;
 import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.activity.shop.ShopActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
+import ru.rienel.clicker.common.ImageDonut;
 import ru.rienel.clicker.ui.dialog.DonutDialogFragment;
+
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DONUT_ID;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 	private Button startGame;
@@ -26,11 +30,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	private MainContract.Presenter presenter;
 	private ImageView imageDonut;
+	private SharedPreferences cookie_settings;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_game);
+		cookie_settings = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+
 
 		startGame = findViewById(R.id.start);
 		statistics = findViewById(R.id.statistic);
@@ -38,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		shop = findViewById(R.id.btnShop);
 		clear = findViewById(R.id.btnClearGameSaves);
 		imageDonut = findViewById(R.id.donut);
+
+		if (cookie_settings.contains(PREFERENCES_DONUT_ID)){
+			imageDonut.setImageResource(cookie_settings.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
+		}
 
 		startGame.setOnClickListener(buildChangeActivityOnClickListener(this, GameActivity.class));
 		statistics.setOnClickListener(buildChangeActivityOnClickListener(this, StatisticsActivity.class));
@@ -57,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	@Override
 	public void replaceDonut(int resourceId) {
 		imageDonut.setImageResource(resourceId);
+		SharedPreferences.Editor editor = cookie_settings.edit();
+		editor.putInt(PREFERENCES_DONUT_ID, resourceId);
+		editor.apply();
 	}
 
 	public View.OnClickListener newOnImageDonutClickListnener() {
