@@ -12,4 +12,10 @@ public class Configuration {
 	public static final class MessageConstants {
 		public static final int MESSAGE_READ = 1;
 	}
+
+	public static final class SharedPreferencesKeys{
+		public static final String PREFERENCES_NAME = "cookie_settings";
+		public static final String PREFERENCES_DONUT_ID = "donut_id";
+
+	}
 }
