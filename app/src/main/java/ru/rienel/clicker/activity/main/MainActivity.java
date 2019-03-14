@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 			SharedPreferences.Editor editor = saves.edit();
 			editor.putBoolean("hasVisited", true);
 			editor.putInt("clicks", 0);
-			editor.putInt("donutPerClicks", 1);            // Increase only for multiplayer clicks; defoult value is "1";
-			editor.putInt("mAutoClicks", 1);            // Counter of Auto tap's (purchased for multiplayer clicks)
-			editor.putInt("tempClicks", 0);                // Counter of temporary increment tap's  (purchased for comman clicks)
-			editor.putInt("tempAutoClicks", 0);            // Counter of temporary Auto tap's  (purchased for comman clicks)
-			editor.putInt("mClicks", 1000000000);    // Multiplayer Clicks
+			editor.putInt("tempClicks", 0);               // Counter of temporary increment clicks  (purchased for comman clicks)
+			editor.putInt("tempAutoClicks", 0);           // Counter of temporary Auto clicks  (purchased for comman clicks)
+			editor.putInt("donutPerClick", 1);           // Increase only for multiplayer clicks; defoult value is "1";
+			editor.putInt("mAutoClicks", 0);            	// Counter of Auto clicks (purchased for multiplayer clicks)
+			editor.putInt("mClicks", 1000000000);    		// Multiplayer Clicks
 			editor.apply();
 			return true;
 		}
