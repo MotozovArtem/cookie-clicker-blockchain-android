@@ -16,8 +16,8 @@ import ru.rienel.clicker.activity.game.GameActivity;
 public class ShopActivity extends AppCompatActivity implements View.OnClickListener {
 
 	private int donutPerClick;
-	private int clicks;
-	private int mClicks;
+	private int coins;
+	private int multiplayerCoins;
 	private int mAutoClicksCounter;
 	private long currentTime;
 	private boolean flagShop = false;
@@ -58,7 +58,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 
 		currentTime = getIntent().getLongExtra("currentTime", 60000);
 		checkingClicks();
-		checkingMultiplayerClicks();
+		checkingMultiplayerCoins();
 
 	}
 
@@ -107,7 +107,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("dpc_state", donutPerClick);
-		outState.putInt("clicks_state", clicks);
+		outState.putInt("clicks_state", coins);
 		outState.putBoolean("flagShop_state", flagShop);
 		outState.putLong("currentTime_state", currentTime);
 	}
@@ -116,7 +116,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		donutPerClick = savedInstanceState.getInt("dpc_state");
-		clicks = savedInstanceState.getInt("clicks_state");
+		coins = savedInstanceState.getInt("clicks_state");
 		flagShop = savedInstanceState.getBoolean("flagShop_state");
 		currentTime = savedInstanceState.getLong("currentTime_state");
 	}
@@ -130,48 +130,48 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	protected void onPause() {
 		super.onPause();
-		saveGameSaves(this.clicks, this.donutPerClick, this.mClicks);
+		saveGameSaves(this.coins, this.donutPerClick, this.multiplayerCoins);
 	}
 
 	private void updateClicks(int clicks) {
-		this.clicks -= clicks;
+		this.coins -= clicks;
 	}
 
 	private void showDonutFragment() {
 		Intent intent = new Intent(this, GameActivity.class);
 		intent.putExtra("dpc", donutPerClick);
-		intent.putExtra("clicks", clicks);
+		intent.putExtra("coins", coins);
 		intent.putExtra("flagShop", flagShop);
 		intent.putExtra("currentTime", currentTime);
 		setResult(RESULT_OK, intent);
 		finish();
 	}
 
-	private boolean updateDonutPerClick(int donutPerClick, int mClicks) {
+	private boolean updateDonutPerClick(int donutPerClick, int multiplayerCoins) {
 		this.donutPerClick +=  donutPerClick;
-		updateMClicks(mClicks);
+		updateMultiplayerCoins(multiplayerCoins);
 		updateTextView();
-		checkingMultiplayerClicks();
+		checkingMultiplayerCoins();
 		return true;
 	}
 
 	private boolean updateMultiplayerAutoClicks(int mAutoClicksCounter, int mClicks) {
 		this.mAutoClicksCounter += mAutoClicksCounter;
-		updateMClicks(mClicks);
+		updateMultiplayerCoins(mClicks);
 		updateTextView();
-		checkingMultiplayerClicks();
+		checkingMultiplayerCoins();
 		return  true;
 	}
 
 
-	private void updateMClicks(int mClicks) {
-		this.mClicks -= mClicks;
+	private void updateMultiplayerCoins(int multiplayerCoins) {
+		this.multiplayerCoins -= multiplayerCoins;
 	}
 
 	private void checkingClicks() {
-		if (clicks >= 10) {
+		if (coins >= 10) {
 			temporaryTap.setEnabled(true);
-			if (clicks >= 20) {
+			if (coins >= 20) {
 				temporaryAutoTap.setEnabled(true);
 
 			} else {
@@ -183,10 +183,10 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-	private void checkingMultiplayerClicks() {
-		if (mClicks >= 100) {
+	private void checkingMultiplayerCoins() {
+		if (multiplayerCoins >= 100) {
 			mAutoClick.setEnabled(true);
-			if (mClicks >= 200) {
+			if (multiplayerCoins >= 200) {
 				mIncrementClick.setEnabled(true);
 			} else {
 				mIncrementClick.setEnabled(false);
@@ -197,28 +197,28 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
-	private void saveGameSaves(int clicks, int dpc, int mClicks) {
+	private void saveGameSaves(int coins, int dpc, int multiplayerCoins) {
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
-		editor.putInt("clicks", clicks);
+		editor.putInt("coins", coins);
 		editor.putInt("donutPerClick", dpc);
-		editor.putInt("mClicks", mClicks);
+		editor.putInt("multiplayerCoins", multiplayerCoins);
 		editor.apply();
 	}
 
 	private void loadGameSaves () {
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 			this.donutPerClick = saves.getInt("donutPerClick",0);
-			this.clicks = saves.getInt("clicks", 0);
-			this.mClicks = saves.getInt("mClicks",0);
+			this.coins = saves.getInt("coins", 0);
+			this.multiplayerCoins = saves.getInt("multiplayerCoins",0);
 			this.mAutoClicksCounter =  saves.getInt("mAutoClicks", 0);
 
 	}
 
 	private void updateTextView() {
-		textViewClicks.setText(String.valueOf(getResources().getString(R.string.clicks) + this.clicks));
+		textViewClicks.setText(String.valueOf(getResources().getString(R.string.coins) + this.coins));
 		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerClick));
-		textViewMClicks.setText(String.valueOf(getResources().getString(R.string.multiplayer_clicks) + this.mClicks));
+		textViewMClicks.setText(String.valueOf(getResources().getString(R.string.multiplayer_coins) + this.multiplayerCoins));
 		textViewMultiplayerAutoClicks.setText(String.valueOf(getResources().getString(R.string.multiplayer_auto_clicks) + this.mAutoClicksCounter));
 	}
 

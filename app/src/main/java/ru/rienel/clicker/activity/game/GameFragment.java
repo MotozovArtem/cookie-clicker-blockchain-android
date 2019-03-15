@@ -36,7 +36,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private GameContract.Presenter presenter;
 
-	private TextView point;
+	private TextView click;
 	private TextView newClick;
 	private TextView clock;
 	private ImageView donutImage;
@@ -50,6 +50,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private boolean flagShop;
 	private long timer;
 	private long currentTime;
+	private int currentLevel;
+	private int coins;
+	private int requiredClicks;
 	private Animation rotateAnimation;
 	private Animation timeAnimation;
 	private Animation donutClickAnimation;
@@ -87,9 +90,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		autoTap = root.findViewById(R.id.btnAutoTap);
 		autoTap.setOnClickListener(newOnAutoTapClickListener());
 		checkPurchasedItem(incTap, autoTap);
-
-		clicks = 0;
-		point = root.findViewById(R.id.tvClicks);
+//		clicks = 0;
+		click = root.findViewById(R.id.tvClicks);
 		shop = root.findViewById(R.id.btnShop);
 		time = root.findViewById(R.id.time);
 		progressBar = root.findViewById(R.id.progressBar);
@@ -102,6 +104,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		timeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.timer_animation);
 		rotateAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.donut_rotate);
 		donutClickAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.donut_on_click_animation);
+
+		preparingProgressBar(this.currentLevel, this.clicks);
 
 		//Tap sound
 		soundPool = newSoundPool();
@@ -166,9 +170,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	public void onResume() {
 		super.onResume();
 		backgroundSound.resume(1);
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+		click.setText(String.format(Locale.ENGLISH, "%d", coins));
 		donutImage.startAnimation(rotateAnimation);
-		point.setTextColor(getResources().getColor(R.color.colorPoint));
+		click.setTextColor(getResources().getColor(R.color.colorPoint));
 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
@@ -186,7 +190,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			countDownTimerBoost.cancel();
 		}
 		backgroundSound.pause(1);
-		saveClicks(this.clicks);
+		saveClicks();
 	}
 
 	@Override
@@ -207,7 +211,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	@Override
 	public void setClicks(Integer clicks) {
-		point.setText(String.format(Locale.ENGLISH, "%d", clicks));
+		click.setText(String.format(Locale.ENGLISH, "%d", this.coins)); // TODO: WTF!!1 Propblem with clicks text view
 	}
 
 	@Override
@@ -308,7 +312,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private void donutClick() {
 		this.clicks += this.donutPerClick;
-		point.setText(Integer.toString(clicks));
+		increaseProgressBar(this.donutPerClick);
+//		click.setText(Integer.toString(coins));
 		newClick.setText(String.format(Locale.ENGLISH, "+%d", this.donutPerClick));
 	}
 
@@ -322,7 +327,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	public View.OnClickListener newOnIncrementTapClickListener() {
 		return view -> {
-			this.donutPerClick += 2;
+			this.donutPerClick += 1;
 			this.tempClicks -= 1;
 			saves.edit().putInt("tempClicks", this.tempClicks).apply();
 			checkPurchasedItem(incTap, autoTap);
@@ -366,12 +371,14 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		this.tempClicks = saves.getInt("tempClicks", 0);
 		this.tempAutoClicks = saves.getInt("tempAutoClicks", 0);
 		this.mAutoClicks = saves.getInt("mAutoClicks", 0);
+		this.currentLevel = saves.getInt("currentLevel", 0);
+		this.coins = saves.getInt("coins", 0);
+		this.clicks = saves.getInt("clicks", 0);
 	}
 
 	private void checkPurchasedItem(Button incTap, Button autoTap) {
 		if (tempClicks > 0) {
 			incTap.setEnabled(true);
-//			incTap.setText(R.string.IncTap + " " + tempClicks);
 			String message = getResources().getString(R.string.IncClick) + " -" + tempClicks;
 			incTap.setText(message);
 		} else {
@@ -381,7 +388,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 		if (tempAutoClicks > 0) {
 			autoTap.setEnabled(true);
-//			autoTap.setText(R.string.AutoTap + " " + tempAutoClicks);
 			String message = getResources().getString(R.string.AutoClick) + " -" + tempAutoClicks;
 			autoTap.setText(message);
 		} else {
@@ -390,17 +396,18 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		}
 	}
 
-	private void saveClicks(int clicks) {
+	private void saveClicks() {
 		saves = getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
-		int tempClicks = saves.getInt("clicks", 0);
-		editor.putInt("clicks", clicks + tempClicks);
+		editor.putInt("clicks", progressBar.getProgress());
+		editor.putInt("coins", this.coins);
+		editor.putInt("currentLevel", this.currentLevel);
 		editor.apply();
 	}
 
 	private void multiplayerAutoClicks() {
 
-		new CountDownTimer(999999999,1000) {
+		new CountDownTimer(999999999, 1000) {
 			@Override
 			public void onTick(long l) {
 				donutClick();
@@ -413,11 +420,37 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	}
 
 	private void startAutoClicks(int autoClicks) {
-	    if (autoClicks > 0) {
-            for (int i = 0; i < autoClicks; i++) {
-                multiplayerAutoClicks();
-            }
-        }
+		if (autoClicks > 0) {
+			for (int i = 0; i < autoClicks; i++) {
+				multiplayerAutoClicks();
+			}
+		}
 	}
 
+	private void preparingProgressBar(int curentLevel, int clicks) {
+		requiredClicks = (int) Math.pow( ((float)(curentLevel + 1) / 0.5), 2);
+		progressBar.setMax(requiredClicks);
+		progressBar.setProgress(clicks);
+	}
+
+	private void increaseProgressBar(int value) {
+		progressBar.incrementProgressBy(value);
+		calculatingNextLevelState();
+	}
+
+	private void calculatingNextLevelState() {
+		if (this.clicks > requiredClicks) {
+			this.clicks = this.clicks - requiredClicks;
+			currentLevel += 1;
+			this.coins += 10;
+			preparingProgressBar(currentLevel, this.clicks);
+			click.setText(String.valueOf(this.coins));
+		} else if (this.clicks == requiredClicks) {
+			currentLevel += 1;
+			this.coins += 10;
+			this.clicks = 0;
+			preparingProgressBar(currentLevel, 0);
+			click.setText(String.valueOf(this.coins));
+		}
+	}
 }
