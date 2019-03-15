@@ -30,15 +30,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 	private MainContract.Presenter presenter;
 	private ImageView imageDonut;
-	private SharedPreferences cookie_settings;
+	private SharedPreferences cookieSettings;
+	private Bundle bundleArgs;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.start_game);
-		cookie_settings = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-
+		cookieSettings = getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+		bundleArgs = new Bundle();
 		startGame = findViewById(R.id.start);
 		statistics = findViewById(R.id.statistic);
 		multiplayer = findViewById(R.id.multiplayer);
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		clear = findViewById(R.id.btnClearGameSaves);
 		imageDonut = findViewById(R.id.donut);
 
-		if (cookie_settings.contains(PREFERENCES_DONUT_ID)){
-			imageDonut.setImageResource(cookie_settings.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
+
+		if (cookieSettings.contains(PREFERENCES_DONUT_ID)){
+			imageDonut.setImageResource(cookieSettings.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
 		}
 
 		startGame.setOnClickListener(buildChangeActivityOnClickListener(this, GameActivity.class));
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	@Override
 	public void replaceDonut(int resourceId) {
 		imageDonut.setImageResource(resourceId);
-		SharedPreferences.Editor editor = cookie_settings.edit();
+		SharedPreferences.Editor editor = cookieSettings.edit();
 		editor.putInt(PREFERENCES_DONUT_ID, resourceId);
 		editor.apply();
 	}
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	public View.OnClickListener newOnImageDonutClickListnener() {
 		return (v) -> {
 			DonutDialogFragment dialog = new DonutDialogFragment();
+			bundleArgs.putInt("donut_id", cookieSettings.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
+			dialog.setArguments(bundleArgs);
 			dialog.show(getSupportFragmentManager(), "custom");
 		};
 	}

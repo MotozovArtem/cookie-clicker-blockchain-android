@@ -28,7 +28,8 @@ public class DonutDialogFragment extends DialogFragment {
     private MainContract.View mainContract;
     private Button selectButton;
     private ImageView rightArrow, leftArrow;
-
+    private  CarouselPicker carouselPicker;
+    List<CarouselPicker.PickerItem> imageItems;
 
 
 
@@ -44,28 +45,28 @@ public class DonutDialogFragment extends DialogFragment {
         View view = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_changing, null);
 
-        CarouselPicker carouselPicker = null;
+        carouselPicker = null;
 
         carouselPicker = view.findViewById(R.id.carousel);
         selectButton = view.findViewById(R.id.select_donut);
         leftArrow = view.findViewById(R.id.left_arrow);
         rightArrow = view.findViewById(R.id.right_arrow);
 
+        //idSelectDonut = getArguments().getInt("donut_id");
 
-        List<CarouselPicker.PickerItem> imageItems = new ArrayList<>();
+
+        imageItems = new ArrayList<>();
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.pink_donut_menu));
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.apple_menu));
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.burger_menu));
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.yellow_donut_menu));
         imageItems.add(new CarouselPicker.DrawableItem(R.drawable.blue_donut_menu));
 
-
-        setVisibilityArrow(rightArrow, leftArrow, 0, imageItems.size());
-
         CarouselPicker.CarouselViewAdapter imageAdapter = new CarouselPicker.CarouselViewAdapter(this.getContext(), imageItems, 0);
 
         carouselPicker.setAdapter(imageAdapter);
 
+        setImagePosition(getArguments().getInt("donut_id"));
 
         carouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -122,6 +123,16 @@ public class DonutDialogFragment extends DialogFragment {
         else lArrow.setVisibility(View.VISIBLE);
         if (position == countDonut - 1) rArrow.setVisibility(View.INVISIBLE);
         else rArrow.setVisibility(View.VISIBLE);
+    }
+
+    public void setImagePosition(int idImage){
+        for (ImageDonut donut : ImageDonut.values()){
+            if (donut.resourceId == idImage) {
+                carouselPicker.setCurrentItem(donut.keyForDialog);
+                setVisibilityArrow(rightArrow, leftArrow, donut.keyForDialog, imageItems.size());
+                break;
+            }
+        }
     }
 }
 
