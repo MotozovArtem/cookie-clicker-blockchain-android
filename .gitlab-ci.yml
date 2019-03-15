@@ -31,3 +31,6 @@ assembleDebug:
     paths:
     - app/build/outputs/
     name: "Cookie-clicker"
+
+  only:
+    - master
