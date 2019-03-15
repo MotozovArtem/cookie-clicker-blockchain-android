@@ -41,3 +41,6 @@ assembleDebug:
     paths:
     - app/build/outputs/
     name: "Coockie-clicker"
+  only:
+    - master
+
