@@ -381,5 +381,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+	// test commit
+
 
 }
