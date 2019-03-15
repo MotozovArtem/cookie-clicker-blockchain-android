@@ -57,8 +57,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private Button incTap;
 	private Button autoTap;
-	private int tempTap;
-	private int tempAutoTap;
+	private int tempClicks;
+	private int tempAutoClicks;
+	private int mAutoClicks;
 
 	private SoundPool soundPool;
 	private int soundId;
@@ -80,6 +81,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 		saves = root.getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		loadGameSaves();
+		startAutoClicks(this.mAutoClicks);
 		incTap = root.findViewById(R.id.btnIncTap);
 		incTap.setOnClickListener(newOnIncrementTapClickListener());
 		autoTap = root.findViewById(R.id.btnAutoTap);
@@ -253,7 +255,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private void initializeActivityState(Bundle savedInstanceState) {
 		if (savedInstanceState == null) {
-			donutPerClick = 1;
+//			donutPerClick = 1;
 			clicks = 0;
 			flagShop = false;
 			currentTime = 0;
@@ -321,8 +323,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	public View.OnClickListener newOnIncrementTapClickListener() {
 		return view -> {
 			this.donutPerClick += 2;
-			this.tempTap -= 1;
-			saves.edit().putInt("tempTap", this.tempTap).apply();
+			this.tempClicks -= 1;
+			saves.edit().putInt("tempClicks", this.tempClicks).apply();
 			checkPurchasedItem(incTap, autoTap);
 			new CountDownTimer(10000, 1000) {
 
@@ -341,8 +343,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	public View.OnClickListener newOnAutoTapClickListener() {
 		return view -> {
-			this.tempAutoTap -= 1;
-			saves.edit().putInt("tempAutoTap", this.tempAutoTap).apply();
+			this.tempAutoClicks -= 1;
+			saves.edit().putInt("tempAutoClicks", this.tempAutoClicks).apply();
 			checkPurchasedItem(incTap, autoTap);
 			new CountDownTimer(10000, 1000) {
 
@@ -361,25 +363,26 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private void loadGameSaves() {
 		this.donutPerClick = saves.getInt("donutPerClick", 0);
-		this.tempTap = saves.getInt("tempTap", 0);
-		this.tempAutoTap = saves.getInt("tempAutoTap", 0);
+		this.tempClicks = saves.getInt("tempClicks", 0);
+		this.tempAutoClicks = saves.getInt("tempAutoClicks", 0);
+		this.mAutoClicks = saves.getInt("mAutoClicks", 0);
 	}
 
 	private void checkPurchasedItem(Button incTap, Button autoTap) {
-		if (tempTap > 0) {
+		if (tempClicks > 0) {
 			incTap.setEnabled(true);
-//			incTap.setText(R.string.IncTap + " " + tempTap);
-			String message = getResources().getString(R.string.IncClick) + " -" + tempTap;
+//			incTap.setText(R.string.IncTap + " " + tempClicks);
+			String message = getResources().getString(R.string.IncClick) + " -" + tempClicks;
 			incTap.setText(message);
 		} else {
 			incTap.setEnabled(false);
 			incTap.setText(R.string.IncClick);
 		}
 
-		if (tempAutoTap > 0) {
+		if (tempAutoClicks > 0) {
 			autoTap.setEnabled(true);
-//			autoTap.setText(R.string.AutoTap + " " + tempAutoTap);
-			String message = getResources().getString(R.string.AutoClick) + " -" + tempAutoTap;
+//			autoTap.setText(R.string.AutoTap + " " + tempAutoClicks);
+			String message = getResources().getString(R.string.AutoClick) + " -" + tempAutoClicks;
 			autoTap.setText(message);
 		} else {
 			autoTap.setEnabled(false);
@@ -393,6 +396,28 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		int tempClicks = saves.getInt("clicks", 0);
 		editor.putInt("clicks", clicks + tempClicks);
 		editor.apply();
+	}
+
+	private void multiplayerAutoClicks() {
+
+		new CountDownTimer(999999999,1000) {
+			@Override
+			public void onTick(long l) {
+				donutClick();
+			}
+
+			@Override
+			public void onFinish() {
+			}
+		}.start();
+	}
+
+	private void startAutoClicks(int autoClicks) {
+	    if (autoClicks > 0) {
+            for (int i = 0; i < autoClicks; i++) {
+                multiplayerAutoClicks();
+            }
+        }
 	}
 
 }

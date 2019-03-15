@@ -18,15 +18,18 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	private int donutPerClick;
 	private int clicks;
 	private int mClicks;
+	private int mAutoClicksCounter;
 	private long currentTime;
 	private boolean flagShop = false;
 
 	private Button temporaryTap;
 	private Button temporaryAutoTap;
-	private Button plus5Donut;
+	private Button mAutoClick;
+	private Button mIncrementClick;
 	private TextView textViewMClicks;
 	private TextView textViewClicks;
 	private TextView textViewDPC;
+	private TextView textViewMultiplayerAutoClicks;
 	private SharedPreferences saves;
 
 
@@ -36,45 +39,49 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.shop_activity);
 
-		temporaryTap = findViewById(R.id.tempIncrementTap);
-		temporaryAutoTap = findViewById(R.id.tempAutoTap);
-		plus5Donut = findViewById(R.id.btn_5);
+		temporaryTap = findViewById(R.id.tempIncrementClick);
+		temporaryAutoTap = findViewById(R.id.tempAutoClick);
+		mAutoClick = findViewById(R.id.mAutoClick);
+		mIncrementClick = findViewById(R.id.mIncrementClick);
 		temporaryTap.setEnabled(false);
 		temporaryAutoTap.setEnabled(false);
-		plus5Donut.setEnabled(false);
+		mAutoClick.setEnabled(false);
+		mIncrementClick.setEnabled(false);
 
 		loadGameSaves();
 		textViewClicks = findViewById(R.id.clicksTextView);
 		textViewMClicks = findViewById(R.id.mClicksTextView);
 		textViewDPC = findViewById(R.id.donutPerClickTextView);
+		textViewMultiplayerAutoClicks = findViewById(R.id.multiplayerAutoClicksTextView);
 		updateTextView();
 
 
 		currentTime = getIntent().getLongExtra("currentTime", 60000);
 		checkingClicks();
+		checkingMultiplayerClicks();
 
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.tempIncrementTap) {
-			int tempTap = saves.getInt("tempTap", 0);
-			saves.edit().putInt("tempTap", tempTap + 1).apply();
+		if (v.getId() == R.id.tempIncrementClick) {
+			int tempClicks = saves.getInt("tempClicks", 0);
+			saves.edit().putInt("tempClicks", tempClicks + 1).apply();
 			updateClicks(10);
 			updateTextView();
 			checkingClicks();
-		} else if (v.getId() == R.id.tempAutoTap) {
-			int tempAutoTap = saves.getInt("tempAutoTap", 0);
-			saves.edit().putInt("tempAutoTap", tempAutoTap + 1).apply();
+		} else if (v.getId() == R.id.tempAutoClick) {
+			int tempAutoClicks = saves.getInt("tempAutoClicks", 0);
+			saves.edit().putInt("tempAutoClicks", tempAutoClicks + 1).apply();
 			updateClicks(20);
 			updateTextView();
 			checkingClicks();
-		} else if (v.getId() == 0) {  // TODO chahge "0" on multiplayer tap button from XML
-			updateDonutPerTap(1,100);
-		} else if (v.getId() == 0) { // TODO change "0" on multiplaer auto tap button from XML
-			int multiplayerAutoTap = saves.getInt("mAutoTap",0);
-			saves.edit().putInt("mAutoTap", multiplayerAutoTap + 1).apply();
-			updateMClicks(300);
+		} else if (v.getId() == R.id.mIncrementClick) {
+			updateDonutPerClick(1,100);
+		} else if (v.getId() == R.id.mAutoClick) {
+			int multiplayerAutoClicks = saves.getInt("mAutoClicks",0);
+			saves.edit().putInt("mAutoClicks", multiplayerAutoClicks + 1).apply();
+			updateMultiplayerAutoClicks(1,200);
 		} else if (v.getId() == R.id.btnBack) {
 //        	startActivity(new Intent(this, MainActivity.class));
 			finish();
@@ -140,11 +147,20 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		finish();
 	}
 
-	private boolean updateDonutPerTap(int donutPerClick, int mClicks) {
-		this.donutPerClick -=  donutPerClick;
+	private boolean updateDonutPerClick(int donutPerClick, int mClicks) {
+		this.donutPerClick +=  donutPerClick;
 		updateMClicks(mClicks);
 		updateTextView();
+		checkingMultiplayerClicks();
 		return true;
+	}
+
+	private boolean updateMultiplayerAutoClicks(int mAutoClicksCounter, int mClicks) {
+		this.mAutoClicksCounter += mAutoClicksCounter;
+		updateMClicks(mClicks);
+		updateTextView();
+		checkingMultiplayerClicks();
+		return  true;
 	}
 
 
@@ -157,19 +173,27 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 			temporaryTap.setEnabled(true);
 			if (clicks >= 20) {
 				temporaryAutoTap.setEnabled(true);
-				if (clicks >= 30) {
-					plus5Donut.setEnabled(false);
-				} else {
-					plus5Donut.setEnabled(false);
-				}
+
 			} else {
 				temporaryAutoTap.setEnabled(false);
-				plus5Donut.setEnabled(false);
 			}
 		} else {
 			temporaryTap.setEnabled(false);
 			temporaryAutoTap.setEnabled(false);
-			plus5Donut.setEnabled(false);
+		}
+	}
+
+	private void checkingMultiplayerClicks() {
+		if (mClicks >= 100) {
+			mAutoClick.setEnabled(true);
+			if (mClicks >= 200) {
+				mIncrementClick.setEnabled(true);
+			} else {
+				mIncrementClick.setEnabled(false);
+			}
+		} else {
+			mIncrementClick.setEnabled(false);
+			mAutoClick.setEnabled(false);
 		}
 	}
 
@@ -187,6 +211,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 			this.donutPerClick = saves.getInt("donutPerClick",0);
 			this.clicks = saves.getInt("clicks", 0);
 			this.mClicks = saves.getInt("mClicks",0);
+			this.mAutoClicksCounter =  saves.getInt("mAutoClicks", 0);
 
 	}
 
@@ -194,6 +219,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		textViewClicks.setText(String.valueOf(getResources().getString(R.string.clicks) + this.clicks));
 		textViewDPC.setText(String.valueOf(getResources().getString(R.string.DPC) + this.donutPerClick));
 		textViewMClicks.setText(String.valueOf(getResources().getString(R.string.multiplayer_clicks) + this.mClicks));
+		textViewMultiplayerAutoClicks.setText(String.valueOf(getResources().getString(R.string.multiplayer_auto_clicks) + this.mAutoClicksCounter));
 	}
 
 }

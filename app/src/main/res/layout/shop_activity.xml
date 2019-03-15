@@ -21,8 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/tempIncrementTap"
-            app:layout_constraintRight_toRightOf="@id/tempIncrementTap"
+            app:layout_constraintLeft_toLeftOf="@id/tempIncrementClick"
+            app:layout_constraintRight_toRightOf="@id/tempIncrementClick"
             android:textSize="40sp"
             android:textColor="@color/colorTitle"
             android:textStyle="bold"
@@ -41,7 +41,7 @@
 
 
         <Button
-            android:id="@+id/tempIncrementTap"
+            android:id="@+id/tempIncrementClick"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -51,23 +51,32 @@
             />
 
         <Button
-            android:id="@+id/tempAutoTap"
+            android:id="@+id/tempAutoClick"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tempIncrementTap"
+            app:layout_constraintTop_toBottomOf="@id/tempIncrementClick"
             android:text="@string/tempAutoClickButton"
             android:onClick="onClick"
             />
 
 
         <Button
-            android:id="@+id/btn_5"
+            android:id="@+id/mAutoClick"
             style="@style/ButtonInShop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tempAutoTap"
-            android:text="@string/description_5"
+            app:layout_constraintTop_toBottomOf="@id/tempAutoClick"
+            android:text="@string/mAutoClick"
+            android:onClick="onClick"
+            />
+        <Button
+            android:id="@+id/mIncrementClick"
+            style="@style/ButtonInShop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mAutoClick"
+            android:text="@string/mIncrementClick"
             android:onClick="onClick"
             />
 
@@ -75,10 +84,9 @@
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_5"
+            app:layout_constraintTop_toBottomOf="@id/mIncrementClick"
             android:drawableLeft="@drawable/icon_back"
             android:layout_marginTop="20dp"
             android:background="@color/btnBack"
@@ -91,7 +99,6 @@
             android:id="@+id/clicksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnBack"
@@ -99,26 +106,36 @@
             />
 
         <TextView
-            android:id="@+id/donutPerClickTextView"
+            android:id="@+id/mClicksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clicksTextView"
+            android:text="@string/multiplayer_clicks"
+            />
+
+        <TextView
+            android:id="@+id/donutPerClickTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mClicksTextView"
             android:text="@string/DPC"
             />
 
         <TextView
-            android:id="@+id/mClicksTextView"
+            android:id="@+id/multiplayerAutoClicksTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/donutPerClickTextView"
-            android:text="@string/multiplayer_clicks"
+            android:text="@string/multiplayer_auto_clicks"
             />
+
+
 
     </android.support.constraint.ConstraintLayout>
 
