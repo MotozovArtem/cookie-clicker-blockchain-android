@@ -17,12 +17,14 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
+import ru.rienel.clicker.service.WifiAppBroadcastReceiver;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
 	private static final String TAG = OpponentsPresenter.class.getName();
 
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
+	private WifiAppBroadcastReceiver broadcastReceiver;
 
 	@Override
 	public void start() {

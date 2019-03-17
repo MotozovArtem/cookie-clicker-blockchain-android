@@ -1,7 +1,7 @@
-package ru.rienel.clicker.db.domain;
+package ru.rienel.clicker.db;
 
 public class AppDataBaseSchema {
-	public static final class BlocksTable{
+	public static final class BlocksTable {
 		public static final String NAME = "blocks";
 
 		public static final class Columns {
@@ -12,8 +12,8 @@ public class AppDataBaseSchema {
 			public static final String OPPONENT = "opponent";
 			public static final String HASH_OF_PREVIOUS_BLOCK = "previous_block_hash";
 			public static final String HASH_OF_BLOCK = "hash_of_block";
-
 		}
+
 		public static String[] allColumns() {
 			return new String[]{
 					Columns.ID,

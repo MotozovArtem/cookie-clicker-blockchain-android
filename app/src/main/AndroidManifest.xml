@@ -25,7 +25,8 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
 		<service
-				android:name=".service.NetworkService"/>
+				android:name=".service.NetworkService"
+				android:stopWithTask="true"/>
 
 		<activity
 				android:name=".activity.game.GameActivity"

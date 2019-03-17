@@ -7,7 +7,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import ru.rienel.clicker.db.domain.AppDataBaseSchema.BlocksTable;
+import ru.rienel.clicker.db.AppDataBaseSchema.BlocksTable;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 

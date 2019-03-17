@@ -6,14 +6,12 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -47,8 +45,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	private BroadcastReceiver receiver;
 	private List<WifiP2pDevice> p2pDevices;
 
-	private CountDownLatch startRecvFileSignal;
-
 	private boolean isP2pEnabled;
 	private boolean retryChannel;
 
@@ -66,7 +62,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
-		wifiP2pManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+		wifiP2pManager = (WifiP2pManager)getSystemService(Context.WIFI_P2P_SERVICE);
 		channel = initialize(this, getMainLooper(), this);
 
 		receiver = new WifiAppBroadcastReceiver(this, this, this);
@@ -99,7 +95,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	@Override
 	public void onChannelDisconnected() {
-
 		if (wifiP2pManager != null && !retryChannel) {
 			Toast.makeText(this, "Channel lost. Trying again",
 					Toast.LENGTH_LONG).show();
@@ -109,7 +104,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		} else {
 			Toast.makeText(
 					this,
-					"Severe! Channel is probably lost permanently. Try Disable/Re-Enable P2P.",
+					"Channel is probably lost permanently. Try Disable/Re-Enable P2P.",
 					Toast.LENGTH_LONG).show();
 		}
 	}
@@ -122,8 +117,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo info) {
 		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
-
-//		changeSupport.firePropertyChange(PropertiesUpdatedName.CONNECTION_INFO, null, OpponentFactory.build(""));
 	}
 
 	@Override
@@ -235,65 +228,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	public class NetworkServiceBinder extends Binder {
 		public NetworkService getService() {
 			return NetworkService.this;
-		}
-	}
-
-	public static class WifiAppBroadcastReceiver extends BroadcastReceiver {
-
-		private static final String TAG = WifiAppBroadcastReceiver.class.getName();
-
-		private NetworkService networkService;
-		private WifiP2pManager.PeerListListener peerListListener;
-		private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-
-				int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-				if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-					networkService.setP2pEnabled(true);
-					networkService.discoverPeers();
-				} else {
-					networkService.setP2pEnabled(false);
-					networkService.resetPeers();
-				}
-				Log.d(TAG, String.format("P2P state changed - state:%d", state));
-			} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-				if (networkService.isP2pEnabled()) {
-					networkService.requestPeers(peerListListener);
-				}
-				Log.d(TAG, "P2P peers changed");
-			} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-				if (!networkService.isP2pEnabled()) {
-					return;
-				}
-				NetworkInfo networkInfo = intent
-						.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-				if (networkInfo.isConnected()) {
-					networkService.requestConnectionInfo(connectionInfoListener);
-				} else {
-					networkService.resetPeers();
-					networkService.discoverPeers();
-				}
-				Log.d(TAG, String.format("P2P connection changed - networkInfo:%s", networkInfo.toString()));
-			} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-				WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(
-						WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-				Log.d(TAG, String.format("P2P this device changed - wifiP2pDevice:%s", wifiP2pDevice.toString()));
-			} else {
-				Log.d(TAG, String.format("Unmatched P2P change action - %s", action));
-			}
-		}
-
-		public WifiAppBroadcastReceiver(NetworkService service,
-		                                WifiP2pManager.PeerListListener peerListListener,
-		                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
-			super();
-			this.networkService = service;
-			this.peerListListener = peerListListener;
-			this.connectionInfoListener = connectionInfoListener;
 		}
 	}
 }
