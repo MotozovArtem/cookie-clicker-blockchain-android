@@ -17,14 +17,19 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.service.NetworkService;
-import ru.rienel.clicker.service.WifiAppBroadcastReceiver;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
 	private static final String TAG = OpponentsPresenter.class.getName();
 
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
-	private WifiAppBroadcastReceiver broadcastReceiver;
+
+	public OpponentsPresenter(OpponentsContract.View opponentsView) {
+		Preconditions.checkNotNull(opponentsView);
+
+		this.opponentsView = opponentsView;
+		opponentsView.setPresenter(this);
+	}
 
 	@Override
 	public void start() {
@@ -41,7 +46,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				Log.d(TAG, "onServiceConnected: called");
-				NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder) service;
+				NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder)service;
 				networkService = binder.getService();
 				networkService.addPropertyChangeListener(OpponentsPresenter.this);
 				Log.d(TAG, "onServiceConnected: connected to service");
@@ -77,6 +82,11 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		networkService.cancelDisconnect(actionListener);
 	}
 
+	@Override
+	public void showAcceptanceDialog(String deviceName) {
+		opponentsView.showAcceptanceDialog(deviceName);
+	}
+
 	private void updateOpponents() {
 		List<WifiP2pDevice> devices = networkService.getP2pDevices();
 
@@ -90,16 +100,8 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 			});
 			opponentList.add(opponent);
 		}
+
 		opponentsView.updateOpponentsList(opponentList);
 		opponentsView.showOpponents();
 	}
-
-	public OpponentsPresenter(OpponentsContract.View opponentsView) {
-		Preconditions.checkNotNull(opponentsView);
-
-		this.opponentsView = opponentsView;
-
-		opponentsView.setPresenter(this);
-	}
-
 }

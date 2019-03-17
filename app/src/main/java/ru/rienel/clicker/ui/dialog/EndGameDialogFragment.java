@@ -31,7 +31,7 @@ public class EndGameDialogFragment extends DialogFragment {
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-		Boolean state = (Boolean) getArguments().getSerializable(ARG_TITLE_TYPE);
+		Boolean state = (Boolean)getArguments().getSerializable(ARG_TITLE_TYPE);
 
 		View view = LayoutInflater.from(getActivity())
 				.inflate(R.layout.dialog_end_game, null);

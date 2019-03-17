@@ -37,13 +37,13 @@ public class Opponent {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o){
+		if (this == o) {
 			return true;
 		}
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		Opponent opponent = (Opponent) o;
+		Opponent opponent = (Opponent)o;
 		return Objects.equals(name, opponent.name) &&
 				Objects.equals(macAddress, opponent.macAddress);
 	}

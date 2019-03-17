@@ -428,7 +428,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	}
 
 	private void preparingProgressBar(int curentLevel, int clicks) {
-		requiredClicks = (int) Math.pow( ((float)(curentLevel + 1) / 0.5), 2);
+		requiredClicks = (int)Math.pow(((float)(curentLevel + 1) / 0.5), 2);
 		progressBar.setMax(requiredClicks);
 		progressBar.setProgress(clicks);
 	}

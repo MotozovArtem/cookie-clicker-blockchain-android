@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,9 +23,11 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
 import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
 
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
+	private static final String TAG = OpponentListFragment.class.getName();
 	private static final boolean HAS_MENU = true;
 
 	private OpponentAdapter opponentAdapter;
@@ -36,14 +39,12 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		return new OpponentListFragment();
 	}
 
-	public OpponentListFragment() {
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater,
 	                         @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_opponent_list, container, false);
+
 		opponentRecyclerView = view.findViewById(R.id.opponent_recycler_view);
 		opponentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -92,6 +93,27 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	@Override
 	public void updateOpponentsList(List<Opponent> opponentList) {
 		this.opponentList = opponentList;
+	}
+
+	@Override
+	public void showAcceptanceDialog(String opponentName) {
+		Opponent opponent = findOpponentByName(opponentName);
+		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent);
+		dialogFragment.show(getFragmentManager(), AcceptanceDialogFragment.TAG);
+	}
+
+	private Opponent findOpponentByName(String opponentName) {
+		Opponent foundOpponent = null;
+		for (Opponent opponent : opponentList) {
+			if (opponent.getName().equals(opponentName)) {
+				foundOpponent = opponent;
+			}
+		}
+		if (foundOpponent == null) {
+			Log.e(TAG, "findOpponentByName: Opponent not found");
+			throw new RuntimeException("Opponent not found");
+		}
+		return foundOpponent;
 	}
 
 	public void clearOpponents() {
@@ -173,11 +195,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
 			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, p2pConfig);
 			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
-
-//			Intent toGameActivity = new Intent(getContext(), GameActivity.class);
-//			toGameActivity.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
-//			toGameActivity.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
-//			startActivity(toGameActivity);
 		}
 
 		public OpponentHolder(@NonNull View itemView) {

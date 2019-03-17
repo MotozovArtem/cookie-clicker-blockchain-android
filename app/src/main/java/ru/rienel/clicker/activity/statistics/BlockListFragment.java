@@ -22,7 +22,7 @@ import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 
-public class BlockListFragment extends Fragment implements StatisticsContract.View{
+public class BlockListFragment extends Fragment implements StatisticsContract.View {
 	private RecyclerView blockRecyclerView;
 	private BlockAdapter blockAdapter;
 	private Repository<Block> blockRepository;
@@ -102,7 +102,7 @@ public class BlockListFragment extends Fragment implements StatisticsContract.Vi
 		public void bind(Block block, int i) {
 			this.block = block;
 			if (i == 0) {
-					blockNumber.setText(R.string.genesis_block);
+				blockNumber.setText(R.string.genesis_block);
 			} else {
 				blockNumber.setText(
 						String.format(Locale.ENGLISH, "#%d", i)

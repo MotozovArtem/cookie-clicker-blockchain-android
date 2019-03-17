@@ -33,7 +33,6 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	private SharedPreferences saves;
 
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,11 +76,11 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 			updateTextView();
 			checkingClicks();
 		} else if (v.getId() == R.id.mIncrementClick) {
-			updateDonutPerClick(1,100);
+			updateDonutPerClick(1, 100);
 		} else if (v.getId() == R.id.mAutoClick) {
-			int multiplayerAutoClicks = saves.getInt("mAutoClicks",0);
+			int multiplayerAutoClicks = saves.getInt("mAutoClicks", 0);
 			saves.edit().putInt("mAutoClicks", multiplayerAutoClicks + 1).apply();
-			updateMultiplayerAutoClicks(1,200);
+			updateMultiplayerAutoClicks(1, 200);
 		} else if (v.getId() == R.id.btnBack) {
 //        	startActivity(new Intent(this, MainActivity.class));
 			finish();
@@ -148,7 +147,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	private boolean updateDonutPerClick(int donutPerClick, int multiplayerCoins) {
-		this.donutPerClick +=  donutPerClick;
+		this.donutPerClick += donutPerClick;
 		updateMultiplayerCoins(multiplayerCoins);
 		updateTextView();
 		checkingMultiplayerCoins();
@@ -160,7 +159,7 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		updateMultiplayerCoins(mClicks);
 		updateTextView();
 		checkingMultiplayerCoins();
-		return  true;
+		return true;
 	}
 
 
@@ -206,12 +205,12 @@ public class ShopActivity extends AppCompatActivity implements View.OnClickListe
 		editor.apply();
 	}
 
-	private void loadGameSaves () {
+	private void loadGameSaves() {
 		saves = getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
-			this.donutPerClick = saves.getInt("donutPerClick",0);
-			this.coins = saves.getInt("coins", 0);
-			this.multiplayerCoins = saves.getInt("multiplayerCoins",0);
-			this.mAutoClicksCounter =  saves.getInt("mAutoClicks", 0);
+		this.donutPerClick = saves.getInt("donutPerClick", 0);
+		this.coins = saves.getInt("coins", 0);
+		this.multiplayerCoins = saves.getInt("multiplayerCoins", 0);
+		this.mAutoClicksCounter = saves.getInt("mAutoClicks", 0);
 
 	}
 

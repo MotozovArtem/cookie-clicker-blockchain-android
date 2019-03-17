@@ -21,242 +21,235 @@ import android.widget.TextView;
 
 import ru.rienel.clicker.R;
 
-
-
 public class CarouselPicker extends ViewPager {
-    private int itemsVisible = 3;
-    private float divisor;
+	private int itemsVisible = 3;
+	private float divisor;
 
-    public CarouselPicker(Context context) {
-        this(context, null);
-    }
+	public CarouselPicker(Context context) {
+		this(context, null);
+	}
 
-    @Override
-    public boolean dispatchNestedPrePerformAccessibilityAction(int action, Bundle arguments) {
-        return super.dispatchNestedPrePerformAccessibilityAction(action, arguments);
-    }
+	@Override
+	public boolean dispatchNestedPrePerformAccessibilityAction(int action, Bundle arguments) {
+		return super.dispatchNestedPrePerformAccessibilityAction(action, arguments);
+	}
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int height = 0;
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-            int h = child.getMeasuredHeight();
-            if (h > height) height = h;
-        }
+		int height = 0;
+		for (int i = 0; i < getChildCount(); i++) {
+			View child = getChildAt(i);
+			child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+			int h = child.getMeasuredHeight();
+			if (h > height) height = h;
+		}
 
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+		heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int w = getMeasuredWidth();
-        setPageMargin((int) (-100/ divisor));
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		int w = getMeasuredWidth();
+		setPageMargin((int)(-100 / divisor));
+	}
 
+	@Override
+	public void setAdapter(PagerAdapter adapter) {
+		super.setAdapter(adapter);
+		this.setOffscreenPageLimit(adapter.getCount());
+	}
 
-    }
+	public CarouselPicker(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initAttributes(context, attrs);
+		init();
+	}
 
-    @Override
-    public void setAdapter(PagerAdapter adapter) {
-        super.setAdapter(adapter);
-        this.setOffscreenPageLimit(adapter.getCount());
-    }
+	private void initAttributes(Context context, AttributeSet attrs) {
+		if (attrs != null) {
+			final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CarouselPicker);
+			itemsVisible = array.getInteger(R.styleable.CarouselPicker_items_visible, itemsVisible);
+			switch (itemsVisible) {
+				case 3:
+					TypedValue threeValue = new TypedValue();
+					getResources().getValue(R.dimen.three_items, threeValue, true);
+					divisor = threeValue.getFloat();
+					break;
+				case 5:
+					TypedValue fiveValue = new TypedValue();
+					getResources().getValue(R.dimen.five_items, fiveValue, true);
+					divisor = fiveValue.getFloat();
+					break;
+				case 7:
+					TypedValue sevenValue = new TypedValue();
+					getResources().getValue(R.dimen.seven_items, sevenValue, true);
+					divisor = sevenValue.getFloat();
+					break;
+				default:
+					divisor = 3;
+					break;
+			}
+			array.recycle();
+		}
+	}
 
-    public CarouselPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initAttributes(context, attrs);
-        init();
-    }
-
-    private void initAttributes(Context context, AttributeSet attrs) {
-        if (attrs != null) {
-            final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CarouselPicker);
-            itemsVisible = array.getInteger(R.styleable.CarouselPicker_items_visible, itemsVisible);
-            switch (itemsVisible) {
-                case 3:
-                    TypedValue threeValue = new TypedValue();
-                    getResources().getValue(R.dimen.three_items, threeValue, true);
-                    divisor = threeValue.getFloat();
-                    break;
-                case 5:
-                    TypedValue fiveValue = new TypedValue();
-                    getResources().getValue(R.dimen.five_items, fiveValue, true);
-                    divisor = fiveValue.getFloat();
-                    break;
-                case 7:
-                    TypedValue sevenValue = new TypedValue();
-                    getResources().getValue(R.dimen.seven_items, sevenValue, true);
-                    divisor = sevenValue.getFloat();
-                    break;
-                default:
-                    divisor = 3;
-                    break;
-            }
-            array.recycle();
-        }
-    }
-
-    private void init() {
-        this.setPageTransformer(false, new CustomPageTransformer(getContext()));
-        this.setClipChildren(false);
-        this.setFadingEdgeLength(0);
-    }
+	private void init() {
+		this.setPageTransformer(false, new CustomPageTransformer());
+		this.setClipChildren(false);
+		this.setFadingEdgeLength(0);
+	}
 
 
+	public static class CarouselViewAdapter extends PagerAdapter {
 
-    public static class CarouselViewAdapter extends PagerAdapter {
+		List<PickerItem> items = new ArrayList<>();
+		Context context;
+		int drawable;
+		int textColor = 0;
 
-        List<PickerItem> items = new ArrayList<>();
-        Context context;
-        int drawable;
-        int textColor = 0;
+		public CarouselViewAdapter(Context context, List<PickerItem> items, int drawable) {
+			this.context = context;
+			this.drawable = drawable;
+			this.items = items;
+			if (this.drawable == 0) {
+				this.drawable = R.layout.swipe_page;
+			}
+		}
 
-        @Override
-        public int getCount() {
-            return items.size();
-        }
+		@Override
+		public int getCount() {
+			return items.size();
+		}
 
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View view = LayoutInflater.from(context).inflate(this.drawable, null);
-            ImageView iv = (ImageView) view.findViewById(R.id.iv);
-            TextView tv = (TextView) view.findViewById(R.id.tv);
-            PickerItem pickerItem = items.get(position);
-            iv.setVisibility(VISIBLE);
-            if (pickerItem.hasDrawable()) {
-                iv.setVisibility(VISIBLE);
-                tv.setVisibility(GONE);
-                iv.setImageResource(pickerItem.getDrawable());
-            } else {
-                if (pickerItem.getText() != null) {
-                    iv.setVisibility(GONE);
-                    tv.setVisibility(VISIBLE);
-                    tv.setText(pickerItem.getText());
-                    if(textColor != 0){
-                        tv.setTextColor(textColor);
-                    }
-                    int textSize = ((TextItem) pickerItem).getTextSize();
-                    if (textSize != 0) {
-                        tv.setTextSize(dpToPx(((TextItem) pickerItem).getTextSize()));
-                    }
-                }
-            }
-            view.setTag(position);
-            container.addView(view);
-            return view;
-        }
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			View view = LayoutInflater.from(context).inflate(this.drawable, null);
+			ImageView iv = (ImageView)view.findViewById(R.id.iv);
+			TextView tv = (TextView)view.findViewById(R.id.tv);
+			PickerItem pickerItem = items.get(position);
+			iv.setVisibility(VISIBLE);
+			if (pickerItem.hasDrawable()) {
+				iv.setVisibility(VISIBLE);
+				tv.setVisibility(GONE);
+				iv.setImageResource(pickerItem.getDrawable());
+			} else {
+				if (pickerItem.getText() != null) {
+					iv.setVisibility(GONE);
+					tv.setVisibility(VISIBLE);
+					tv.setText(pickerItem.getText());
+					if (textColor != 0) {
+						tv.setTextColor(textColor);
+					}
+					int textSize = ((TextItem)pickerItem).getTextSize();
+					if (textSize != 0) {
+						tv.setTextSize(dpToPx(((TextItem)pickerItem).getTextSize()));
+					}
+				}
+			}
+			view.setTag(position);
+			container.addView(view);
+			return view;
+		}
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			container.removeView((View)object);
+		}
 
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return (view == object);
-        }
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return (view == object);
+		}
 
-        public CarouselViewAdapter(Context context, List<PickerItem> items, int drawable) {
-            this.context = context;
-            this.drawable = drawable;
-            this.items = items;
-            if (this.drawable == 0) {
-                this.drawable = R.layout.swipe_page;
-            }
-        }
+		public int getTextColor() {
+			return textColor;
+		}
 
-        public int getTextColor() {
-            return textColor;
-        }
-
-        public void setTextColor(@ColorInt int textColor) {
-            this.textColor = textColor;
-        }
-
+		public void setTextColor(@ColorInt int textColor) {
+			this.textColor = textColor;
+		}
 
 
-        private int dpToPx(int dp) {
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        }
-    }
+		private int dpToPx(int dp) {
+			DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+			return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+		}
+	}
 
-    /**
-     * An interface which should be implemented by all the Item classes.
-     * The picker only accepts items in the form of PickerItem.
-     */
-    public interface PickerItem {
-        String getText();
+	/**
+	 * An interface which should be implemented by all the Item classes.
+	 * The picker only accepts items in the form of PickerItem.
+	 */
+	public interface PickerItem {
+		String getText();
 
-        @DrawableRes
-        int getDrawable();
+		@DrawableRes
+		int getDrawable();
 
-        boolean hasDrawable();
-    }
+		boolean hasDrawable();
+	}
 
-    /**
-     * A PickerItem which supports text.
-     */
-    public static class TextItem implements PickerItem {
-        private String text;
-        private int textSize;
+	/**
+	 * A PickerItem which supports text.
+	 */
+	public static class TextItem implements PickerItem {
+		private String text;
+		private int textSize;
 
-        @Override
-        public int getDrawable() {
-            return 0;
-        }
+		@Override
+		public int getDrawable() {
+			return 0;
+		}
 
-        @Override
-        public boolean hasDrawable() {
-            return false;
-        }
+		@Override
+		public boolean hasDrawable() {
+			return false;
+		}
 
-        public TextItem(String text, int textSize) {
-            this.text = text;
-            this.textSize = textSize;
-        }
+		public TextItem(String text, int textSize) {
+			this.text = text;
+			this.textSize = textSize;
+		}
 
-        public String getText() {
-            return text;
-        }
+		public String getText() {
+			return text;
+		}
 
 
+		public int getTextSize() {
+			return textSize;
+		}
 
-        public int getTextSize() {
-            return textSize;
-        }
+		public void setTextSize(int textSize) {
+			this.textSize = textSize;
+		}
+	}
 
-        public void setTextSize(int textSize) {
-            this.textSize = textSize;
-        }
-    }
+	/**
+	 * A PickerItem which supports drawables.
+	 */
+	public static class DrawableItem implements PickerItem {
+		@DrawableRes
+		private int drawable;
 
-    /**
-     * A PickerItem which supports drawables.
-     */
-    public static class DrawableItem implements PickerItem {
-        @DrawableRes
-        private int drawable;
+		@Override
+		public String getText() {
+			return null;
+		}
 
-        @Override
-        public String getText() {
-            return null;
-        }
+		@DrawableRes
+		public int getDrawable() {
+			return drawable;
+		}
 
-        @DrawableRes
-        public int getDrawable() {
-            return drawable;
-        }
+		@Override
+		public boolean hasDrawable() {
+			return true;
+		}
 
-        @Override
-        public boolean hasDrawable() {
-            return true;
-        }
-
-        public DrawableItem(@DrawableRes int drawable) {
-            this.drawable = drawable;
-        }
-    }
+		public DrawableItem(@DrawableRes int drawable) {
+			this.drawable = drawable;
+		}
+	}
 
 
 }

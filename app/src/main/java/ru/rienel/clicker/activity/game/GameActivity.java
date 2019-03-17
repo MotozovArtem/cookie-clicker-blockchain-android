@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity {
 		setContentView(R.layout.game_activity);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		GameFragment fragment = (GameFragment) fragmentManager.findFragmentById(R.id.game_container);
+		GameFragment fragment = (GameFragment)fragmentManager.findFragmentById(R.id.game_container);
 
 		if (fragment == null) {
 			fragment = GameFragment.newInstance();
@@ -37,8 +37,8 @@ public class GameActivity extends AppCompatActivity {
 		InetAddress address = null;
 
 		if (intent != null) {
-			gameType = (GameType) intent.getSerializableExtra(INTENT_GAME_TYPE);
-			address = (InetAddress) intent.getSerializableExtra(INTENT_ADDRESS);
+			gameType = (GameType)intent.getSerializableExtra(INTENT_GAME_TYPE);
+			address = (InetAddress)intent.getSerializableExtra(INTENT_ADDRESS);
 		}
 		if (gameType == null) {
 			gameType = GameType.SINGLEPLAYER;

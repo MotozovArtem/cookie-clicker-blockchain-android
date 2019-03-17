@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		imageDonut = findViewById(R.id.donut);
 
 
-		if (cookieSettings.contains(PREFERENCES_DONUT_ID)){
+		if (cookieSettings.contains(PREFERENCES_DONUT_ID)) {
 			imageDonut.setImageResource(cookieSettings.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
 		}
 
@@ -101,12 +101,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 			editor.putInt("tempClicks", 1);               // Counter of temporary increment clicks  (purchased for comman clicks)
 			editor.putInt("tempAutoClicks", 1);           // Counter of temporary Auto clicks  (purchased for comman clicks)
 			editor.putInt("donutPerClick", 1);           // Increase only for multiplayer clicks; defoult value is "1";
-			editor.putInt("mAutoClicks", 0);            	// Counter of Auto clicks (purchased for multiplayer clicks)
-			editor.putInt("clicks", 0);			// Common clicks
-			editor.putInt("mClicks", 0);    		// Multiplayer Clicks
-			editor.putInt("currentLevel", 0);    		// Player Level
-			editor.putInt("commonCoins", 0);    		// Player common coins
-			editor.putInt("multiplayerCoins", 10000);    		// Player multiplayer coins
+			editor.putInt("mAutoClicks", 0);                // Counter of Auto clicks (purchased for multiplayer clicks)
+			editor.putInt("clicks", 0);            // Common clicks
+			editor.putInt("mClicks", 0);            // Multiplayer Clicks
+			editor.putInt("currentLevel", 0);            // Player Level
+			editor.putInt("commonCoins", 0);            // Player common coins
+			editor.putInt("multiplayerCoins", 10000);            // Player multiplayer coins
 			editor.apply();
 			return true;
 		}

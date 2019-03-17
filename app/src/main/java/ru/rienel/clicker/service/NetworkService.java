@@ -192,17 +192,8 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		wifiP2pManager.requestConnectionInfo(channel, infoListener);
 	}
 
-	public void removeGroup() {
-		wifiP2pManager.removeGroup(channel, new ActionListener() {
-			@Override
-			public void onSuccess() {
-			}
-
-			@Override
-			public void onFailure(int reason) {
-				Log.e(TAG, String.format(Locale.ENGLISH, "Disconnect failed. Reason :%d", reason));
-			}
-		});
+	public void removeGroup(ActionListener listener) {
+		wifiP2pManager.removeGroup(channel, listener);
 	}
 
 	public List<WifiP2pDevice> getP2pDevices() {
@@ -223,6 +214,10 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void handleConnect(String deviceName) {
+
 	}
 
 	public class NetworkServiceBinder extends Binder {

@@ -18,6 +18,8 @@ public interface OpponentsContract {
 		void updateOpponentsList(List<Opponent> opponentList);
 
 		Context getContext();
+
+		void showAcceptanceDialog(String opponentName);
 	}
 
 	interface Presenter extends BasePresenter {
@@ -28,5 +30,7 @@ public interface OpponentsContract {
 		void handleOnOpponentListClick(WifiP2pConfig config, WifiP2pManager.ActionListener actionListener);
 
 		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
+
+		void showAcceptanceDialog(String deviceName);
 	}
 }

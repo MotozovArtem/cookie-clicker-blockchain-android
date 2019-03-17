@@ -31,7 +31,7 @@ public class OpponentsActivity extends AppCompatActivity {
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		opponentListFragment =
-				(OpponentListFragment) fragmentManager.findFragmentById(R.id.opponent_fragment_container);
+				(OpponentListFragment)fragmentManager.findFragmentById(R.id.opponent_fragment_container);
 
 		if (opponentListFragment == null) {
 			opponentListFragment = OpponentListFragment.newInstance();
@@ -43,7 +43,6 @@ public class OpponentsActivity extends AppCompatActivity {
 		presenter = new OpponentsPresenter(opponentListFragment);
 
 		connection = presenter.newServiceConnection();
-
 		Intent serviceIntent = NetworkService.newIntent(this);
 		startService(serviceIntent);
 		bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE);

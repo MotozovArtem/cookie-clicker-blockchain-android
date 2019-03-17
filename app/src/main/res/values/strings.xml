@@ -2,7 +2,6 @@
 	<string name="app_name">P2P-Clicker</string>
 	<string name="empty"/>
 	<string name="nullPoints">00000</string>
-
 	<string name="clicked">+1</string>
 	<string name="title">Donut clicker</string>
 	<string name="backToMenu">Back to menu</string>
@@ -10,7 +9,7 @@
 	<string name="tempIncrementButton">Increment click +1 (-10 coins)</string>
 	<string name="tempAutoClickButton">Auto click (-20 coins)</string>
 	<string name="mAutoClick">Auto click (-200 Multiplayer coins)</string>
-	<string name="mIncrementClick">Increment click  +1 (-100 Multiplayer coins)</string>
+	<string name="mIncrementClick">Increment click +1 (-100 Multiplayer coins)</string>
 	<string name="shop">Go to shop</string>
 	<string name="shopTitle">Shop</string>
 	<string name="gameTitle">Chain Clicker</string>
@@ -19,7 +18,7 @@
 	<string name="startTitle">P2P Clicker</string>
 	<string name="endGame">The end!</string>
 	<string name="titleDialog">Game over</string>
-	<string name="continueGameDialog">OK</string>
+	<string name="ok">OK</string>
 	<string name="statisticsDesc">You won</string>
 	<string name="diagrammTitle">Diagram</string>
 	<string name="multiplayer">Multiplayer</string>
@@ -34,21 +33,23 @@
 	<string name="you_lose">You lose…</string>
 	<string name="you_win">You win!!!</string>
 	<string name="dialog_message_for_opponent">Message for opponent</string>
-    <string name="settings">Settings</string>
+	<string name="settings">Settings</string>
 	<string name="statisticText">Statistic</string>
 	<string name="multiplayerText">Multiplayer</string>
 	<string name="new_gameText">New game</string>
 	<string name="imageofdonutText">imageOfDonut</string>
 	<string name="warning_title">Warning</string>
-    <string name="gameSaves">game_saves</string>
-    <string name="coins">Coins: </string>
-    <string name="DPC">Donuts Per Click: </string>
-    <string name="clearGameSaves">Clear game saves</string>
-    <string name="IncClick">Increment Click</string>
-    <string name="AutoClick">Auto Click</string>
-    <string name="multiplayer_coins">Multiplayer Coins: </string>
-    <string name="select">Select</string>
+	<string name="gameSaves">game_saves</string>
+	<string name="coins">Coins:</string>
+	<string name="DPC">Donuts Per Click:</string>
+	<string name="clearGameSaves">Clear game saves</string>
+	<string name="IncClick">Increment Click</string>
+	<string name="AutoClick">Auto Click</string>
+	<string name="multiplayer_coins">Multiplayer Coins:</string>
+	<string name="select">Select</string>
 	<string name="cancel">Cancel</string>
-	<string name="waiting_opponent">Waiting opponent...</string>
-	<string name="multiplayer_auto_clicks">Multiplayer Auto Clicks: </string>
+	<string name="waiting_opponent">Waiting opponent…</string>
+	<string name="multiplayer_auto_clicks">Multiplayer Auto Clicks:</string>
+	<string name="dialog_acceptance_message">Are you ready for epic donut battle with…</string>
+	<string name="question_mark">\?</string>
 </resources>
