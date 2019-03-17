@@ -163,7 +163,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	public void discoverPeers() {
 		if (!isP2pEnabled) {
-			Toast.makeText(this, "P2P off", Toast.LENGTH_SHORT).show();
 			Log.d(TAG, "discoverPeers: P2P off");
 		} else {
 			wifiP2pManager.discoverPeers(channel, new ActionListener() {
@@ -172,7 +171,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 					Toast.makeText(NetworkService.this,
 							"Discovery Initiated",
 							Toast.LENGTH_SHORT).show();
-					Log.d(TAG, "onSuccess: Discovery initiated");
 				}
 
 				@Override
@@ -180,7 +178,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 					Toast.makeText(NetworkService.this,
 							String.format(Locale.ENGLISH, "Discovery Failed : %d", reason),
 							Toast.LENGTH_SHORT).show();
-					Log.d(TAG, String.format(Locale.ENGLISH, "onFailure: Discovery Failed : %d", reason));
 				}
 			});
 		}
@@ -262,7 +259,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 					networkService.setP2pEnabled(false);
 					networkService.resetPeers();
 				}
-				Log.d(TAG, "P2P state changed - state:" + state);
+				Log.d(TAG, String.format("P2P state changed - state:%d", state));
 			} else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 				if (networkService.isP2pEnabled()) {
 					networkService.requestPeers(peerListListener);
@@ -272,7 +269,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 				if (!networkService.isP2pEnabled()) {
 					return;
 				}
-
 				NetworkInfo networkInfo = intent
 						.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 				if (networkInfo.isConnected()) {
@@ -281,13 +277,13 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 					networkService.resetPeers();
 					networkService.discoverPeers();
 				}
-				Log.d(TAG, "P2P connection changed - networkInfo:" + networkInfo.toString());
+				Log.d(TAG, String.format("P2P connection changed - networkInfo:%s", networkInfo.toString()));
 			} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 				WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(
 						WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
-				Log.d(TAG, "P2P this device changed - wifiP2pDevice:" + wifiP2pDevice.toString());
+				Log.d(TAG, String.format("P2P this device changed - wifiP2pDevice:%s", wifiP2pDevice.toString()));
 			} else {
-				Log.d(TAG, "Unmatched P2P change action - " + action);
+				Log.d(TAG, String.format("Unmatched P2P change action - %s", action));
 			}
 		}
 
