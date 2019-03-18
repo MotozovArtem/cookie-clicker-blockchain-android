@@ -25,9 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.common.ImageDonut;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.ui.dialog.EndGameDialogFragment;
 import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
+
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DONUT_ID;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
 
 public class GameFragment extends Fragment implements GameContract.View, SoundPool.OnLoadCompleteListener {
 	private static final String TIMER_TIME_FORMAT = "%02d:%02d";
@@ -106,7 +110,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		donutClickAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.donut_on_click_animation);
 
 		preparingProgressBar(this.currentLevel, this.clicks);
-
+		loadDonutImage();
 		//Tap sound
 		soundPool = newSoundPool();
 		soundId = soundPool.load(getActivity(), R.raw.muda, 1);
@@ -340,7 +344,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 				@Override
 				public void onFinish() {
-					donutPerClick -= 2;
+					donutPerClick -= 1;
 				}
 			}.start();
 		};
@@ -374,6 +378,13 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		this.currentLevel = saves.getInt("currentLevel", 0);
 		this.coins = saves.getInt("coins", 0);
 		this.clicks = saves.getInt("clicks", 0);
+	}
+
+	private void loadDonutImage() {
+		donutImage.setBackground(null);
+		this.donutImage.setImageResource(getContext()
+				.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+				.getInt(PREFERENCES_DONUT_ID, ImageDonut.PINK_DONUT.resourceId));
 	}
 
 	private void checkPurchasedItem(Button incTap, Button autoTap) {
