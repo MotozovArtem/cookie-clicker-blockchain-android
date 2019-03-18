@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
-import android.widget.Toast;
 
 public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 	private static final String TAG = WifiAppBroadcastReceiver.class.getName();
@@ -57,7 +57,12 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 				networkService.resetPeers();
 				networkService.discoverPeers();
 			}
-			Log.i(TAG, String.format("SOMEONE CONNECTED !!!!!!HUY %s", networkInfo.toString()));
+
+			WifiP2pInfo p2pInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO);
+			if (p2pInfo != null && p2pInfo.groupOwnerAddress != null) {
+				networkService.handleConnect(p2pInfo.groupOwnerAddress);
+				Log.i(TAG, "onReceive: Connection registered");
+			}
 			Log.d(TAG, String.format("P2P connection changed - networkInfo:%s", networkInfo.toString()));
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			WifiP2pDevice wifiP2pDevice = intent.getParcelableExtra(

@@ -1,5 +1,6 @@
 package ru.rienel.clicker.activity.opponents;
 
+import java.net.InetAddress;
 import java.util.List;
 
 import android.content.Context;
@@ -19,7 +20,7 @@ public interface OpponentsContract {
 
 		Context getContext();
 
-		void showAcceptanceDialog(String opponentName);
+		void showAcceptanceDialog(InetAddress opponentAddress);
 	}
 
 	interface Presenter extends BasePresenter {
@@ -31,6 +32,6 @@ public interface OpponentsContract {
 
 		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
 
-		void showAcceptanceDialog(String deviceName);
+		void showAcceptanceDialog(InetAddress deviceName);
 	}
 }

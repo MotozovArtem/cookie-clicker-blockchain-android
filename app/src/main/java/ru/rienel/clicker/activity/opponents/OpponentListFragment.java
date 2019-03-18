@@ -1,5 +1,6 @@
 package ru.rienel.clicker.activity.opponents;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
 import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
 
@@ -96,21 +98,22 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	}
 
 	@Override
-	public void showAcceptanceDialog(String opponentName) {
-		Opponent opponent = findOpponentByName(opponentName);
+	public void showAcceptanceDialog(InetAddress opponentAddress) {
+//		Opponent opponent = findOpponentByAddress(opponentAddress);
+		Opponent opponent = OpponentFactory.build(opponentAddress.getHostAddress(), null , opponentAddress);
 		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent);
 		dialogFragment.show(getFragmentManager(), AcceptanceDialogFragment.TAG);
 	}
 
-	private Opponent findOpponentByName(String opponentName) {
+	private Opponent findOpponentByAddress(InetAddress opponentAddress) {
 		Opponent foundOpponent = null;
 		for (Opponent opponent : opponentList) {
-			if (opponent.getName().equals(opponentName)) {
+			if (opponent.getIpAddress().equals(opponentAddress)) {
 				foundOpponent = opponent;
 			}
 		}
 		if (foundOpponent == null) {
-			Log.e(TAG, "findOpponentByName: Opponent not found");
+			Log.e(TAG, "findOpponentByAddress: Opponent not found");
 			throw new RuntimeException("Opponent not found");
 		}
 		return foundOpponent;

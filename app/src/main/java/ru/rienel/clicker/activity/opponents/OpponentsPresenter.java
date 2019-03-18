@@ -2,6 +2,7 @@ package ru.rienel.clicker.activity.opponents;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 				Log.d(TAG, "onServiceConnected: called");
 				NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder)service;
 				networkService = binder.getService();
+				networkService.setPresenter(OpponentsPresenter.this);
 				networkService.addPropertyChangeListener(OpponentsPresenter.this);
 				Log.d(TAG, "onServiceConnected: connected to service");
 			}
@@ -83,7 +85,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void showAcceptanceDialog(String deviceName) {
+	public void showAcceptanceDialog(InetAddress deviceName) {
 		opponentsView.showAcceptanceDialog(deviceName);
 	}
 

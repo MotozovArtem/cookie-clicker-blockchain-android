@@ -29,6 +29,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import ru.rienel.clicker.activity.opponents.OpponentsContract;
+import ru.rienel.clicker.activity.opponents.OpponentsPresenter;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 
 public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
@@ -47,6 +49,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	private boolean isP2pEnabled;
 	private boolean retryChannel;
+	private OpponentsContract.Presenter opponentsPresenter;
 
 	public static Intent newIntent(Context context) {
 		return new Intent(context, NetworkService.class);
@@ -216,8 +219,12 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		changeSupport.removePropertyChangeListener(listener);
 	}
 
-	public void handleConnect(String deviceName) {
+	public void handleConnect(InetAddress opponentAddress) {
+		this.opponentsPresenter.showAcceptanceDialog(opponentAddress);
+	}
 
+	public void setPresenter(OpponentsPresenter opponentsPresenter) {
+		this.opponentsPresenter = opponentsPresenter;
 	}
 
 	public class NetworkServiceBinder extends Binder {
