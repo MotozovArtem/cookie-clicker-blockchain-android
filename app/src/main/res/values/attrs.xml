@@ -4,8 +4,8 @@
         <attr name="items_visible" />
     </declare-styleable>
     <attr name="items_visible" format="enum">
-        <enum name="three" signalType="3" />
-        <enum name="five" signalType="5" />
-        <enum name="seven" signalType="7" />
+        <enum name="three" value="3" />
+        <enum name="five" value="5" />
+        <enum name="seven" value="7" />
     </attr>
 </resources>
