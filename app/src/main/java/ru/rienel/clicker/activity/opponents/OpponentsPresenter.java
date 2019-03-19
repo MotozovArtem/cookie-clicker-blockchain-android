@@ -2,13 +2,11 @@ package ru.rienel.clicker.activity.opponents;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.IBinder;
@@ -17,6 +15,8 @@ import android.util.Log;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.net.task.ClientAsyncTask;
+import ru.rienel.clicker.net.task.ServerAsyncTask;
 import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
@@ -24,6 +24,8 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
+	private ServerAsyncTask server;
+	private ClientAsyncTask client;
 
 	public OpponentsPresenter(OpponentsContract.View opponentsView) {
 		Preconditions.checkNotNull(opponentsView);
@@ -49,7 +51,6 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 				Log.d(TAG, "onServiceConnected: called");
 				NetworkService.NetworkServiceBinder binder = (NetworkService.NetworkServiceBinder)service;
 				networkService = binder.getService();
-				networkService.setPresenter(OpponentsPresenter.this);
 				networkService.addPropertyChangeListener(OpponentsPresenter.this);
 				Log.d(TAG, "onServiceConnected: connected to service");
 			}
@@ -74,19 +75,15 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void handleOnOpponentListClick(WifiP2pConfig config, WifiP2pManager.ActionListener actionListener) {
-		Preconditions.checkNotNull(config);
-		networkService.connect(config, actionListener);
+	public void handleOnOpponentListClick(Opponent opponent) {
+		Preconditions.checkNotNull(opponent);
+
+
 	}
 
 	@Override
 	public void handleCancelConnection(WifiP2pManager.ActionListener actionListener) {
 		networkService.cancelDisconnect(actionListener);
-	}
-
-	@Override
-	public void showAcceptanceDialog(InetAddress deviceName) {
-		opponentsView.showAcceptanceDialog(deviceName);
 	}
 
 	private void updateOpponents() {
@@ -99,6 +96,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 			opponent.setMacAddress(device.deviceAddress);
 			networkService.requestConnectionInfo(info -> {
 				opponent.setIpAddress(info.groupOwnerAddress);
+				opponentsView.updateUi();
 			});
 			opponentList.add(opponent);
 		}

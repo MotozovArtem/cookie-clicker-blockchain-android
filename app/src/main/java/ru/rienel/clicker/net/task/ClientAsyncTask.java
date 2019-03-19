@@ -13,12 +13,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration;
+import ru.rienel.clicker.net.Signal;
 
 public class ClientAsyncTask extends AsyncTask<Object, Void, Boolean> {
-
 	private Context context;
 	private InetSocketAddress serverAddress;
+	private static final Gson GSON = new GsonBuilder().
+			registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
+			.create();
 
 	public ClientAsyncTask(Context context, InetAddress serverAddress) {
 		this.context = context;
@@ -33,7 +38,6 @@ public class ClientAsyncTask extends AsyncTask<Object, Void, Boolean> {
 		try {
 			socket.bind(null);
 			socket.connect(this.serverAddress, Configuration.TIMEOUT);
-
 
 			OutputStream outputStream = socket.getOutputStream();
 			ContentResolver contentResolver = context.getContentResolver();

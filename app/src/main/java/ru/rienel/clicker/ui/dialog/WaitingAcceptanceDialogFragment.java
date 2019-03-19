@@ -2,7 +2,6 @@ package ru.rienel.clicker.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,19 +17,21 @@ import android.widget.Toast;
 
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.opponents.OpponentsContract;
+import ru.rienel.clicker.db.domain.Opponent;
 
 public class WaitingAcceptanceDialogFragment extends DialogFragment {
 	public static final String TAG = WaitingAcceptanceDialogFragment.class.getName();
 
 	private ImageView donutIcon;
 	private TextView waitingMessage;
-	private OpponentsContract.Presenter presenter;
-	private WifiP2pConfig p2pConfig;
 
-	public static WaitingAcceptanceDialogFragment newInstance(OpponentsContract.Presenter presenter, WifiP2pConfig p2pConfig) {
+	private OpponentsContract.Presenter presenter;
+	private Opponent opponent;
+
+	public static WaitingAcceptanceDialogFragment newInstance(OpponentsContract.Presenter presenter, Opponent opponent) {
 		WaitingAcceptanceDialogFragment dialog = new WaitingAcceptanceDialogFragment();
 		dialog.setPresenter(presenter);
-		dialog.setWifiP2pConfig(p2pConfig);
+		dialog.setOpponent(opponent);
 		return dialog;
 	}
 
@@ -45,8 +46,7 @@ public class WaitingAcceptanceDialogFragment extends DialogFragment {
 
 		donutIcon.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.dialog_donut_rotate));
 
-		presenter.handleOnOpponentListClick(p2pConfig, newConnectionActionListener());
-
+		presenter.handleOnOpponentListClick(opponent);
 
 		return new AlertDialog.Builder(getActivity())
 				.setView(root)
@@ -62,8 +62,8 @@ public class WaitingAcceptanceDialogFragment extends DialogFragment {
 		this.presenter = presenter;
 	}
 
-	private void setWifiP2pConfig(WifiP2pConfig p2pConfig) {
-		this.p2pConfig = p2pConfig;
+	private void setOpponent(Opponent opponent) {
+		this.opponent = opponent;
 	}
 
 	private WifiP2pManager.ActionListener newConnectionActionListener() {

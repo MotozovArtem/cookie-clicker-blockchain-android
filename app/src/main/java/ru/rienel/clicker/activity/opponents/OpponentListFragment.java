@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -77,7 +76,8 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		inflater.inflate(R.menu.fragment_opponent_list, menu);
 	}
 
-	private void updateUi() {
+	@Override
+	public void updateUi() {
 		opponentAdapter = new OpponentAdapter(opponentList);
 		opponentRecyclerView.setAdapter(opponentAdapter);
 	}
@@ -99,8 +99,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 	@Override
 	public void showAcceptanceDialog(InetAddress opponentAddress) {
-//		Opponent opponent = findOpponentByAddress(opponentAddress);
-		Opponent opponent = OpponentFactory.build(opponentAddress.getHostAddress(), null , opponentAddress);
+		Opponent opponent = OpponentFactory.build(opponentAddress.getHostAddress(), null, opponentAddress);
 		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent);
 		dialogFragment.show(getFragmentManager(), AcceptanceDialogFragment.TAG);
 	}
@@ -117,10 +116,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			throw new RuntimeException("Opponent not found");
 		}
 		return foundOpponent;
-	}
-
-	public void clearOpponents() {
-		opponentList.clear();
 	}
 
 	public void updateOpponent(Opponent opponent) {
@@ -192,33 +187,29 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 		private ImageView thumbnail;
 		private TextView name;
-
-		@Override
-		public void onClick(View v) {
-			WifiP2pConfig p2pConfig = getConfigForConnection(this.opponent);
-			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, p2pConfig);
-			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
-		}
+		private TextView ip;
 
 		public OpponentHolder(@NonNull View itemView) {
 			super(itemView);
 
 			name = itemView.findViewById(R.id.list_item_opponent_name);
 			thumbnail = itemView.findViewById(R.id.list_item_opponent_thumbnail);
+			ip = itemView.findViewById(R.id.list_item_opponent_ip);
 			itemView.setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
+			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
 		}
 
 		public void bind(Opponent opponent) {
 			this.opponent = opponent;
 			name.setText(opponent.getName());
-		}
-
-		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
-			Preconditions.checkNotNull(opponent);
-
-			WifiP2pConfig config = new WifiP2pConfig();
-			config.deviceAddress = opponent.getMacAddress();
-			return config;
+			if (opponent.getIpAddress() != null) {
+				ip.setText(opponent.getIpAddress().getHostAddress());
+			}
 		}
 	}
 }
