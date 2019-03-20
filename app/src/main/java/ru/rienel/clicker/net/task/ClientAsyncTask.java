@@ -1,17 +1,16 @@
 package ru.rienel.clicker.net.task;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,51 +18,38 @@ import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.net.Signal;
 
 public class ClientAsyncTask extends AsyncTask<Object, Void, Boolean> {
-	private Context context;
-	private InetSocketAddress serverAddress;
-	private static final Gson GSON = new GsonBuilder().
-			registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
+	private static final String TAG = ClientAsyncTask.class.getName();
+	private static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
 			.create();
 
-	public ClientAsyncTask(Context context, InetAddress serverAddress) {
+	private Context context;
+	private InetSocketAddress serverAddress;
+	private Signal signal;
+
+	public ClientAsyncTask(Context context, InetAddress serverAddress, Signal signal) {
 		this.context = context;
 		this.serverAddress = new InetSocketAddress(serverAddress, Configuration.SERVER_PORT);
 	}
 
 	@Override
 	protected Boolean doInBackground(Object... objects) {
-		int len;
-		Socket socket = new Socket();
-		byte[] buffer = new byte[1024];
-		try {
+		byte[] buffer = new byte[2048];
+		try (Socket socket = new Socket()) {
 			socket.bind(null);
 			socket.connect(this.serverAddress, Configuration.TIMEOUT);
 
+			String json = GSON.toJson(signal);
 			OutputStream outputStream = socket.getOutputStream();
-			ContentResolver contentResolver = context.getContentResolver();
-			InputStream inputStream = null;
-			inputStream = contentResolver.openInputStream(Uri.parse("path/to/picture.jpg"));
-			while ((len = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, len);
-			}
+			InputStream inputStream = socket.getInputStream();
+
+//			outputStream.write();
+
 			outputStream.close();
 			inputStream.close();
-		} catch (FileNotFoundException e) {
-			//catch logic
-			return false;
 		} catch (IOException e) {
-			//catch logic
+			Log.e(TAG, "doInBackground: ", e);
 			return false;
-		} finally {
-			if (socket != null) {
-				if (socket.isConnected()) {
-					try {
-						socket.close();
-					} catch (IOException e) {
-						//catch logic
-					}
-				}
-			}
 		}
 		return true;
 	}
