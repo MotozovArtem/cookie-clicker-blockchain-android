@@ -111,6 +111,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 		preparingProgressBar(this.currentLevel, this.clicks);
 		loadDonutImage();
+
 		//Tap sound
 		soundPool = newSoundPool();
 		soundId = soundPool.load(getActivity(), R.raw.muda, 1);

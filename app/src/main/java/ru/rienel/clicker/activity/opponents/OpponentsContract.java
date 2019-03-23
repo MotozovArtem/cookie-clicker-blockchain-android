@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pManager;
 
 import ru.rienel.clicker.activity.BasePresenter;
@@ -15,13 +16,17 @@ public interface OpponentsContract {
 	interface View extends BaseView<Presenter> {
 		void updateUi();
 
-		void showOpponents();
-
-		void updateOpponentsList(List<Opponent> opponentList);
-
 		Context getContext();
 
 		void showAcceptanceDialog(InetAddress opponentAddress);
+
+		void updateOpponent(Opponent opponent);
+
+		void updateOpponentList(List<Opponent> opponentList);
+
+		List<Opponent> getOpponentList();
+
+		void setOpponentList(List<Opponent> opponentList);
 	}
 
 	interface Presenter extends BasePresenter {
@@ -30,6 +35,8 @@ public interface OpponentsContract {
 		ServiceConnection newServiceConnection();
 
 		void handleOnOpponentListClick(Opponent opponent);
+
+		void connect(WifiP2pConfig config);
 
 		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
 	}

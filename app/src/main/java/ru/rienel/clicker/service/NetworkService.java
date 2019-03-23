@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 
-public class NetworkService extends Service implements ChannelListener, PeerListListener, ConnectionInfoListener {
+public class NetworkService extends Service implements ChannelListener, PeerListListener {
 	private static final String TAG = NetworkService.class.getName();
 
 	private final IntentFilter intentFilter = new IntentFilter();
@@ -65,7 +65,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		wifiP2pManager = (WifiP2pManager)getSystemService(Context.WIFI_P2P_SERVICE);
 		channel = initialize(this, getMainLooper(), this);
 
-		receiver = new WifiAppBroadcastReceiver(this, this, this);
+		receiver = new WifiAppBroadcastReceiver(this, this);
 		registerReceiver(receiver, intentFilter);
 
 		p2pDevices = new ArrayList<>();
@@ -115,11 +115,6 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 	}
 
 	@Override
-	public void onConnectionInfoAvailable(WifiP2pInfo info) {
-		final InetAddress groupOwnerAddress = info.groupOwnerAddress;
-	}
-
-	@Override
 	public void onPeersAvailable(WifiP2pDeviceList peers) {
 		int listSize = peers.getDeviceList().size();
 		if (listSize == 0) {
@@ -158,22 +153,26 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 		if (!isP2pEnabled) {
 			Log.d(TAG, "discoverPeers: P2P off");
 		} else {
-			wifiP2pManager.discoverPeers(channel, new ActionListener() {
-				@Override
-				public void onSuccess() {
-					Toast.makeText(NetworkService.this,
-							"Discovery Initiated",
-							Toast.LENGTH_SHORT).show();
-				}
-
-				@Override
-				public void onFailure(int reason) {
-					Toast.makeText(NetworkService.this,
-							String.format(Locale.ENGLISH, "Discovery Failed : %d", reason),
-							Toast.LENGTH_SHORT).show();
-				}
-			});
+			wifiP2pManager.discoverPeers(channel, newDiscoveryListener());
 		}
+	}
+
+	private ActionListener newDiscoveryListener() {
+		return new ActionListener() {
+			@Override
+			public void onSuccess() {
+				Toast.makeText(NetworkService.this,
+						"Discovery Initiated",
+						Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onFailure(int reason) {
+				Toast.makeText(NetworkService.this,
+						String.format(Locale.ENGLISH, "Discovery Failed : %d", reason),
+						Toast.LENGTH_SHORT).show();
+			}
+		};
 	}
 
 	public void connect(WifiP2pConfig config, ActionListener actionListener) {

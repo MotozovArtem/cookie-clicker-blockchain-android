@@ -14,15 +14,12 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 
 	private NetworkService networkService;
 	private WifiP2pManager.PeerListListener peerListListener;
-	private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
 
 	public WifiAppBroadcastReceiver(NetworkService service,
-	                                WifiP2pManager.PeerListListener peerListListener,
-	                                WifiP2pManager.ConnectionInfoListener connectionInfoListener) {
+	                                WifiP2pManager.PeerListListener peerListListener) {
 		super();
 		this.networkService = service;
 		this.peerListListener = peerListListener;
-		this.connectionInfoListener = connectionInfoListener;
 	}
 
 	@Override
@@ -52,7 +49,7 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 
 			NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 			if (networkInfo.isConnected()) {
-				networkService.requestConnectionInfo(connectionInfoListener);
+				networkService.requestConnectionInfo(newConnectionInfoListener());
 			} else {
 				networkService.resetPeers();
 				networkService.discoverPeers();
@@ -65,5 +62,14 @@ public class WifiAppBroadcastReceiver extends BroadcastReceiver {
 		} else {
 			Log.d(TAG, String.format("Unmatched P2P change action - %s", action));
 		}
+	}
+
+	private WifiP2pManager.ConnectionInfoListener newConnectionInfoListener() {
+		return new WifiP2pManager.ConnectionInfoListener() {
+			@Override
+			public void onConnectionInfoAvailable(WifiP2pInfo info) {
+				Log.d(TAG, "onConnectionInfoAvailable: " + info);
+			}
+		};
 	}
 }

@@ -1,12 +1,10 @@
 package ru.rienel.clicker.net.task;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.charset.Charset;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,39 +12,42 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ru.rienel.clicker.activity.game.GameContract;
+import ru.rienel.clicker.activity.opponents.OpponentsContract;
 import ru.rienel.clicker.common.Configuration;
+import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.net.Signal;
 
-public class ClientAsyncTask extends AsyncTask<Object, Void, Boolean> {
+public class ClientAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private static final String TAG = ClientAsyncTask.class.getName();
 	private static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
 			.create();
 
-	private Context context;
 	private InetSocketAddress serverAddress;
 	private Signal signal;
+	private OpponentsContract.Presenter opponentPresenter;
+	private GameContract.Presenter gamePresenter;
 
-	public ClientAsyncTask(Context context, InetAddress serverAddress, Signal signal) {
-		this.context = context;
+	public ClientAsyncTask(InetAddress serverAddress, Signal signal) {
+		Preconditions.checkNotNull(signal);
+		Preconditions.checkNotNull(serverAddress);
+
 		this.serverAddress = new InetSocketAddress(serverAddress, Configuration.SERVER_PORT);
+		this.signal = signal;
 	}
 
 	@Override
-	protected Boolean doInBackground(Object... objects) {
-		byte[] buffer = new byte[2048];
+	protected Boolean doInBackground(Void... voids) {
 		try (Socket socket = new Socket()) {
 			socket.bind(null);
 			socket.connect(this.serverAddress, Configuration.TIMEOUT);
 
+			OutputStream out = socket.getOutputStream();
 			String json = GSON.toJson(signal);
-			OutputStream outputStream = socket.getOutputStream();
-			InputStream inputStream = socket.getInputStream();
+			out.write(json.getBytes());
 
-//			outputStream.write();
-
-			outputStream.close();
-			inputStream.close();
+			out.close();
 		} catch (IOException e) {
 			Log.e(TAG, "doInBackground: ", e);
 			return false;
@@ -62,5 +63,21 @@ public class ClientAsyncTask extends AsyncTask<Object, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean aBoolean) {
 		super.onPostExecute(aBoolean);
+	}
+
+	public OpponentsContract.Presenter getOpponentPresenter() {
+		return opponentPresenter;
+	}
+
+	public void setOpponentPresenter(OpponentsContract.Presenter opponentPresenter) {
+		this.opponentPresenter = opponentPresenter;
+	}
+
+	public GameContract.Presenter getGamePresenter() {
+		return gamePresenter;
+	}
+
+	public void setGamePresenter(GameContract.Presenter gamePresenter) {
+		this.gamePresenter = gamePresenter;
 	}
 }
