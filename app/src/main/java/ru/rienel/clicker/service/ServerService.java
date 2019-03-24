@@ -14,10 +14,14 @@ import ru.rienel.clicker.common.Configuration;
 public class ServerService extends IntentService {
 	private static final String TAG = ServerService.class.getName();
 
-	public static final String ACTION_SEND_FILE = "com.example.android.wifidirect.SEND_FILE";
+	public static final String ACTION_SEND_FILE = "ru.rienel.clicker.SEND_FILE";
 	public static final String EXTRAS_FILE_PATH = "file_url";
 	public static final String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
 	public static final String EXTRAS_GROUP_OWNER_PORT = "go_port";
+
+	public static Intent newIntent(Context context) {
+		return new Intent(context, ServerService.class);
+	}
 
 	public ServerService(String name) {
 		super(name);

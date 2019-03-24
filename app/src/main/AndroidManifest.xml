@@ -27,6 +27,8 @@
 		<service
 				android:name=".service.NetworkService"
 				android:stopWithTask="true"/>
+		<service android:name=".service.ClientService"/>
+		<service android:name=".service.ServerService"/>
 
 		<activity
 				android:name=".activity.game.GameActivity"
