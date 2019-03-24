@@ -2,7 +2,6 @@ package ru.rienel.clicker.service;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -12,10 +11,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -125,6 +124,7 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 			p2pDevices.clear();
 
 			changeSupport.firePropertyChange(PropertiesUpdatedName.P2P_DEVICES, oldDevices, p2pDevices);
+			return;
 		}
 
 		if (!p2pDevices.equals(peers.getDeviceList())) {

@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -68,14 +69,9 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		switch (evt.getPropertyName()) {
-			case PropertiesUpdatedName.P2P_DEVICES:
-				this.updateOpponents();
-				break;
-			case PropertiesUpdatedName.CONNECTION_INFO:
-				// TODO Update concrete opponent IP address (comes from WifiP2pInfo)
-				break;
+	public void propertyChange(PropertyChangeEvent event) {
+		if (PropertiesUpdatedName.P2P_DEVICES.equals(event.getPropertyName())) {
+			this.updateOpponents();
 		}
 	}
 
@@ -85,10 +81,9 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		Signal signal = new Signal("connect", Signal.SignalType.INVITE);
 
 		client = new ClientAsyncTask(opponent.getIpAddress(), signal);
-		client.execute();
+		client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
-	@Override
 	public void connect(WifiP2pConfig config) {
 		Preconditions.checkNotNull(config);
 
@@ -121,10 +116,9 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		for (WifiP2pDevice device : devices) {
 			Opponent opponent = new Opponent();
 			opponent.setName(device.deviceName);
-			opponent.setMacAddress(device.deviceAddress);
+			opponent.setAddress(device.deviceAddress);
 			networkService.requestConnectionInfo(info -> {
 				opponent.setIpAddress(info.groupOwnerAddress);
-				opponentsView.updateUi();
 			});
 			opponentList.add(opponent);
 		}

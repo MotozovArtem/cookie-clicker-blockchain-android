@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Opponent {
 	private String name;
-	private String macAddress;
+	private String address;
 	private InetAddress ipAddress;
 
 	public Opponent() {
@@ -19,12 +19,12 @@ public class Opponent {
 		this.name = name;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public InetAddress getIpAddress() {
@@ -45,11 +45,11 @@ public class Opponent {
 		}
 		Opponent opponent = (Opponent)o;
 		return Objects.equals(name, opponent.name) &&
-				Objects.equals(macAddress, opponent.macAddress);
+				Objects.equals(address, opponent.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, macAddress);
+		return Objects.hash(name, address);
 	}
 }

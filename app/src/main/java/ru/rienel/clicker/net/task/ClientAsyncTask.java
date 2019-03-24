@@ -6,7 +6,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,7 +23,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
 			.create();
 
-	private InetSocketAddress serverAddress;
+	private InetAddress serverAddress;
 	private Signal signal;
 	private OpponentsContract.Presenter opponentPresenter;
 	private GameContract.Presenter gamePresenter;
@@ -33,15 +32,16 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		Preconditions.checkNotNull(signal);
 		Preconditions.checkNotNull(serverAddress);
 
-		this.serverAddress = new InetSocketAddress(serverAddress, Configuration.SERVER_PORT);
+		this.serverAddress = serverAddress;
 		this.signal = signal;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... voids) {
+		InetSocketAddress serverAddress = new InetSocketAddress(this.serverAddress, Configuration.SERVER_PORT);
 		try (Socket socket = new Socket()) {
 			socket.bind(null);
-			socket.connect(this.serverAddress, Configuration.TIMEOUT);
+			socket.connect(serverAddress, Configuration.TIMEOUT);
 
 			OutputStream out = socket.getOutputStream();
 			String json = GSON.toJson(signal);
@@ -57,6 +57,7 @@ public class ClientAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected void onPreExecute() {
+		Log.d(TAG, "onPreExecute: Executed");
 		super.onPreExecute();
 	}
 

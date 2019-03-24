@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:paddingTop="15dp"
-		android:paddingStart="20dp"
-		android:paddingBottom="15dp"
-		android:layout_width="wrap_content"
+		android:layout_marginTop="15dp"
+		android:layout_marginStart="20dp"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="10dp">
 
@@ -17,15 +16,16 @@
 
 	<TextView
 			android:id="@+id/list_item_opponent_name"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
 			android:layout_toEndOf="@id/list_item_opponent_thumbnail"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
 			style="@style/opponent_list_item"/>
 
 	<TextView
-			android:id="@+id/list_item_opponent_ip"
-			android:layout_below="@id/list_item_opponent_name"
-			android:layout_toEndOf="@id/list_item_opponent_thumbnail"
+			android:id="@+id/list_item_opponent_address"
+			android:layout_centerVertical="true"
+			android:layout_toEndOf="@id/list_item_opponent_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 </RelativeLayout>

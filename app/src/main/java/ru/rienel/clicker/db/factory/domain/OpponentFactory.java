@@ -8,7 +8,7 @@ public class OpponentFactory {
 	public static Opponent build(String name, String macAddress, InetAddress ipAddress) {
 		Opponent opponent = new Opponent();
 		opponent.setName(name);
-		opponent.setMacAddress(macAddress);
+		opponent.setAddress(macAddress);
 		opponent.setIpAddress(ipAddress);
 		return opponent;
 	}

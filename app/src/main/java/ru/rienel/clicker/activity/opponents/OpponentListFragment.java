@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +25,7 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
+import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
 
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
 	private static final String TAG = OpponentListFragment.class.getName();
@@ -181,41 +181,29 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 
 		private ImageView thumbnail;
 		private TextView name;
-		private TextView ip;
+		private TextView address;
 
 		public OpponentHolder(@NonNull View itemView) {
 			super(itemView);
 
 			thumbnail = itemView.findViewById(R.id.list_item_opponent_thumbnail);
 			name = itemView.findViewById(R.id.list_item_opponent_name);
-			ip = itemView.findViewById(R.id.list_item_opponent_ip);
+			address = itemView.findViewById(R.id.list_item_opponent_address);
 
 			itemView.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View v) {
-			WifiP2pConfig config = getConfigForConnection(this.opponent);
-			presenter.connect(config);
-
-//			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
-//			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
+			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
+			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
 		}
 
 		public void bind(Opponent opponent) {
 			this.opponent = opponent;
 			name.setText(opponent.getName());
-			if (opponent.getIpAddress() != null) {
-				ip.setText(opponent.getIpAddress().getHostAddress());
-			}
-		}
-
-		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
-			Preconditions.checkNotNull(opponent);
-
-			WifiP2pConfig config = new WifiP2pConfig();
-			config.deviceAddress = opponent.getMacAddress();
-			return config;
+			address.setText(
+					String.format("(%s)", opponent.getAddress()));
 		}
 	}
 }

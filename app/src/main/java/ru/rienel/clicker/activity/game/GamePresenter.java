@@ -1,6 +1,5 @@
 package ru.rienel.clicker.activity.game;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Date;
 
@@ -12,12 +11,6 @@ import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
-import ru.rienel.clicker.net.Client;
-import ru.rienel.clicker.net.SendReceive;
-import ru.rienel.clicker.net.Server;
-import ru.rienel.clicker.net.factory.ClientThreadFactory;
-import ru.rienel.clicker.net.factory.SendReceiveThreadFactory;
-import ru.rienel.clicker.net.factory.ServerThreadFactory;
 
 
 public class GamePresenter implements GameContract.Presenter {
@@ -30,17 +23,6 @@ public class GamePresenter implements GameContract.Presenter {
 	private SignalHandler signalHandler;
 	private InetAddress opponentAddress;
 
-	private ClientThreadFactory clientFactory = new ClientThreadFactory();
-	private ServerThreadFactory serverFactory = new ServerThreadFactory();
-	private SendReceiveThreadFactory sendReceiveFactory = new SendReceiveThreadFactory();
-
-	private Client client;
-	private Server server;
-	private SendReceive sendReceive;
-
-	private Thread clientThread;
-	private Thread serverThread;
-	private Thread sendReceiveThread;
 
 	@Override
 	public void start() {
@@ -84,19 +66,6 @@ public class GamePresenter implements GameContract.Presenter {
 
 		if (GameType.MULTIPLAYER == gameType) {
 			signalHandler = new SignalHandler();
-
-			if (opponentAddress != null) {
-				clientThread = clientFactory.newThread(Client.newInstanceTo(opponentAddress));
-				clientThread.start();
-				try {
-					serverThread = serverFactory.newThread(new Server(signalHandler));
-					serverThread.start();
-				} catch (IOException e) {
-					Log.e(TAG, "GamePresenter(Multiplayer)", e);
-				}
-				sendReceiveThread = sendReceiveFactory.newThread(new SendReceive(client.getClientSocket(), signalHandler));
-				sendReceiveThread.start();
-			}
 		}
 		gameView.setPresenter(this);
 	}
