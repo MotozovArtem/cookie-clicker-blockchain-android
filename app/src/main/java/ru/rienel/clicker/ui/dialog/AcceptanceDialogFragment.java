@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -18,7 +19,11 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.game.GameActivity;
 import ru.rienel.clicker.activity.game.GameType;
+import ru.rienel.clicker.activity.opponents.OpponentsContract;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.net.Signal;
+import ru.rienel.clicker.net.Signal.SignalType;
+import ru.rienel.clicker.net.task.ClientAsyncTask;
 
 public class AcceptanceDialogFragment extends DialogFragment {
 	public static final String TAG = AcceptanceDialogFragment.class.getName();
@@ -29,12 +34,14 @@ public class AcceptanceDialogFragment extends DialogFragment {
 	private TextView opponentNameLabel;
 	private TextView remainingAcceptanceTime;
 	private CountDownTimer timer;
+	private OpponentsContract.Presenter presenter;
 
 	private Opponent opponent;
 
-	public static AcceptanceDialogFragment newInstance(Opponent opponent) {
+	public static AcceptanceDialogFragment newInstance(Opponent opponent, OpponentsContract.Presenter presenter) {
 		AcceptanceDialogFragment dialogFragment = new AcceptanceDialogFragment();
 		dialogFragment.setOpponent(opponent);
+		dialogFragment.setPresenter(presenter);
 		return dialogFragment;
 	}
 
@@ -54,12 +61,27 @@ public class AcceptanceDialogFragment extends DialogFragment {
 		return new AlertDialog.Builder(getActivity())
 				.setView(root)
 				.setCancelable(true)
+				.setOnCancelListener(newOnCancelListener())
 				.setPositiveButton(R.string.ok, newOnOkClickListener())
 				.create();
 	}
 
+	private DialogInterface.OnCancelListener newOnCancelListener() {
+		return new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				presenter.discardInvitation();
+			}
+		};
+	}
+
 	private DialogInterface.OnClickListener newOnOkClickListener() {
 		return (dialog, which) -> {
+
+			Signal acceptSignal = new Signal("accept", SignalType.ACCEPT, null);
+			ClientAsyncTask task = new ClientAsyncTask(opponent.getIpAddress(), acceptSignal);
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 			Intent goToGameIntent = new Intent(getActivity(), GameActivity.class);
 			goToGameIntent.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);
 			goToGameIntent.putExtra(GameActivity.INTENT_ADDRESS, this.opponent.getIpAddress());
@@ -69,7 +91,7 @@ public class AcceptanceDialogFragment extends DialogFragment {
 
 	private CountDownTimer newTimerForDialog() {
 		return new CountDownTimer(TIME_FOR_ANSWER, COUNT_DOWN_INTERVAL) {
-			private String timePattern = "%tS";
+			private String timePattern = "%tSS";
 
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -89,5 +111,13 @@ public class AcceptanceDialogFragment extends DialogFragment {
 
 	private void setOpponent(Opponent opponentName) {
 		this.opponent = opponentName;
+	}
+
+	public OpponentsContract.Presenter getPresenter() {
+		return presenter;
+	}
+
+	public void setPresenter(OpponentsContract.Presenter presenter) {
+		this.presenter = presenter;
 	}
 }

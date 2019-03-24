@@ -15,7 +15,10 @@ import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.activity.game.GameContract;
 import ru.rienel.clicker.activity.opponents.OpponentsContract;
 import ru.rienel.clicker.common.Configuration;
+import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.net.Signal;
+import ru.rienel.clicker.net.dto.OpponentDto;
 
 public class ServerAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private static final String TAG = ServerAsyncTask.class.getName();
@@ -45,11 +48,15 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			switch (signal.getSignalType()) {
 				case INVITE:
-					opponentPresenter.showAcceptanceDialog(signal.getIpAddress());
+					OpponentDto opponentDto = signal.getOpponent();
+					Opponent opponent = OpponentFactory.buildFromDto(opponentDto);
+					opponentPresenter.showAcceptanceDialog(opponent);
 					break;
 				case DISCARD:
 					break;
 				case GAME_OVER:
+					break;
+				case ACCEPT:
 					break;
 				default:
 					break;
@@ -58,7 +65,7 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			return true;
 		} catch (IOException e) {
-			Log.e(TAG, "doInBackground: ", e);
+			Log.e(TAG, "doInBackground: " + e.getMessage(), e);
 			return false;
 		}
 	}

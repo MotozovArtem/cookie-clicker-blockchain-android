@@ -11,6 +11,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
+import ru.rienel.clicker.net.dto.OpponentDto;
 
 public class Signal {
 	@SerializedName("message")
@@ -19,13 +20,14 @@ public class Signal {
 	@SerializedName("signalType")
 	private SignalType signalType;
 
-	@SerializedName("ipAddress")
-	private String ipAddress;
+	@SerializedName("opponent")
+	private OpponentDto opponent;
 
-	public Signal(String message, SignalType signalType, String ipAddress) {
+
+	public Signal(String message, SignalType signalType, OpponentDto opponent) {
 		this.message = message;
 		this.signalType = signalType;
-		this.ipAddress = ipAddress;
+		this.opponent = opponent;
 	}
 
 	public String getMessage() {
@@ -44,18 +46,19 @@ public class Signal {
 		this.signalType = signalType;
 	}
 
-	public String getIpAddress() {
-		return ipAddress;
+	public OpponentDto getOpponent() {
+		return opponent;
 	}
 
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
+	public void setOpponent(OpponentDto opponent) {
+		this.opponent = opponent;
 	}
 
 	public enum SignalType {
 		GAME_OVER(0),
-		INVITE(1),
-		DISCARD(2);
+		ACCEPT(1),
+		INVITE(2),
+		DISCARD(3);
 
 		int code;
 

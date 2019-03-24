@@ -18,6 +18,7 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.net.Signal;
+import ru.rienel.clicker.net.dto.OpponentDto;
 import ru.rienel.clicker.net.task.ClientAsyncTask;
 import ru.rienel.clicker.net.task.ServerAsyncTask;
 import ru.rienel.clicker.service.NetworkService;
@@ -78,9 +79,9 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	@Override
 	public void handleOnOpponentListClick(Opponent opponent) {
 		Preconditions.checkNotNull(opponent);
-		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponent.getAddress());
+		OpponentDto opponentDto = OpponentDto.newFromOpponent(opponent);
+		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
 
-		// TODO catch Illegal argument exception and show dialog
 		try {
 			client = new ClientAsyncTask(opponent.getIpAddress(), signal);
 			client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -116,8 +117,13 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void showAcceptanceDialog(String from) {
-		opponentsView.showAcceptanceDialog(from);
+	public void showAcceptanceDialog(Opponent opponent) {
+		opponentsView.showAcceptanceDialog(opponent);
+	}
+
+	@Override
+	public void discardInvitation() {
+
 	}
 
 	private void updateOpponents() {

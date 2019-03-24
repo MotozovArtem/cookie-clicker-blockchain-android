@@ -1,6 +1,7 @@
 package ru.rienel.clicker.activity.opponents;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,9 +91,8 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	}
 
 	@Override
-	public void showAcceptanceDialog(String opponentAddress) {
-		Opponent opponent = OpponentFactory.build(opponentAddress, opponentAddress, null);
-		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent);
+	public void showAcceptanceDialog(Opponent opponent) {
+		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent, presenter);
 		dialogFragment.show(getFragmentManager(), AcceptanceDialogFragment.TAG);
 	}
 
@@ -191,7 +191,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		private TextView name;
 		private TextView address;
 		private TextView ip;
-//		private Button resolveIp;
 
 		public OpponentHolder(@NonNull View itemView) {
 			super(itemView);
@@ -200,16 +199,18 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			name = itemView.findViewById(R.id.list_item_opponent_name);
 			address = itemView.findViewById(R.id.list_item_opponent_address);
 			ip = itemView.findViewById(R.id.list_item_opponent_ip);
-//			resolveIp = itemView.findViewById(R.id.list_item_opponent_resolve_group_owner_ip);
-//			resolveIp.setOnClickListener(newOnResolveIpClickListener());
 
 			itemView.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View v) {
-			WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
-			dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
+			if (opponent.getIpAddress() != null) {
+				WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
+				dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
+			} else {
+				presenter.connect(getConfigForConnection(opponent));
+			}
 		}
 
 		public void bind(Opponent opponent) {
@@ -222,12 +223,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 						opponent.getIpAddress().getHostAddress()));
 			}
 		}
-
-//		public View.OnClickListener newOnResolveIpClickListener() {
-//			return v -> {
-//				presenter.connect(getConfigForConnection(opponent));
-//			};
-//		}
 
 		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
 			Preconditions.checkNotNull(opponent);

@@ -17,7 +17,7 @@ public interface OpponentsContract {
 
 		Context getContext();
 
-		void showAcceptanceDialog(String opponentAddress);
+		void showAcceptanceDialog(Opponent opponent);
 
 		void updateOpponent(Opponent opponent);
 
@@ -41,6 +41,8 @@ public interface OpponentsContract {
 
 		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
 
-		void showAcceptanceDialog(String from);
+		void showAcceptanceDialog(Opponent opponent);
+
+		void discardInvitation();
 	}
 }
