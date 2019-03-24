@@ -20,7 +20,7 @@ import ru.rienel.clicker.net.Signal;
 public class ClientAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private static final String TAG = ClientAsyncTask.class.getName();
 	private static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeDeserializer())
+			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeSerialize())
 			.create();
 
 	private InetAddress serverAddress;

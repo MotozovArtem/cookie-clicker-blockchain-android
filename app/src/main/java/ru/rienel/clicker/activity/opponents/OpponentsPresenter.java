@@ -78,12 +78,18 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	@Override
 	public void handleOnOpponentListClick(Opponent opponent) {
 		Preconditions.checkNotNull(opponent);
-		Signal signal = new Signal("connect", Signal.SignalType.INVITE);
+		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponent.getAddress());
 
-		client = new ClientAsyncTask(opponent.getIpAddress(), signal);
-		client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		// TODO catch Illegal argument exception and show dialog
+		try {
+			client = new ClientAsyncTask(opponent.getIpAddress(), signal);
+			client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		} catch (IllegalArgumentException e) {
+			opponentsView.showErrorDialog(e);
+		}
 	}
 
+	@Override
 	public void connect(WifiP2pConfig config) {
 		Preconditions.checkNotNull(config);
 
@@ -109,6 +115,11 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		networkService.cancelDisconnect(actionListener);
 	}
 
+	@Override
+	public void showAcceptanceDialog(String from) {
+		opponentsView.showAcceptanceDialog(from);
+	}
+
 	private void updateOpponents() {
 		List<WifiP2pDevice> devices = networkService.getP2pDevices();
 
@@ -119,6 +130,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 			opponent.setAddress(device.deviceAddress);
 			networkService.requestConnectionInfo(info -> {
 				opponent.setIpAddress(info.groupOwnerAddress);
+				opponentsView.updateUi();
 			});
 			opponentList.add(opponent);
 		}

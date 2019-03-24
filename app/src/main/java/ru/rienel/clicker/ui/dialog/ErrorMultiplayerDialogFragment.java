@@ -17,7 +17,7 @@ import ru.rienel.clicker.R;
 import ru.rienel.clicker.activity.main.MainActivity;
 
 public class ErrorMultiplayerDialogFragment extends DialogFragment {
-	private static final String TAG = ErrorMultiplayerDialogFragment.class.getName();
+	public static final String TAG = ErrorMultiplayerDialogFragment.class.getName();
 
 	private TextView dialogTitle;
 	private ScrollView message;

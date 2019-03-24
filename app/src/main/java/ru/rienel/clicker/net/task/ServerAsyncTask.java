@@ -7,7 +7,6 @@ import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -43,6 +42,18 @@ public class ServerAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			Reader inputStreamReader = new InputStreamReader(in);
 			signal = GSON.fromJson(inputStreamReader, Signal.class);
+
+			switch (signal.getSignalType()) {
+				case INVITE:
+					opponentPresenter.showAcceptanceDialog(signal.getIpAddress());
+					break;
+				case DISCARD:
+					break;
+				case GAME_OVER:
+					break;
+				default:
+					break;
+			}
 			in.close();
 
 			return true;

@@ -1,10 +1,10 @@
 package ru.rienel.clicker.activity.opponents;
 
-import java.net.InetAddress;
 import java.util.List;
 
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pManager;
 
 import ru.rienel.clicker.activity.BasePresenter;
@@ -17,7 +17,7 @@ public interface OpponentsContract {
 
 		Context getContext();
 
-		void showAcceptanceDialog(InetAddress opponentAddress);
+		void showAcceptanceDialog(String opponentAddress);
 
 		void updateOpponent(Opponent opponent);
 
@@ -26,6 +26,8 @@ public interface OpponentsContract {
 		List<Opponent> getOpponentList();
 
 		void setOpponentList(List<Opponent> opponentList);
+
+		void showErrorDialog(IllegalArgumentException error);
 	}
 
 	interface Presenter extends BasePresenter {
@@ -35,6 +37,10 @@ public interface OpponentsContract {
 
 		void handleOnOpponentListClick(Opponent opponent);
 
+		void connect(WifiP2pConfig config);
+
 		void handleCancelConnection(WifiP2pManager.ActionListener actionListener);
+
+		void showAcceptanceDialog(String from);
 	}
 }

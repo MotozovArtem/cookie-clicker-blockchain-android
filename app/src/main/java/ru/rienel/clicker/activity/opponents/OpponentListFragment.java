@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
 import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
+import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
 import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
 
 public class OpponentListFragment extends Fragment implements OpponentsContract.View {
@@ -88,8 +90,8 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	}
 
 	@Override
-	public void showAcceptanceDialog(InetAddress opponentAddress) {
-		Opponent opponent = OpponentFactory.build(opponentAddress.getHostAddress(), null, opponentAddress);
+	public void showAcceptanceDialog(String opponentAddress) {
+		Opponent opponent = OpponentFactory.build(opponentAddress, opponentAddress, null);
 		AcceptanceDialogFragment dialogFragment = AcceptanceDialogFragment.newInstance(opponent);
 		dialogFragment.show(getFragmentManager(), AcceptanceDialogFragment.TAG);
 	}
@@ -146,6 +148,12 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		this.opponentList = opponentList;
 	}
 
+	@Override
+	public void showErrorDialog(IllegalArgumentException error) {
+		ErrorMultiplayerDialogFragment dialog = ErrorMultiplayerDialogFragment.newInstance(error);
+		dialog.show(getFragmentManager(), ErrorMultiplayerDialogFragment.TAG);
+	}
+
 	private class OpponentAdapter extends RecyclerView.Adapter<OpponentListFragment.OpponentHolder> {
 		private List<Opponent> opponentList;
 
@@ -182,6 +190,8 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		private ImageView thumbnail;
 		private TextView name;
 		private TextView address;
+		private TextView ip;
+//		private Button resolveIp;
 
 		public OpponentHolder(@NonNull View itemView) {
 			super(itemView);
@@ -189,6 +199,9 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			thumbnail = itemView.findViewById(R.id.list_item_opponent_thumbnail);
 			name = itemView.findViewById(R.id.list_item_opponent_name);
 			address = itemView.findViewById(R.id.list_item_opponent_address);
+			ip = itemView.findViewById(R.id.list_item_opponent_ip);
+//			resolveIp = itemView.findViewById(R.id.list_item_opponent_resolve_group_owner_ip);
+//			resolveIp.setOnClickListener(newOnResolveIpClickListener());
 
 			itemView.setOnClickListener(this);
 		}
@@ -203,7 +216,25 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 			this.opponent = opponent;
 			name.setText(opponent.getName());
 			address.setText(
-					String.format("(%s)", opponent.getAddress()));
+					String.format("(Mac: %s)", opponent.getAddress()));
+			if (opponent.getIpAddress() != null) {
+				ip.setText(String.format("(Group owner IP: %s)",
+						opponent.getIpAddress().getHostAddress()));
+			}
+		}
+
+//		public View.OnClickListener newOnResolveIpClickListener() {
+//			return v -> {
+//				presenter.connect(getConfigForConnection(opponent));
+//			};
+//		}
+
+		private WifiP2pConfig getConfigForConnection(Opponent opponent) {
+			Preconditions.checkNotNull(opponent);
+
+			WifiP2pConfig config = new WifiP2pConfig();
+			config.deviceAddress = opponent.getAddress();
+			return config;
 		}
 	}
 }

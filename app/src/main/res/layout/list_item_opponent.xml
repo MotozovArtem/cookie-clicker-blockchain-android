@@ -9,6 +9,7 @@
 
 	<ImageView
 			android:id="@+id/list_item_opponent_thumbnail"
+			android:layout_centerVertical="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:background="@drawable/icon_phone"
@@ -16,15 +17,21 @@
 
 	<TextView
 			android:id="@+id/list_item_opponent_name"
-			android:layout_centerHorizontal="true"
 			android:layout_toEndOf="@id/list_item_opponent_thumbnail"
+			android:layout_centerVertical="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			style="@style/opponent_list_item"/>
 
 	<TextView
 			android:id="@+id/list_item_opponent_address"
-			android:layout_centerVertical="true"
+			android:layout_toEndOf="@id/list_item_opponent_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+	<TextView
+			android:id="@+id/list_item_opponent_ip"
+			android:layout_below="@id/list_item_opponent_address"
 			android:layout_toEndOf="@id/list_item_opponent_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
