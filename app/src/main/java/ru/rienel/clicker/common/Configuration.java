@@ -9,6 +9,8 @@ public class Configuration {
 
 	public static final Integer TIMEOUT = 5 * 1000;
 
+	public static final int STANDARD_BUFFER_SIZE = 1024;
+
 	public static final class MessageConstants {
 		public static final int MESSAGE_READ = 1;
 	}

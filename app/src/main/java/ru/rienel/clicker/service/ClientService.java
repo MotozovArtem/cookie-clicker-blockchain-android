@@ -1,10 +1,12 @@
 package ru.rienel.clicker.service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -12,19 +14,28 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Preconditions;
+import ru.rienel.clicker.net.Signal;
 
 
 public class ClientService extends IntentService {
 	private static final String TAG = ClientService.class.getName();
 	private static final String EXTRAS_GROUP_OWNER_ADDRESS = "serverAddress";
-
+	private static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeSerialize())
+			.create();
 
 	private Context context;
+	private SocketChannel channel;
+	private Signal sendSignal;
 
-	public static Intent newIntent(Context context) {
-		return new Intent(context, ClientService.class);
+	public static Intent newIntent(Context context, InetAddress targetAddress) {
+		Intent serviceIntent = new Intent(context, ClientService.class);
+		serviceIntent.putExtra(EXTRAS_GROUP_OWNER_ADDRESS, targetAddress);
+		return serviceIntent;
 	}
 
 	public ClientService(String name) {
@@ -42,16 +53,20 @@ public class ClientService extends IntentService {
 		Context context = getApplicationContext();
 		String intentAction = intent.getAction();
 		if (intentAction != null && intentAction.equals(Actions.ACTION_SEND_INVITE)) {
-			String host = intent.getExtras().getString(EXTRAS_GROUP_OWNER_ADDRESS);
+			InetAddress host = (InetAddress)intent.getSerializableExtra(EXTRAS_GROUP_OWNER_ADDRESS);
 			try (Socket socket = new Socket()) {
 				Log.d(TAG, "Opening client socket - ");
-				socket.bind(null);
-				socket.connect((new InetSocketAddress(host, Configuration.SERVER_PORT)), Configuration.TIMEOUT);
-				Log.d(TAG, "Client socket - " + socket.isConnected());
+				try {
+					SocketAddress address = new InetSocketAddress(host, Configuration.SERVER_PORT);
+					SocketChannel client = SocketChannel.open(address);
+					ByteBuffer buffer = ByteBuffer.allocate(1024);
+					String json = GSON.toJson(sendSignal);
 
-				OutputStream out = socket.getOutputStream();
-				InputStream in = null;
-				Log.d(TAG, "Client: Signal sent");
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
+
 			} catch (IOException e) {
 				Log.e(TAG, e.getMessage());
 			}
