@@ -6,7 +6,6 @@ import java.util.Date;
 import android.util.Log;
 
 import ru.rienel.clicker.common.Preconditions;
-import ru.rienel.clicker.common.SignalHandler;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
@@ -20,7 +19,6 @@ public class GamePresenter implements GameContract.Presenter {
 	private GameContract.View gameView;
 	private Integer clicks;
 	private Repository<Block> blockRepository;
-	private SignalHandler signalHandler;
 	private InetAddress opponentAddress;
 
 
@@ -64,9 +62,6 @@ public class GamePresenter implements GameContract.Presenter {
 		this.clicks = 0; // fixme: bug warning
 		DONUT_PER_CLICK = 1;
 
-		if (GameType.MULTIPLAYER == gameType) {
-			signalHandler = new SignalHandler();
-		}
 		gameView.setPresenter(this);
 	}
 }

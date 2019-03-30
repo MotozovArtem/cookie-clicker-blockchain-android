@@ -1,19 +1,9 @@
-package ru.rienel.clicker.net.dto;
-
-import ru.rienel.clicker.db.domain.Opponent;
+package ru.rienel.clicker.net.model;
 
 public class OpponentDto {
 	private String name;
 	private String address;
 	private String ipAddress;
-
-	public static OpponentDto newFromOpponent(Opponent opponent) {
-		OpponentDto opponentDto = new OpponentDto();
-		opponentDto.setName(opponent.getName());
-		opponentDto.setAddress(opponent.getAddress());
-		opponentDto.setIpAddress(opponent.getIpAddress().getHostAddress());
-		return opponentDto;
-	}
 
 	public OpponentDto() {
 	}

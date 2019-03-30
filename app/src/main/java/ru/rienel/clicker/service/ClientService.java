@@ -18,14 +18,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Preconditions;
-import ru.rienel.clicker.net.Signal;
+import ru.rienel.clicker.net.model.Signal;
 
 
 public class ClientService extends IntentService {
 	private static final String TAG = ClientService.class.getName();
 	private static final String EXTRAS_GROUP_OWNER_ADDRESS = "serverAddress";
 	private static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeSerialize())
+			.registerTypeAdapter(Signal.SignalType.class, new Signal.SignalTypeSerializer())
 			.create();
 
 	private Context context;

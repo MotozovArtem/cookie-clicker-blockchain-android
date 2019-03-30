@@ -1,4 +1,4 @@
-package ru.rienel.clicker.net;
+package ru.rienel.clicker.net.model;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -11,7 +11,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
-import ru.rienel.clicker.net.dto.OpponentDto;
 
 public class Signal {
 	@SerializedName("message")
@@ -81,7 +80,7 @@ public class Signal {
 		}
 	}
 
-	public static class SignalTypeSerialize implements JsonSerializer<SignalType> {
+	public static class SignalTypeSerializer implements JsonSerializer<SignalType> {
 		@Override
 		public JsonElement serialize(SignalType src, Type typeOfSrc, JsonSerializationContext context) {
 			return new JsonPrimitive(src.code);

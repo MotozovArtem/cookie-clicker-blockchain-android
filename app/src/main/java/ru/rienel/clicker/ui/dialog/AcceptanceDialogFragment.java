@@ -21,9 +21,8 @@ import ru.rienel.clicker.activity.game.GameActivity;
 import ru.rienel.clicker.activity.game.GameType;
 import ru.rienel.clicker.activity.opponents.OpponentsContract;
 import ru.rienel.clicker.db.domain.Opponent;
-import ru.rienel.clicker.net.Signal;
-import ru.rienel.clicker.net.Signal.SignalType;
-import ru.rienel.clicker.net.task.ClientAsyncTask;
+import ru.rienel.clicker.net.model.Signal;
+import ru.rienel.clicker.net.model.Signal.SignalType;
 
 public class AcceptanceDialogFragment extends DialogFragment {
 	public static final String TAG = AcceptanceDialogFragment.class.getName();
@@ -79,8 +78,7 @@ public class AcceptanceDialogFragment extends DialogFragment {
 		return (dialog, which) -> {
 
 			Signal acceptSignal = new Signal("accept", SignalType.ACCEPT, null);
-			ClientAsyncTask task = new ClientAsyncTask(opponent.getIpAddress(), acceptSignal);
-			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
 			Intent goToGameIntent = new Intent(getActivity(), GameActivity.class);
 			goToGameIntent.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);

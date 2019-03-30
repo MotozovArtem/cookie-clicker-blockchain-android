@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import ru.rienel.clicker.common.Configuration;
+import ru.rienel.clicker.common.Configuration.MessageConstants;
 
 public class ServerService extends IntentService {
 	private static final String TAG = ServerService.class.getName();
@@ -77,7 +78,7 @@ public class ServerService extends IntentService {
 						System.out.println("Accepted connection from " + client);
 						client.configureBlocking(false);
 						SelectionKey key2 = client.register(selector, SelectionKey.OP_WRITE);
-						ByteBuffer buffer = ByteBuffer.allocate(Configuration.STANDARD_BUFFER_SIZE);
+						ByteBuffer buffer = ByteBuffer.allocate(MessageConstants.STANDARD_BUFFER_SIZE);
 //						buffer.put(rotation, 0, 72);
 //						buffer.put((byte)'\r');
 //						buffer.put((byte)'\n');
@@ -115,4 +116,6 @@ public class ServerService extends IntentService {
 			}
 		}
 	}
+
+
 }
