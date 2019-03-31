@@ -19,18 +19,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration.MessageConstants;
 import ru.rienel.clicker.net.model.Signal;
+import ru.rienel.clicker.net.model.Signal.SignalType;
+import ru.rienel.clicker.net.model.Signal.SignalTypeDeserializer;
+import ru.rienel.clicker.net.model.Signal.SignalTypeSerializer;
 
 public class Client implements Runnable {
 	private static final String TAG = Client.class.getName();
 	private static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(Signal.SignalType.class, Signal.SignalTypeSerializer.class)
-			.registerTypeAdapter(Signal.SignalType.class, Signal.SignalTypeDeserializer.class)
+			.registerTypeAdapter(SignalType.class, new SignalTypeDeserializer())
+			.registerTypeAdapter(SignalType.class, new SignalTypeSerializer())
 			.create();
-
 	private static final String FATAL_COMMUNICATION_MSG = "Lost connection...";
 
 	private final ByteBuffer buffer = ByteBuffer.allocateDirect(MessageConstants.STANDARD_BUFFER_SIZE);
-
 	private Selector selector;
 	private SocketChannel client;
 	private InetSocketAddress serverAddress;
@@ -40,9 +41,8 @@ public class Client implements Runnable {
 	private boolean connected;
 	private boolean timeToSend;
 
-	public void connect(String host, int port) {
-		serverAddress = new InetSocketAddress(host, port);
-		new Thread(this).start();
+	private Client(String address, Integer port) {
+		serverAddress = new InetSocketAddress(address, port);
 	}
 
 	@Override
@@ -169,6 +169,26 @@ public class Client implements Runnable {
 //		for (CommunicationListener listener : listeners) {
 //			pool.execute(listener::disconnected);
 //		}
+	}
+
+
+	public static class Builder {
+		public String address;
+		private Integer port;
+
+		public Builder setAddress(String address) {
+			this.address = address;
+			return this;
+		}
+
+		public Builder setPort(Integer port) {
+			this.port = port;
+			return this;
+		}
+
+		public Client create() {
+			return new Client(address, port);
+		}
 	}
 
 	public static class ConnectionEvent extends EventObject {

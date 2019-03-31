@@ -15,10 +15,14 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.net.Client;
 import ru.rienel.clicker.net.Server;
+import ru.rienel.clicker.net.model.OpponentDto;
+import ru.rienel.clicker.net.model.Signal;
 import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
@@ -26,8 +30,10 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
+
 	private Server server;
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private Client client;
+	private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	public OpponentsPresenter(OpponentsContract.View opponentsView, Server server) {
 		Preconditions.checkNotNull(opponentsView);
@@ -77,6 +83,20 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	@Override
 	public void handleOnOpponentListClick(Opponent opponent) {
+		Preconditions.checkNotNull(opponent);
+		OpponentDto opponentDto = OpponentDto.newFromOpponent(opponent);
+		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
+
+		try {
+			client = new Client.Builder()
+					.setAddress(opponent.getAddress())
+					.setPort(Configuration.SERVER_PORT)
+					.create();
+			executor.execute(client);
+			client.sendSignal(signal);
+		} catch (IllegalArgumentException e) {
+			opponentsView.showErrorDialog(e);
+		}
 	}
 
 	@Override

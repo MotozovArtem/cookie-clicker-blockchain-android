@@ -26,8 +26,8 @@ import ru.rienel.clicker.net.model.Signal.SignalTypeSerializer;
 public class Server implements Runnable {
 	private static final String TAG = Server.class.getName();
 	private static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(SignalType.class, SignalTypeDeserializer.class)
-			.registerTypeAdapter(SignalType.class, SignalTypeSerializer.class)
+			.registerTypeAdapter(SignalType.class, new SignalTypeDeserializer())
+			.registerTypeAdapter(SignalType.class, new SignalTypeSerializer())
 			.create();
 
 	private Selector selector;

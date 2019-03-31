@@ -37,7 +37,6 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	private RecyclerView opponentRecyclerView;
 	private List<Opponent> opponentList;
 	private OpponentsContract.Presenter presenter;
-	private Server server;
 
 	public static OpponentListFragment newInstance() {
 		return new OpponentListFragment();
