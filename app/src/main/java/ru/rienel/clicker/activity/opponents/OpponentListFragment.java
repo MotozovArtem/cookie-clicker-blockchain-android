@@ -24,7 +24,6 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
-import ru.rienel.clicker.net.Server;
 import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
 import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
 import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
@@ -148,7 +147,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	}
 
 	@Override
-	public void showErrorDialog(IllegalArgumentException error) {
+	public void showErrorDialog(Throwable error) {
 		ErrorMultiplayerDialogFragment dialog = ErrorMultiplayerDialogFragment.newInstance(error);
 		dialog.show(getFragmentManager(), ErrorMultiplayerDialogFragment.TAG);
 	}

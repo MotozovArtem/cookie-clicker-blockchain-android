@@ -27,7 +27,7 @@ public interface OpponentsContract {
 
 		void setOpponentList(List<Opponent> opponentList);
 
-		void showErrorDialog(IllegalArgumentException error);
+		void showErrorDialog(Throwable error);
 	}
 
 	interface Presenter extends BasePresenter {

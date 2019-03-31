@@ -2,6 +2,8 @@ package ru.rienel.clicker.activity.game;
 
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import android.util.Log;
 
@@ -10,6 +12,10 @@ import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
+import ru.rienel.clicker.net.Client;
+import ru.rienel.clicker.net.Client.ClientConnectionEvent;
+import ru.rienel.clicker.net.Client.ClientConnectionListener;
+import ru.rienel.clicker.net.Server;
 
 
 public class GamePresenter implements GameContract.Presenter {
@@ -21,6 +27,24 @@ public class GamePresenter implements GameContract.Presenter {
 	private Repository<Block> blockRepository;
 	private InetAddress opponentAddress;
 
+	private Server server;
+	private Client client;
+	private ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+	public GamePresenter(GameContract.View gameView, GameType gameType, InetAddress address, Server server, Client client) {
+		Preconditions.checkNotNull(gameView);
+		Preconditions.checkNotNull(gameType);
+
+		this.gameView = gameView;
+		this.clicks = 0; // fixme: bug warning
+		DONUT_PER_CLICK = 1;
+
+		this.server = server;
+		//this.client = client; //TODO: Get client from intent, cause client should came from OpponentsActivity
+		//this.client.addListener(new ConnectionListener());
+
+		gameView.setPresenter(this);
+	}
 
 	@Override
 	public void start() {
@@ -54,14 +78,21 @@ public class GamePresenter implements GameContract.Presenter {
 		}
 	}
 
-	public GamePresenter(GameContract.View gameView, GameType gameType, InetAddress address) {
-		Preconditions.checkNotNull(gameView);
-		Preconditions.checkNotNull(gameType);
+	public class ConnectionListener implements ClientConnectionListener {
 
-		this.gameView = gameView;
-		this.clicks = 0; // fixme: bug warning
-		DONUT_PER_CLICK = 1;
+		@Override
+		public void connected(ClientConnectionEvent event) {
+			// do nothing,
+		}
 
-		gameView.setPresenter(this);
+		@Override
+		public void disconnected(ClientConnectionEvent event) {
+
+		}
+
+		@Override
+		public void receivedSignal(ClientConnectionEvent event) {
+
+		}
 	}
 }

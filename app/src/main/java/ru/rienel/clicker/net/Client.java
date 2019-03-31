@@ -6,11 +6,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.EventObject;
-import java.util.Objects;
+import java.util.List;
 import java.util.Queue;
 
 import android.util.Log;
@@ -18,6 +18,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration.MessageConstants;
+import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.net.model.Signal;
 import ru.rienel.clicker.net.model.Signal.SignalType;
 import ru.rienel.clicker.net.model.Signal.SignalTypeDeserializer;
@@ -32,10 +33,11 @@ public class Client implements Runnable {
 	private static final String FATAL_COMMUNICATION_MSG = "Lost connection...";
 
 	private final ByteBuffer buffer = ByteBuffer.allocateDirect(MessageConstants.STANDARD_BUFFER_SIZE);
+	private final Queue<ByteBuffer> messageToSend = new ArrayDeque<>();
+	private List<EventListener> listeners = new ArrayList<>();
 	private Selector selector;
 	private SocketChannel client;
 	private InetSocketAddress serverAddress;
-	private final Queue<ByteBuffer> messageToSend = new ArrayDeque<>();
 	private MessageProcessor messageProcessor = new MessageProcessor();
 
 	private boolean connected;
@@ -102,8 +104,8 @@ public class Client implements Runnable {
 
 	private void receive(SelectionKey key) throws IOException {
 		buffer.clear();
-		int numOfReadBytes = client.read(buffer);
-		if (numOfReadBytes == 1) {
+		int numberOfReadBytes = client.read(buffer);
+		if (numberOfReadBytes == 1) {
 			Log.e(TAG, "receive: " + FATAL_COMMUNICATION_MSG);
 			throw new IOException(FATAL_COMMUNICATION_MSG);
 		}
@@ -112,7 +114,8 @@ public class Client implements Runnable {
 		messageProcessor.appendReceivedMessage(received);
 		while (messageProcessor.hasNext()) {
 			String msg = messageProcessor.nextMsg();
-			notifyMessageReceived(MessageProcessor.getMessageBody(msg));
+			Signal signal = GSON.fromJson(MessageProcessor.getMessageBody(msg), Signal.class);
+			notifyMessageReceived(signal);
 		}
 	}
 
@@ -124,11 +127,11 @@ public class Client implements Runnable {
 	}
 
 	private void send(SelectionKey key) throws IOException {
-		ByteBuffer msg;
+		ByteBuffer buffer;
 		synchronized (messageToSend) {
-			while ((msg = messageToSend.peek()) != null) {
-				client.write(msg);
-				if (msg.hasRemaining()) {
+			while ((buffer = messageToSend.peek()) != null) {
+				client.write(buffer);
+				if (buffer.hasRemaining()) {
 					return;
 				}
 				messageToSend.remove();
@@ -153,55 +156,76 @@ public class Client implements Runnable {
 	}
 
 
-	private void notifyMessageReceived(String message) {
-//		Executor pool = ForkJoinPool.commonPool();
-//		for (CommunicationListener listener : listeners) {
-//			pool.execute(() -> {
-//				listener.recvMsg(message);
-//			});
-//		}
+	public void notifyMessageReceived(Signal signal) {
+		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, signal);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof Server.ServerConnectionListener) {
+				try {
+					((Server.ServerConnectionListener)eventListener).receivedSignal(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyMessageReceived: listener error", e);
+				}
+			}
+		}
 	}
 
-	private void notifyConnectionDone(InetSocketAddress remoteAddress) {
-//		Executor pool = ForkJoinPool.commonPool();
-//		for (CommunicationListener listener : listeners) {
-//			pool.execute(() -> listener.connected(remoteAddress));
-//		}
+	public void notifyConnectionDone(Signal signal) {
+		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, signal);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof Server.ServerConnectionListener) {
+				try {
+					((Server.ServerConnectionListener)eventListener).connected(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyConnectionDone: listener error", e);
+				}
+			}
+		}
 	}
 
-	private void notifyDisconnectionDone() {
-//		Executor pool = ForkJoinPool.commonPool();
-//		for (CommunicationListener listener : listeners) {
-//			pool.execute(listener::disconnected);
-//		}
+	public void notifyDisconnectionDone() {
+		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, null);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof Server.ServerConnectionListener) {
+				try {
+					((Server.ServerConnectionListener)eventListener).disconnected(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyDisconnectionDone: listener error", e);
+				}
+			}
+		}
 	}
 
-	public static class ConnectionEvent extends EventObject {
-		private final Path imagePath;
-		private final String flightId;
+	// events
+	public void addListener(EventListener listener) {
+		Preconditions.checkNotNull(listener);
+		listeners.add(listener);
+	}
 
-		public ConnectionEvent(Object source, Path imagePath, String flightId) {
+	public void removeListener(EventListener listener) {
+		Preconditions.checkNotNull(listener);
+		listeners.remove(listener);
+	}
+
+
+	public static class ClientConnectionEvent extends EventObject {
+		private final Signal signal;
+
+		public ClientConnectionEvent(Object source, Signal signal) {
 			super(source);
-			Objects.requireNonNull(imagePath);
-			Objects.requireNonNull(flightId);
-			this.imagePath = imagePath;
-			this.flightId = flightId;
+			Preconditions.checkNotNull(signal);
+			this.signal = signal;
 		}
 
-		public Path getImagePath() {
-			return imagePath;
-		}
-
-		public String getFlightId() {
-			return flightId;
+		public Signal getSignal() {
+			return signal;
 		}
 	}
 
-	public interface ConnectionListener extends EventListener {
-		void connected();
+	public interface ClientConnectionListener extends EventListener {
+		void connected(Client.ClientConnectionEvent event);
 
-		void disconnected();
+		void disconnected(Client.ClientConnectionEvent event);
 
-		void receivedSignal();
+		void receivedSignal(Client.ClientConnectionEvent event);
 	}
 }

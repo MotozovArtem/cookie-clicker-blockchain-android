@@ -2,6 +2,7 @@ package ru.rienel.clicker.activity.opponents;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,6 +20,7 @@ import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.db.factory.domain.OpponentFactory;
 import ru.rienel.clicker.net.Client;
 import ru.rienel.clicker.net.Server;
 import ru.rienel.clicker.net.model.OpponentDto;
@@ -41,6 +43,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		this.opponentsView = opponentsView;
 
 		this.server = server;
+		server.addListener(new ConnectionListener());
 		executor.execute(server);
 
 		opponentsView.setPresenter(this);
@@ -86,7 +89,6 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		Preconditions.checkNotNull(opponent);
 		OpponentDto opponentDto = OpponentDto.newFromOpponent(opponent);
 		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
-
 		try {
 			client = new Client(opponent.getIpAddress().getHostAddress(), Configuration.SERVER_PORT);
 			executor.execute(client);
@@ -148,5 +150,34 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		}
 
 		opponentsView.updateOpponentList(opponentList);
+	}
+
+	public class ConnectionListener implements Server.ServerConnectionListener {
+		@Override
+		public void connected(Server.ServerConnectionEvent event) {
+			Signal signal = event.getSignal();
+			OpponentDto dto = signal.getOpponent();
+			try {
+				opponentsView.showAcceptanceDialog(OpponentFactory.buildFromDto(dto));
+			} catch (UnknownHostException e) {
+				Log.e(TAG, "connected:", e);
+			}
+		}
+
+		@Override
+		public void disconnected(Server.ServerConnectionEvent event) {
+			// TODO: Add disconnect event logic
+		}
+
+		@Override
+		public void receivedSignal(Server.ServerConnectionEvent event) {
+			Signal signal = event.getSignal();
+			OpponentDto dto = signal.getOpponent();
+			try {
+				opponentsView.showAcceptanceDialog(OpponentFactory.buildFromDto(dto));
+			} catch (UnknownHostException e) {
+				Log.e(TAG, "connected:", e);
+			}
+		}
 	}
 }

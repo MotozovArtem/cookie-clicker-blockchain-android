@@ -8,7 +8,11 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.EventObject;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -18,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Configuration.MessageConstants;
+import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.net.model.Signal;
 import ru.rienel.clicker.net.model.Signal.SignalType;
 import ru.rienel.clicker.net.model.Signal.SignalTypeDeserializer;
@@ -32,6 +37,7 @@ public class Server implements Runnable {
 
 	private Selector selector;
 	private ServerSocketChannel serverSocketChannel;
+	private List<EventListener> listeners = new ArrayList<>();
 	private ByteBuffer buffer = ByteBuffer.allocateDirect(MessageConstants.STANDARD_BUFFER_SIZE);
 
 	private static Server instance;
@@ -63,6 +69,9 @@ public class Server implements Runnable {
 				while (iter.hasNext()) {
 					SelectionKey key = iter.next();
 					iter.remove();
+					if (!key.isValid()) {
+						return;
+					}
 
 					if (key.isAcceptable()) {
 						register(selector, serverSocketChannel);
@@ -110,7 +119,8 @@ public class Server implements Runnable {
 			throws IOException {
 		SocketChannel client = serverSocket.accept();
 		client.configureBlocking(false);
-		client.register(selector, SelectionKey.OP_READ);
+		LocalClientHandler handler = new LocalClientHandler(this, client);
+		client.register(selector, SelectionKey.OP_READ, new LocalClient(handler));
 	}
 
 	private ByteBuffer createMessage(Signal signal) {
@@ -119,13 +129,85 @@ public class Server implements Runnable {
 		return ByteBuffer.wrap(messageWithLengthHeader.getBytes());
 	}
 
+	public void notifyMessageReceived(Signal signal) {
+		ServerConnectionEvent event = new ServerConnectionEvent(this, signal);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof ServerConnectionListener) {
+				try {
+					((ServerConnectionListener)eventListener).receivedSignal(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyMessageReceived: listener error", e);
+				}
+			}
+		}
+	}
+
+	public void notifyConnectionDone(Signal signal) {
+		ServerConnectionEvent event = new ServerConnectionEvent(this, signal);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof ServerConnectionListener) {
+				try {
+					((ServerConnectionListener)eventListener).connected(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyConnectionDone: listener error", e);
+				}
+			}
+		}
+	}
+
+	public void notifyDisconnectionDone() {
+		ServerConnectionEvent event = new ServerConnectionEvent(this, null);
+		for (EventListener eventListener : listeners) {
+			if (eventListener instanceof ServerConnectionListener) {
+				try {
+					((ServerConnectionListener)eventListener).disconnected(event);
+				} catch (Exception e) {
+					Log.e(TAG, "notifyDisconnectionDone: listener error", e);
+				}
+			}
+		}
+	}
+
+	// events
+	public void addListener(EventListener listener) {
+		Preconditions.checkNotNull(listener);
+		listeners.add(listener);
+	}
+
+	public void removeListener(EventListener listener) {
+		Preconditions.checkNotNull(listener);
+		listeners.remove(listener);
+	}
+
+
+	public static class ServerConnectionEvent extends EventObject {
+		private final Signal signal;
+
+		public ServerConnectionEvent(Object source, Signal signal) {
+			super(source);
+			Preconditions.checkNotNull(signal);
+			this.signal = signal;
+		}
+
+		public Signal getSignal() {
+			return signal;
+		}
+	}
+
+	public interface ServerConnectionListener extends EventListener {
+		void connected(ServerConnectionEvent event);
+
+		void disconnected(ServerConnectionEvent event);
+
+		void receivedSignal(ServerConnectionEvent event);
+	}
+
 	public class LocalClient {
 		private final LocalClientHandler handler;
 		private final Queue<ByteBuffer> messagesToSend = new ArrayDeque<>();
 
-		public LocalClient(LocalClientHandler handler, Signal signal) {
+		public LocalClient(LocalClientHandler handler) {
 			this.handler = handler;
-			messagesToSend.add(createMessage(signal));
 		}
 
 		public void addMessageToQueue(ByteBuffer msg) {
@@ -155,6 +237,5 @@ public class Server implements Runnable {
 				}
 			}
 		}
-
 	}
 }
