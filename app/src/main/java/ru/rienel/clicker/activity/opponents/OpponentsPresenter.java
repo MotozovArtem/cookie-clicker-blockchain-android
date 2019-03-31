@@ -88,10 +88,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
 
 		try {
-			client = new Client.Builder()
-					.setAddress(opponent.getAddress())
-					.setPort(Configuration.SERVER_PORT)
-					.create();
+			client = new Client(opponent.getIpAddress().getHostAddress(), Configuration.SERVER_PORT);
 			executor.execute(client);
 			client.sendSignal(signal);
 		} catch (IllegalArgumentException e) {

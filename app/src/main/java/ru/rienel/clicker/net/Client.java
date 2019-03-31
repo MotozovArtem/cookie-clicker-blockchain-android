@@ -36,17 +36,22 @@ public class Client implements Runnable {
 	private SocketChannel client;
 	private InetSocketAddress serverAddress;
 	private final Queue<ByteBuffer> messageToSend = new ArrayDeque<>();
-	private MessageProcessor messageProcessor;
+	private MessageProcessor messageProcessor = new MessageProcessor();
 
 	private boolean connected;
 	private boolean timeToSend;
 
-	private Client(String address, Integer port) {
-		serverAddress = new InetSocketAddress(address, port);
+	private String address;
+	private Integer port;
+
+	public Client(String address, Integer port) {
+		this.address = address;
+		this.port = port;
 	}
 
 	@Override
 	public void run() {
+		serverAddress = new InetSocketAddress(address, port);
 		try {
 			initConnection();
 			initSelector();
@@ -169,26 +174,6 @@ public class Client implements Runnable {
 //		for (CommunicationListener listener : listeners) {
 //			pool.execute(listener::disconnected);
 //		}
-	}
-
-
-	public static class Builder {
-		public String address;
-		private Integer port;
-
-		public Builder setAddress(String address) {
-			this.address = address;
-			return this;
-		}
-
-		public Builder setPort(Integer port) {
-			this.port = port;
-			return this;
-		}
-
-		public Client create() {
-			return new Client(address, port);
-		}
 	}
 
 	public static class ConnectionEvent extends EventObject {
