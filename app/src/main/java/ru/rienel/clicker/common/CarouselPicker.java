@@ -98,9 +98,7 @@ public class CarouselPicker extends ViewPager {
 		this.setFadingEdgeLength(0);
 	}
 
-
 	public static class CarouselViewAdapter extends PagerAdapter {
-
 		List<PickerItem> items = new ArrayList<>();
 		Context context;
 		int drawable;
@@ -175,10 +173,6 @@ public class CarouselPicker extends ViewPager {
 		}
 	}
 
-	/**
-	 * An interface which should be implemented by all the Item classes.
-	 * The picker only accepts items in the form of PickerItem.
-	 */
 	public interface PickerItem {
 		String getText();
 
@@ -188,9 +182,6 @@ public class CarouselPicker extends ViewPager {
 		boolean hasDrawable();
 	}
 
-	/**
-	 * A PickerItem which supports text.
-	 */
 	public static class TextItem implements PickerItem {
 		private String text;
 		private int textSize;
@@ -224,9 +215,6 @@ public class CarouselPicker extends ViewPager {
 		}
 	}
 
-	/**
-	 * A PickerItem which supports drawables.
-	 */
 	public static class DrawableItem implements PickerItem {
 		@DrawableRes
 		private int drawable;
@@ -250,7 +238,5 @@ public class CarouselPicker extends ViewPager {
 			this.drawable = drawable;
 		}
 	}
-
-
 }
 

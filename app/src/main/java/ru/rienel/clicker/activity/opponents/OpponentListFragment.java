@@ -1,7 +1,6 @@
 package ru.rienel.clicker.activity.opponents;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import android.widget.TextView;
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Opponent;
-import ru.rienel.clicker.db.factory.domain.OpponentFactory;
+import ru.rienel.clicker.net.Server;
 import ru.rienel.clicker.ui.dialog.AcceptanceDialogFragment;
 import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
 import ru.rienel.clicker.ui.dialog.WaitingAcceptanceDialogFragment;
@@ -38,6 +37,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 	private RecyclerView opponentRecyclerView;
 	private List<Opponent> opponentList;
 	private OpponentsContract.Presenter presenter;
+	private Server server;
 
 	public static OpponentListFragment newInstance() {
 		return new OpponentListFragment();

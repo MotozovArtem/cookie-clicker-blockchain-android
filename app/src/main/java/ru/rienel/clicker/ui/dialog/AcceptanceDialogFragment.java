@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;

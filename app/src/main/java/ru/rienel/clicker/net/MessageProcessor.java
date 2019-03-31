@@ -4,11 +4,20 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 import ru.rienel.clicker.common.Configuration.MessageConstants;
+import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.StringJoiner;
 
 public class MessageProcessor {
 	private StringBuilder receivedChars = new StringBuilder();
 	private final Queue<String> messages = new ArrayDeque<>();
+
+	public synchronized String nextMsg() {
+		return messages.poll();
+	}
+
+	public synchronized boolean hasNext() {
+		return !messages.isEmpty();
+	}
 
 	public synchronized void appendReceivedMessage(String receivedMessage) {
 		receivedChars.append(receivedMessage);
@@ -36,23 +45,19 @@ public class MessageProcessor {
 		return message.length() >= lengthHeader;
 	}
 
-	public synchronized String nextMsg() {
-		return messages.poll();
-	}
+	public static String getMessageBody(String message) {
+		Preconditions.checkNotNull(message);
 
-	public synchronized boolean hasNext() {
-		return !messages.isEmpty();
-	}
-
-	public static String bodyOf(String message) {
 		String[] messageParts = message.split(MessageConstants.MESSAGE_LENGTH_DELIMITER);
 		return messageParts[MessageConstants.MESSAGE_BODY_INDEX];
 	}
 
-	public static String prependLengthHeader(String messageWithourHeader) {
+	public static String prependLengthHeader(String messageWithoutHeader) {
+		Preconditions.checkNotNull(messageWithoutHeader);
+
 		StringJoiner joiner = new StringJoiner(MessageConstants.MESSAGE_LENGTH_DELIMITER);
-		joiner.add(Integer.toString(messageWithourHeader.length()));
-		joiner.add(messageWithourHeader);
+		joiner.add(Integer.toString(messageWithoutHeader.length()));
+		joiner.add(messageWithoutHeader);
 		return joiner.toString();
 	}
 }

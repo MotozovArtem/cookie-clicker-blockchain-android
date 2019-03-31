@@ -3,15 +3,20 @@ package ru.rienel.clicker.net;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Objects;
+import java.util.Queue;
+
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.rienel.clicker.common.Configuration;
 import ru.rienel.clicker.common.Configuration.MessageConstants;
 import ru.rienel.clicker.net.model.Signal;
 
@@ -22,51 +27,148 @@ public class Client implements Runnable {
 			.registerTypeAdapter(Signal.SignalType.class, Signal.SignalTypeDeserializer.class)
 			.create();
 
+	private static final String FATAL_COMMUNICATION_MSG = "Lost connection...";
+
+	private final ByteBuffer buffer = ByteBuffer.allocateDirect(MessageConstants.STANDARD_BUFFER_SIZE);
+
+	private Selector selector;
 	private SocketChannel client;
-	private ByteBuffer buffer = ByteBuffer.allocate(MessageConstants.STANDARD_BUFFER_SIZE);
-	private static Client instance;
+	private InetSocketAddress serverAddress;
+	private final Queue<ByteBuffer> messageToSend = new ArrayDeque<>();
+	private MessageProcessor messageProcessor;
 
-	public static Client start() {
-		if (instance == null)
-			instance = new Client();
+	private boolean connected;
+	private boolean timeToSend;
 
-		return instance;
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		if (client.isOpen()) {
-			client.close();
-		}
-	}
-
-	public void connect(String address) throws IOException {
-		client = SocketChannel.open(new InetSocketAddress("localhost", Configuration.SERVER_PORT));
-	}
-
-	public String sendSignal(Signal signal) {
-		String json = GSON.toJson(signal);
-		String messageWithLengthHeader = MessageProcessor.prependLengthHeader(json);
-		buffer = ByteBuffer.wrap(messageWithLengthHeader.getBytes());
-		String response = null;
-		try {
-			client.write(buffer);
-			buffer.clear();
-			client.read(buffer);
-			response = new String(buffer.array()).trim();
-			System.out.println("response=" + response);
-			buffer.clear();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return response;
-
+	public void connect(String host, int port) {
+		serverAddress = new InetSocketAddress(host, port);
+		new Thread(this).start();
 	}
 
 	@Override
 	public void run() {
+		try {
+			initConnection();
+			initSelector();
 
+			while (connected || !messageToSend.isEmpty()) {
+				if (timeToSend) {
+					client.keyFor(selector).interestOps(SelectionKey.OP_WRITE);
+					timeToSend = false;
+				}
+
+				selector.select();
+				for (SelectionKey key : selector.selectedKeys()) {
+					selector.selectedKeys().remove(key);
+					if (!key.isValid()) {
+						continue;
+					}
+
+					if (key.isConnectable()) {
+						completeConnection(key);
+					} else if (key.isReadable()) {
+						receive(key);
+					} else if (key.isWritable()) {
+						send(key);
+					}
+				}
+			}
+		} catch (IOException e) {
+			Log.e(TAG, "run: ", e);
+		}
+	}
+
+	private void initSelector() throws IOException {
+		selector = Selector.open();
+		client.register(selector, SelectionKey.OP_CONNECT);
+	}
+
+	private void initConnection() throws IOException {
+		client = SocketChannel.open();
+		client.configureBlocking(false);
+		client.connect(serverAddress);
+		connected = true;
+	}
+
+	private void completeConnection(SelectionKey key) throws IOException {
+		client.finishConnect();
+		key.interestOps(SelectionKey.OP_READ);
+	}
+
+	private void receive(SelectionKey key) throws IOException {
+		buffer.clear();
+		int numOfReadBytes = client.read(buffer);
+		if (numOfReadBytes == 1) {
+			Log.e(TAG, "receive: " + FATAL_COMMUNICATION_MSG);
+			throw new IOException(FATAL_COMMUNICATION_MSG);
+		}
+
+		String received = extractMessageFromBuffer();
+		messageProcessor.appendReceivedMessage(received);
+		while (messageProcessor.hasNext()) {
+			String msg = messageProcessor.nextMsg();
+			notifyMessageReceived(MessageProcessor.getMessageBody(msg));
+		}
+	}
+
+	private String extractMessageFromBuffer() {
+		buffer.flip();
+		byte[] bytes = new byte[buffer.remaining()];
+		buffer.get(bytes);
+		return new String(bytes);
+	}
+
+	private void send(SelectionKey key) throws IOException {
+		ByteBuffer msg;
+		synchronized (messageToSend) {
+			while ((msg = messageToSend.peek()) != null) {
+				client.write(msg);
+				if (msg.hasRemaining()) {
+					return;
+				}
+				messageToSend.remove();
+			}
+			key.interestOps(SelectionKey.OP_READ);
+		}
+	}
+
+	public void disconnect() {
+		connected = false;
+		sendSignal(null);
+	}
+
+	public void sendSignal(Signal signal) {
+		String signalJson = GSON.toJson(signal);
+		String messageWithLengthHeader = MessageProcessor.prependLengthHeader(signalJson);
+		synchronized (messageToSend) {
+			messageToSend.add(ByteBuffer.wrap(messageWithLengthHeader.getBytes()));
+		}
+		timeToSend = true;
+		selector.wakeup();
+	}
+
+
+	private void notifyMessageReceived(String message) {
+//		Executor pool = ForkJoinPool.commonPool();
+//		for (CommunicationListener listener : listeners) {
+//			pool.execute(() -> {
+//				listener.recvMsg(message);
+//			});
+//		}
+	}
+
+	private void notifyConnectionDone(InetSocketAddress remoteAddress) {
+//		Executor pool = ForkJoinPool.commonPool();
+//		for (CommunicationListener listener : listeners) {
+//			pool.execute(() -> listener.connected(remoteAddress));
+//		}
+	}
+
+	private void notifyDisconnectionDone() {
+//		Executor pool = ForkJoinPool.commonPool();
+//		for (CommunicationListener listener : listeners) {
+//			pool.execute(listener::disconnected);
+//		}
 	}
 
 	public static class ConnectionEvent extends EventObject {

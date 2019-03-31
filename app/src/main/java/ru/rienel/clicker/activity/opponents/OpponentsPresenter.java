@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
@@ -16,6 +18,7 @@ import android.util.Log;
 import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.PropertiesUpdatedName;
 import ru.rienel.clicker.db.domain.Opponent;
+import ru.rienel.clicker.net.Server;
 import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentsPresenter implements OpponentsContract.Presenter, PropertyChangeListener {
@@ -23,11 +26,17 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	private NetworkService networkService;
 	private OpponentsContract.View opponentsView;
+	private Server server;
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	public OpponentsPresenter(OpponentsContract.View opponentsView) {
+	public OpponentsPresenter(OpponentsContract.View opponentsView, Server server) {
 		Preconditions.checkNotNull(opponentsView);
 
 		this.opponentsView = opponentsView;
+
+		this.server = server;
+		executor.execute(server);
+
 		opponentsView.setPresenter(this);
 	}
 

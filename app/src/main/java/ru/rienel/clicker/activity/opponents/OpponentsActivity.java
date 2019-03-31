@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import ru.rienel.clicker.R;
+import ru.rienel.clicker.net.Server;
 import ru.rienel.clicker.service.NetworkService;
 
 public class OpponentsActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class OpponentsActivity extends AppCompatActivity {
 
 	private OpponentListFragment opponentListFragment;
 	private OpponentsPresenter presenter;
+	private Server server;
 	private ServiceConnection connection;
 
 	@Override
@@ -40,7 +42,9 @@ public class OpponentsActivity extends AppCompatActivity {
 					.commit();
 		}
 
-		presenter = new OpponentsPresenter(opponentListFragment);
+		server = Server.getInstance();
+
+		presenter = new OpponentsPresenter(opponentListFragment, server);
 
 		connection = presenter.newServiceConnection();
 		Intent serviceIntent = NetworkService.newIntent(this);
