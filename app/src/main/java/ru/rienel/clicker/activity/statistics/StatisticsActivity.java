@@ -42,7 +42,6 @@ public class StatisticsActivity extends AppCompatActivity {
 		super.onResume();
 		TextView statisticTitle;
 		statisticTitle = findViewById(R.id.statisticsTitle);
-
 		Integer blocksCount = blockRepository.count();
 		statisticTitle.setText(
 				String.format(Locale.ENGLISH, "Statistics: %d games played",

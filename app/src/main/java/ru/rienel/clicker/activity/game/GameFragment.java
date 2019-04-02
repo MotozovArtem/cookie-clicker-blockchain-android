@@ -455,14 +455,27 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			this.clicks = this.clicks - requiredClicks;
 			currentLevel += 1;
 			this.coins += 10;
+
+			String message = String.format(Locale.ENGLISH, "You earned %d level", this.currentLevel);
+			presenter.finishGame(message, this.requiredClicks);
+
 			preparingProgressBar(currentLevel, this.clicks);
 			click.setText(String.valueOf(this.coins));
+
+
+
 		} else if (this.clicks == requiredClicks) {
 			currentLevel += 1;
 			this.coins += 10;
 			this.clicks = 0;
+
+			String message = String.format(Locale.ENGLISH, "You earned %d level", this.currentLevel);
+			presenter.finishGame(message, this.requiredClicks);
+
 			preparingProgressBar(currentLevel, 0);
 			click.setText(String.valueOf(this.coins));
+
+
 		}
 	}
 }

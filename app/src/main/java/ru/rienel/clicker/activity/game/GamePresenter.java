@@ -2,6 +2,7 @@ package ru.rienel.clicker.activity.game;
 
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -11,6 +12,7 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.db.domain.Block;
 import ru.rienel.clicker.db.domain.dao.DaoException;
 import ru.rienel.clicker.db.domain.dao.Repository;
+import ru.rienel.clicker.db.domain.dao.impl.BlockDaoImpl;
 import ru.rienel.clicker.db.factory.domain.BlockFactory;
 import ru.rienel.clicker.net.Client;
 import ru.rienel.clicker.net.Client.ClientConnectionEvent;
@@ -68,9 +70,11 @@ public class GamePresenter implements GameContract.Presenter {
 
 	@Override
 	public void finishGame(String message, Integer goal) {
+		blockRepository = new BlockDaoImpl(gameView.getActivityContext());
+		List<Block> blockList = blockRepository.findAll();
 		Block newBlock = BlockFactory.build(message, goal,
 				new Date(System.currentTimeMillis()), "None",
-				"none", "HASH");
+				blockList.get(blockList.size()-1).getHashOfBlock(), "HASH");
 		try {
 			blockRepository.add(newBlock);
 		} catch (DaoException e) {
