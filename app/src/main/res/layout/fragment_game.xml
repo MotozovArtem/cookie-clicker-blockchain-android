@@ -1,99 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="#F3F0D1">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/relativeLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#F3F0D1">
+
 
 	<TextView
-			android:id="@+id/title"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/title"
-			android:textColor="@color/colorTitle"
-			android:textSize="40sp"
-			android:layout_centerHorizontal="true"/>
-
-	<TextView
-			android:id="@+id/time"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_below="@id/title"
-			android:textSize="18sp"/>
-
+		android:id="@+id/time"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/title"
+		android:layout_centerHorizontal="true"
+		android:textSize="18sp" />
 
 
 	<com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 		android:id="@+id/progressBarB"
 		android:layout_width="match_parent"
-		android:layout_marginStart="70dp"
 		android:layout_height="30dp"
-		app:rcMax="20"
-		app:rcRadius="50dp"
-		app:rcBackgroundPadding="1dp"
-		app:rcReverse="false"
-		app:rcProgressColor="#C85108"
-		app:rcBackgroundColor="#E29C68"
 		android:layout_below="@id/time"
-		android:layout_centerHorizontal="true"/>
+		android:layout_centerHorizontal="true"
+		android:layout_marginStart="70dp"
+		app:rcBackgroundColor="#E29C68"
+		app:rcBackgroundPadding="1dp"
+		app:rcMax="20"
+		app:rcProgressColor="#C85108"
+		app:rcRadius="50dp"
+		app:rcReverse="false" />
 
 
 	<TextView
-			android:id="@+id/stopwatch"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_below="@id/progressBarB"
-			android:textColor="@color/colorTitle"
-			android:textSize="32sp"/>
+		android:id="@+id/stopwatch"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/progressBarB"
+		android:layout_centerHorizontal="true"
+		android:textColor="@color/colorTitle"
+		android:textSize="32sp" />
 
 
 	<ImageView
-			android:id="@+id/donut"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/stopwatch"
-			android:background="@drawable/donut_for_game"
-			android:scaleType="center"
-			android:soundEffectsEnabled="false"
-			android:layout_centerHorizontal="true"/>
+		android:id="@+id/donut"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/stopwatch"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:background="@drawable/donut_for_game"
+		android:scaleType="center"
+		android:soundEffectsEnabled="false" />
 
 	<TextView
-			android:id="@+id/newClick"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:textSize="26sp"
-			android:textColor="@color/colorToast"/>
+		android:id="@+id/newClick"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:textColor="@color/colorToast"
+		android:textSize="26sp" />
 
 	<TextView
-			android:id="@+id/tvClicks"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="20dp"
-			android:paddingTop="20dp"
-			android:textSize="32sp"
-			android:layout_centerHorizontal="true"
-			android:layout_below="@id/donut"/>
+		android:id="@+id/tvClicks"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/donut"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="20dp"
+		android:paddingTop="20dp"
+		android:textSize="32sp" />
 
 
-	<Button
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/activity_main"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@+id/donut"
+		android:layout_alignParentStart="true"
+		android:layout_marginStart="35dp"
+		android:layout_marginTop="40dp"
+		android:layout_marginEnd="35dp">
+
+		<Button
 			android:id="@+id/btnIncTap"
-			android:layout_width="wrap_content"
+			style="@style/TextStyle"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/IncClick"
-			android:layout_below="@id/tvClicks"
-			style="@style/Widget.AppCompat.Button.Colored"/>
+			android:background="@drawable/buttons_style"
+			android:text="IncClick \n 1 coin"
+			android:paddingStart="20dp"
+			android:textAlignment="textStart"
+			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintVertical_chainStyle="spread" />
 
-	<Button
+		<Button
 			android:id="@+id/btnAutoTap"
-			android:layout_width="wrap_content"
+			style="@style/TextStyle"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/AutoClick"
-			android:layout_below="@id/tvClicks"
 			android:layout_toEndOf="@id/btnIncTap"
-			style="@style/Widget.AppCompat.Button.Colored"/>
+			android:background="@drawable/buttons_style"
+			android:text="AutoClick \n 1 coin"
+			android:paddingStart="20dp"
+			android:textAlignment="textStart"
+			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap1"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/btnIncTap"
+			tools:ignore="RtlSymmetry" />
+
+		<Button
+			android:id="@+id/btnAutoTap1"
+			style="@style/TextStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toEndOf="@id/btnIncTap"
+			android:background="@drawable/buttons_style"
+			android:text="Regular Inc \n 1 coin"
+			android:paddingStart="20dp"
+			android:textAlignment="textStart"
+			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap2"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/btnAutoTap" />
+
+		<Button
+			android:id="@+id/btnAutoTap2"
+			style="@style/TextStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_toEndOf="@id/btnIncTap"
+			android:background="@drawable/buttons_style"
+			android:text="Regular AutoClick \ 1 coin"
+			android:paddingStart="20dp"
+			android:textAlignment="textStart"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/btnAutoTap1"
+			/>
+	</android.support.constraint.ConstraintLayout>
 </RelativeLayout>
