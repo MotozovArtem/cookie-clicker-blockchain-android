@@ -32,13 +32,16 @@
 
 		<activity
 				android:name=".activity.game.GameActivity"
-				android:label="@string/newGame"/>
+				android:label="@string/newGame"
+				android:screenOrientation="portrait"/>
 		<activity
 				android:name=".activity.shop.ShopActivity"
-				android:label="@string/shopTitle"/>
+				android:label="@string/shopTitle"
+				android:screenOrientation="portrait"/>
 		<activity
 				android:name=".activity.main.MainActivity"
-				android:label="@string/gameTitle">
+				android:label="@string/gameTitle"
+				android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
@@ -47,14 +50,17 @@
 		</activity>
 		<activity
 				android:name=".activity.statistics.StatisticsActivity"
-				android:label="@string/statistic">
+				android:label="@string/statistic"
+				android:screenOrientation="portrait">
 		</activity>
 		<activity
-				android:name=".activity.preference.PreferencesActivity"/>
+				android:name=".activity.preference.PreferencesActivity"
+				android:screenOrientation="portrait"/>
 		<activity
 				android:parentActivityName=".activity.main.MainActivity"
 				android:label="Opponents"
-				android:name=".activity.opponents.OpponentsActivity"/>
+				android:name=".activity.opponents.OpponentsActivity"
+				android:screenOrientation="portrait"/>
 	</application>
 
 </manifest>
