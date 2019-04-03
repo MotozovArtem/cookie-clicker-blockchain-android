@@ -46,9 +46,7 @@ public class Client implements Runnable {
 	private String address;
 	private Integer port;
 
-	public Client(String address, Integer port) {
-		this.address = address;
-		this.port = port;
+	public Client() {
 	}
 
 	@Override
@@ -85,16 +83,16 @@ public class Client implements Runnable {
 		}
 	}
 
-	private void initSelector() throws IOException {
-		selector = Selector.open();
-		client.register(selector, SelectionKey.OP_CONNECT);
-	}
-
 	private void initConnection() throws IOException {
 		client = SocketChannel.open();
 		client.configureBlocking(false);
 		client.connect(serverAddress);
 		connected = true;
+	}
+
+	private void initSelector() throws IOException {
+		selector = Selector.open();
+		client.register(selector, SelectionKey.OP_CONNECT);
 	}
 
 	private void completeConnection(SelectionKey key) throws IOException {
@@ -155,13 +153,29 @@ public class Client implements Runnable {
 		selector.wakeup();
 	}
 
+	public String getAddress() {
+		return address;
+	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	// Notifications
 	public void notifyMessageReceived(Signal signal) {
-		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, signal);
+		ClientNetworkEvent event = new ClientNetworkEvent(this, signal);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof Server.ServerConnectionListener) {
+			if (eventListener instanceof Server.ServerNetworkListener) {
 				try {
-					((Server.ServerConnectionListener)eventListener).receivedSignal(event);
+					((ClientNetworkListener)eventListener).receivedSignal(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyMessageReceived: listener error", e);
 				}
@@ -170,11 +184,11 @@ public class Client implements Runnable {
 	}
 
 	public void notifyConnectionDone(Signal signal) {
-		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, signal);
+		ClientNetworkEvent event = new ClientNetworkEvent(this, signal);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof Server.ServerConnectionListener) {
+			if (eventListener instanceof Server.ServerNetworkListener) {
 				try {
-					((Server.ServerConnectionListener)eventListener).connected(event);
+					((ClientNetworkListener)eventListener).connected(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyConnectionDone: listener error", e);
 				}
@@ -183,11 +197,11 @@ public class Client implements Runnable {
 	}
 
 	public void notifyDisconnectionDone() {
-		Server.ServerConnectionEvent event = new Server.ServerConnectionEvent(this, null);
+		ClientNetworkEvent event = new ClientNetworkEvent(this, null);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof Server.ServerConnectionListener) {
+			if (eventListener instanceof Server.ServerNetworkListener) {
 				try {
-					((Server.ServerConnectionListener)eventListener).disconnected(event);
+					((ClientNetworkListener)eventListener).disconnected(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyDisconnectionDone: listener error", e);
 				}
@@ -207,10 +221,10 @@ public class Client implements Runnable {
 	}
 
 
-	public static class ClientConnectionEvent extends EventObject {
+	public static class ClientNetworkEvent extends EventObject {
 		private final Signal signal;
 
-		public ClientConnectionEvent(Object source, Signal signal) {
+		public ClientNetworkEvent(Object source, Signal signal) {
 			super(source);
 			Preconditions.checkNotNull(signal);
 			this.signal = signal;
@@ -221,11 +235,11 @@ public class Client implements Runnable {
 		}
 	}
 
-	public interface ClientConnectionListener extends EventListener {
-		void connected(Client.ClientConnectionEvent event);
+	public interface ClientNetworkListener extends EventListener {
+		void connected(ClientNetworkEvent event);
 
-		void disconnected(Client.ClientConnectionEvent event);
+		void disconnected(ClientNetworkEvent event);
 
-		void receivedSignal(Client.ClientConnectionEvent event);
+		void receivedSignal(ClientNetworkEvent event);
 	}
 }

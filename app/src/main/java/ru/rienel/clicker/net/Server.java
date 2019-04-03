@@ -129,12 +129,13 @@ public class Server implements Runnable {
 		return ByteBuffer.wrap(messageWithLengthHeader.getBytes());
 	}
 
+	// Notifications
 	public void notifyMessageReceived(Signal signal) {
-		ServerConnectionEvent event = new ServerConnectionEvent(this, signal);
+		ServerNetworkEvent event = new ServerNetworkEvent(this, signal);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof ServerConnectionListener) {
+			if (eventListener instanceof ServerNetworkListener) {
 				try {
-					((ServerConnectionListener)eventListener).receivedSignal(event);
+					((ServerNetworkListener)eventListener).receivedSignal(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyMessageReceived: listener error", e);
 				}
@@ -143,11 +144,11 @@ public class Server implements Runnable {
 	}
 
 	public void notifyConnectionDone(Signal signal) {
-		ServerConnectionEvent event = new ServerConnectionEvent(this, signal);
+		ServerNetworkEvent event = new ServerNetworkEvent(this, signal);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof ServerConnectionListener) {
+			if (eventListener instanceof ServerNetworkListener) {
 				try {
-					((ServerConnectionListener)eventListener).connected(event);
+					((ServerNetworkListener)eventListener).connected(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyConnectionDone: listener error", e);
 				}
@@ -156,11 +157,11 @@ public class Server implements Runnable {
 	}
 
 	public void notifyDisconnectionDone() {
-		ServerConnectionEvent event = new ServerConnectionEvent(this, null);
+		ServerNetworkEvent event = new ServerNetworkEvent(this, null);
 		for (EventListener eventListener : listeners) {
-			if (eventListener instanceof ServerConnectionListener) {
+			if (eventListener instanceof ServerNetworkListener) {
 				try {
-					((ServerConnectionListener)eventListener).disconnected(event);
+					((ServerNetworkListener)eventListener).disconnected(event);
 				} catch (Exception e) {
 					Log.e(TAG, "notifyDisconnectionDone: listener error", e);
 				}
@@ -180,10 +181,10 @@ public class Server implements Runnable {
 	}
 
 
-	public static class ServerConnectionEvent extends EventObject {
+	public static class ServerNetworkEvent extends EventObject {
 		private final Signal signal;
 
-		public ServerConnectionEvent(Object source, Signal signal) {
+		public ServerNetworkEvent(Object source, Signal signal) {
 			super(source);
 			Preconditions.checkNotNull(signal);
 			this.signal = signal;
@@ -194,12 +195,12 @@ public class Server implements Runnable {
 		}
 	}
 
-	public interface ServerConnectionListener extends EventListener {
-		void connected(ServerConnectionEvent event);
+	public interface ServerNetworkListener extends EventListener {
+		void connected(ServerNetworkEvent event);
 
-		void disconnected(ServerConnectionEvent event);
+		void disconnected(ServerNetworkEvent event);
 
-		void receivedSignal(ServerConnectionEvent event);
+		void receivedSignal(ServerNetworkEvent event);
 	}
 
 	public class LocalClient {

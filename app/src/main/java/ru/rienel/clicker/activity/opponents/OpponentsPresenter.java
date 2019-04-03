@@ -43,8 +43,10 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		this.opponentsView = opponentsView;
 
 		this.server = server;
-		server.addListener(new ConnectionListener());
+		server.addListener(new ServerListener());
 		executor.execute(server);
+
+		client = new Client();
 
 		opponentsView.setPresenter(this);
 	}
@@ -90,7 +92,8 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 		OpponentDto opponentDto = OpponentDto.newFromOpponent(opponent);
 		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
 		try {
-			client = new Client(opponent.getIpAddress().getHostAddress(), Configuration.SERVER_PORT);
+			client.setAddress(opponentDto.getIpAddress());
+			client.setPort(Configuration.SERVER_PORT);
 			executor.execute(client);
 			client.sendSignal(signal);
 		} catch (IllegalArgumentException e) {
@@ -121,6 +124,7 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	@Override
 	public void handleCancelConnection(WifiP2pManager.ActionListener actionListener) {
+		client.disconnect();
 		networkService.cancelDisconnect(actionListener);
 	}
 
@@ -136,7 +140,6 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 	private void updateOpponents() {
 		List<WifiP2pDevice> devices = networkService.getP2pDevices();
-
 		List<Opponent> opponentList = new ArrayList<>(devices.size());
 		for (WifiP2pDevice device : devices) {
 			Opponent opponent = new Opponent();
@@ -148,36 +151,51 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 			});
 			opponentList.add(opponent);
 		}
-
 		opponentsView.updateOpponentList(opponentList);
 	}
 
-	public class ConnectionListener implements Server.ServerConnectionListener {
+	public class ServerListener implements Server.ServerNetworkListener {
 		@Override
-		public void connected(Server.ServerConnectionEvent event) {
+		public void connected(Server.ServerNetworkEvent event) {
 			Signal signal = event.getSignal();
-			OpponentDto dto = signal.getOpponent();
+			Opponent opponent;
 			try {
-				opponentsView.showAcceptanceDialog(OpponentFactory.buildFromDto(dto));
+				opponent = OpponentFactory.buildFromDto(signal.getOpponent());
 			} catch (UnknownHostException e) {
-				Log.e(TAG, "connected:", e);
+				Log.e(TAG, "connected: ", e);
+				opponentsView.showErrorDialog(e);
+				return;
 			}
+			opponentsView.showAcceptanceDialog(opponent);
 		}
 
 		@Override
-		public void disconnected(Server.ServerConnectionEvent event) {
-			// TODO: Add disconnect event logic
+		public void disconnected(Server.ServerNetworkEvent event) {
+
 		}
 
 		@Override
-		public void receivedSignal(Server.ServerConnectionEvent event) {
-			Signal signal = event.getSignal();
-			OpponentDto dto = signal.getOpponent();
-			try {
-				opponentsView.showAcceptanceDialog(OpponentFactory.buildFromDto(dto));
-			} catch (UnknownHostException e) {
-				Log.e(TAG, "connected:", e);
-			}
+		public void receivedSignal(Server.ServerNetworkEvent event) {
+
+		}
+	}
+
+
+	public class ClientListener implements Client.ClientNetworkListener {
+
+		@Override
+		public void connected(Client.ClientNetworkEvent event) {
+
+		}
+
+		@Override
+		public void disconnected(Client.ClientNetworkEvent event) {
+
+		}
+
+		@Override
+		public void receivedSignal(Client.ClientNetworkEvent event) {
+
 		}
 	}
 }
