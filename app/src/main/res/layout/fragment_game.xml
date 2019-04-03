@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:app="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="#F3F0D1">
@@ -22,14 +23,21 @@
 			android:layout_below="@id/title"
 			android:textSize="18sp"/>
 
-	<ProgressBar
-			android:id="@+id/progressBar"
-			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:max="20"
-			android:layout_below="@id/time"
-			android:layout_centerHorizontal="true"/>
+
+
+	<com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+		android:id="@+id/progressBarB"
+		android:layout_width="match_parent"
+		android:layout_marginStart="70dp"
+		android:layout_height="30dp"
+		app:rcMax="20"
+		app:rcRadius="50dp"
+		app:rcBackgroundPadding="1dp"
+		app:rcReverse="false"
+		app:rcProgressColor="#C85108"
+		app:rcBackgroundColor="#E29C68"
+		android:layout_below="@id/time"
+		android:layout_centerHorizontal="true"/>
 
 
 	<TextView
@@ -37,7 +45,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerHorizontal="true"
-			android:layout_below="@id/progressBar"
+			android:layout_below="@id/progressBarB"
 			android:textColor="@color/colorTitle"
 			android:textSize="32sp"/>
 

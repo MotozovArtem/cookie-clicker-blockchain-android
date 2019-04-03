@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+
 import ru.rienel.clicker.R;
 import ru.rienel.clicker.common.ImageDonut;
 import ru.rienel.clicker.common.Preconditions;
@@ -46,7 +48,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private ImageView donutImage;
 	private TextView time;
 	private Button shop;
-	private ProgressBar progressBar;
+	private RoundCornerProgressBar progressBar;
 
 	private Integer clicks;
 	private int donutPerClick;
@@ -98,7 +100,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		click = root.findViewById(R.id.tvClicks);
 		shop = root.findViewById(R.id.btnShop);
 		time = root.findViewById(R.id.time);
-		progressBar = root.findViewById(R.id.progressBar);
+		progressBar = root.findViewById(R.id.progressBarB);
 		donutImage = root.findViewById(R.id.donut);
 		clock = root.findViewById(R.id.stopwatch);
 
@@ -411,7 +413,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private void saveClicks() {
 		saves = getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
-		editor.putInt("clicks", progressBar.getProgress());
+		editor.putInt("clicks", (int)progressBar.getProgress());
 		editor.putInt("coins", this.coins);
 		editor.putInt("currentLevel", this.currentLevel);
 		editor.apply();
@@ -446,7 +448,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	}
 
 	private void increaseProgressBar(int value) {
-		progressBar.incrementProgressBy(value);
+		progressBar.setProgress((int)progressBar.getProgress() + value);
 		calculatingNextLevelState();
 	}
 
