@@ -70,23 +70,24 @@
 		android:id="@+id/tvCoinsCounter"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/donut"
-		android:layout_centerHorizontal="true"
-		android:layout_marginBottom="20dp"
-		android:paddingTop="20dp"
+		android:layout_above="@id/donut"
+		android:layout_centerHorizontal="false"
+		android:layout_marginBottom="20sp"
+		android:paddingTop="20sp"
 		android:textSize="20sp"
-		android:layout_toLeftOf="@id/donut"/>
+		android:paddingStart="50sp"
+		android:paddingEnd="50sp"/>
 
 	<TextView
 		android:id="@+id/tvMultiplayerCoinsCounter"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/donut"
-		android:layout_centerHorizontal="true"
-		android:layout_marginBottom="20dp"
+		android:layout_above="@id/donut"
+		android:layout_toEndOf="@id/tvCoinsCounter"
+		android:layout_centerHorizontal="false"
+		android:layout_marginBottom="20sp"
 		android:paddingTop="20dp"
-		android:textSize="20sp"
-		android:paddingLeft="30sp"/>
+		android:textSize="20sp"/>
 
 
 	<android.support.constraint.ConstraintLayout

@@ -210,6 +210,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		donutImage.startAnimation(rotateAnimation);
 		coinsCounterTextView.setTextColor(getResources().getColor(R.color.colorPoint));
 		multiplayerCoinsCounterTextView.setTextColor(getResources().getColor(R.color.colorPoint));
+		currentLevelTextView.setTextColor(getResources().getColor(R.color.colorPoint));
 		if (currentTime != 0) {
 			timer = currentTime;
 		} else {
@@ -488,7 +489,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			currentLevel += 1;
 			this.coins += 10;
 
-			String message = String.format(Locale.ENGLISH, "You earned %d level", this.currentLevel);
+			String message = String.format(Locale.ENGLISH, "You earned level %d", this.currentLevel);
 			presenter.finishGame(message, this.requiredClicks);
 
 			preparingProgressBar(currentLevel, this.clicks);
@@ -501,7 +502,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			this.coins += 10;
 			this.clicks = 0;
 
-			String message = String.format(Locale.ENGLISH, "You earned %d level", this.currentLevel);
+			String message = String.format(Locale.ENGLISH, "You earned level %d ", this.currentLevel);
 			presenter.finishGame(message, this.requiredClicks);
 
 			preparingProgressBar(currentLevel, 0);
