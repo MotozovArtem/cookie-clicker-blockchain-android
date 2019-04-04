@@ -8,20 +8,14 @@
 	android:background="#F3F0D1">
 
 
-	<TextView
-		android:id="@+id/time"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/title"
-		android:layout_centerHorizontal="true"
-		android:textSize="18sp" />
+
 
 
 	<com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
 		android:id="@+id/progressBarB"
 		android:layout_width="match_parent"
 		android:layout_height="30dp"
-		android:layout_below="@id/time"
+		android:layout_below="@+id/tvCurrentLevel"
 		android:layout_centerHorizontal="true"
 		android:layout_marginStart="70dp"
 		app:rcBackgroundColor="#E29C68"
@@ -35,12 +29,10 @@
 		android:id="@+id/tvCurrentLevel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_centerVertical="true"
 		android:text="@string/current_level"
 		android:textColor="@color/colorToast"
 		android:textSize="26sp"
-		android:layout_below="@id/progressBarB"/>
+		android:layout_centerHorizontal="true"/>
 
 
 	<TextView
@@ -60,6 +52,7 @@
 		android:layout_below="@id/stopwatch"
 		android:layout_centerHorizontal="true"
 		android:layout_centerVertical="true"
+
 		android:background="@drawable/donut_for_game"
 		android:scaleType="center"
 		android:soundEffectsEnabled="false" />

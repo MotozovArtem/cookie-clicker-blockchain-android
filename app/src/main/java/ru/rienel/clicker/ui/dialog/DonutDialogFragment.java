@@ -66,6 +66,7 @@ public class DonutDialogFragment extends DialogFragment {
 
 		setImagePosition(getArguments().getInt("donut_id"));
 
+
 		carouselPicker.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
@@ -97,6 +98,7 @@ public class DonutDialogFragment extends DialogFragment {
 		};
 
 		CarouselPicker finalCarouselPicker = carouselPicker;
+		idSelectDonut = finalCarouselPicker.getCurrentItem();
 		View.OnClickListener setNextPosition = v -> {
 			finalCarouselPicker.setCurrentItem(idSelectDonut + 1);
 		};
