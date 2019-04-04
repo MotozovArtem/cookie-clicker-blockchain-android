@@ -43,8 +43,8 @@
 	<string name="coins">Coins:</string>
 	<string name="DPC">Donuts Per Click:</string>
 	<string name="clearGameSaves">Clear game saves</string>
-	<string name="IncClick">Increment Click</string>
-	<string name="AutoClick">AutoClick</string>
+	<string name="IncClick">Increment Click (-10 coins)</string>
+	<string name="AutoClick">AutoClick (-20 coins)</string>
 	<string name="multiplayer_coins">Multiplayer Coins:</string>
 	<string name="select">Select</string>
 	<string name="cancel">Cancel</string>
@@ -54,7 +54,9 @@
 	<string name="question_mark">\?</string>
 	<string name="resolve_ip">Resolve IP</string>
     <string name="buy">Buy</string>
-	<string name="regular_inc">Regular Inc (-10 coins)</string>
-	<string name="regular_autoclick">Regular AutoClick (-20 coins)</string>
+	<string name="regular_inc">Regular Inc (-10 multicoins)</string>
+	<string name="regular_autoclick">Regular AutoClick (-20 multicoins)</string>
 	<string name="current_level">Level </string>
+	<string name="autoclick_coins">AutoClick (- 20 coins)</string>
+	<string name="incclick_coins">IncClick (-10 coins)</string>
 </resources>

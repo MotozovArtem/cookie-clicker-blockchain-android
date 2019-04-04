@@ -15,6 +15,15 @@ import android.widget.SeekBar;
 
 import ru.rienel.clicker.R;
 
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_CLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_COMMONCOINS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_DONUT_PER_CLICK;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_LEVEL;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MAUTOCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MULIPLAYER_COINS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_TEMPAUTOCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_TEMPCLICKS;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_VOLUME_EFFECT;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_VOLUME_MUSIC;
@@ -97,15 +106,15 @@ public class SettingsDialogFragment extends DialogFragment implements SeekBar.On
         if (!hasVisited) {
             SharedPreferences.Editor editor = saves.edit();
             editor.putBoolean("hasVisited", true);
-            editor.putInt("tempClicks", 1);               // Counter of temporary increment clicks  (purchased for comman clicks)
-            editor.putInt("tempAutoClicks", 1);           // Counter of temporary Auto clicks  (purchased for comman clicks)
-            editor.putInt("donutPerClick", 1);           // Increase only for multiplayer clicks; defoult value is "1";
-            editor.putInt("mAutoClicks", 0);                // Counter of Auto clicks (purchased for multiplayer clicks)
-            editor.putInt("clicks", 0);            // Common clicks
-            editor.putInt("mClicks", 0);            // Multiplayer Clicks
-            editor.putInt("currentLevel", 0);            // Player Level
-            editor.putInt("commonCoins", 0);            // Player common coins
-            editor.putInt("multiplayerCoins", 10);            // Player multiplayer coins
+            editor.putInt("tempClicks", PREFERENCES_DEFOULT_TEMPCLICKS);               // Counter of temporary increment clicks  (purchased for comman clicks)
+            editor.putInt("tempAutoClicks", PREFERENCES_DEFOULT_TEMPAUTOCLICKS);           // Counter of temporary Auto clicks  (purchased for comman clicks)
+            editor.putInt("donutPerClick", PREFERENCES_DEFOULT_DONUT_PER_CLICK);           // Increase only for multiplayer clicks; defoult value is "1";
+            editor.putInt("mAutoClicks", PREFERENCES_DEFOULT_MAUTOCLICKS);                // Counter of Auto clicks (purchased for multiplayer clicks)
+            editor.putInt("clicks", PREFERENCES_DEFOULT_CLICKS);            // Common clicks
+            editor.putInt("mClicks", PREFERENCES_DEFOULT_MCLICKS);            // Multiplayer Clicks
+            editor.putInt("currentLevel", PREFERENCES_DEFOULT_LEVEL);            // Player Level
+            editor.putInt("commonCoins", PREFERENCES_DEFOULT_COMMONCOINS);            // Player common coins
+            editor.putInt("multiplayerCoins", PREFERENCES_DEFOULT_MULIPLAYER_COINS);            // Player multiplayer coins
             editor.apply();
             return true;
         }

@@ -22,5 +22,14 @@ public class Configuration {
 		public static final String PREFERENCES_DONUT_ID = "donut_id";
 		public static final String PREFERENCES_VOLUME_MUSIC  = "volume_music";
 		public static final String PREFERENCES_VOLUME_EFFECT  = "volume_effect";
+		public static final int PREFERENCES_DEFOULT_COMMONCOINS  = 1000;
+		public static final int PREFERENCES_DEFOULT_MULIPLAYER_COINS  = 1000;
+		public static final int PREFERENCES_DEFOULT_LEVEL  = 0;
+		public static final int PREFERENCES_DEFOULT_MCLICKS  = 0;
+		public static final int PREFERENCES_DEFOULT_CLICKS  = 0;
+		public static final int PREFERENCES_DEFOULT_MAUTOCLICKS  = 0;
+		public static final int PREFERENCES_DEFOULT_DONUT_PER_CLICK  = 1;
+		public static final int PREFERENCES_DEFOULT_TEMPAUTOCLICKS  = 0;
+		public static final int PREFERENCES_DEFOULT_TEMPCLICKS  = 0;
 	}
 }

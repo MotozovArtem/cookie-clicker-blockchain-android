@@ -19,6 +19,15 @@ import ru.rienel.clicker.common.ImageDonut;
 import ru.rienel.clicker.ui.dialog.DonutDialogFragment;
 import ru.rienel.clicker.ui.dialog.SettingsDialogFragment;
 
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_CLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_COMMONCOINS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_DONUT_PER_CLICK;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_LEVEL;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MAUTOCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_MULIPLAYER_COINS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_TEMPAUTOCLICKS;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DEFOULT_TEMPCLICKS;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DONUT_ID;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
 
@@ -104,15 +113,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		if (!hasVisited) {
 			SharedPreferences.Editor editor = saves.edit();
 			editor.putBoolean("hasVisited", true);
-			editor.putInt("tempClicks", 1);               // Counter of temporary increment clicks  (purchased for comman clicks)
-			editor.putInt("tempAutoClicks", 1);           // Counter of temporary Auto clicks  (purchased for comman clicks)
-			editor.putInt("donutPerClick", 1);           // Increase only for multiplayer clicks; defoult value is "1";
-			editor.putInt("mAutoClicks", 0);                // Counter of Auto clicks (purchased for multiplayer clicks)
-			editor.putInt("clicks", 0);            // Common clicks
-			editor.putInt("mClicks", 0);            // Multiplayer Clicks
-			editor.putInt("currentLevel", 0);            // Player Level
-			editor.putInt("commonCoins", 0);            // Player common coins
-			editor.putInt("multiplayerCoins", 10);            // Player multiplayer coins
+			editor.putInt("tempClicks", PREFERENCES_DEFOULT_TEMPCLICKS);               // Counter of temporary increment clicks  (purchased for comman clicks)
+			editor.putInt("tempAutoClicks", PREFERENCES_DEFOULT_TEMPAUTOCLICKS);           // Counter of temporary Auto clicks  (purchased for comman clicks)
+			editor.putInt("donutPerClick", PREFERENCES_DEFOULT_DONUT_PER_CLICK);           // Increase only for multiplayer clicks; defoult value is "1";
+			editor.putInt("mAutoClicks", PREFERENCES_DEFOULT_MAUTOCLICKS);                // Counter of Auto clicks (purchased for multiplayer clicks)
+			editor.putInt("clicks", PREFERENCES_DEFOULT_CLICKS);            // Common clicks
+			editor.putInt("mClicks", PREFERENCES_DEFOULT_MCLICKS);            // Multiplayer Clicks
+			editor.putInt("currentLevel", PREFERENCES_DEFOULT_LEVEL);            // Player Level
+			editor.putInt("commonCoins", PREFERENCES_DEFOULT_COMMONCOINS);            // Player common coins
+			editor.putInt("multiplayerCoins", PREFERENCES_DEFOULT_MULIPLAYER_COINS);            // Player multiplayer coins
 			editor.apply();
 			return true;
 		}
@@ -126,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	public View.OnClickListener newOnClearGamesSavesClickListener() {
 		return view -> {
 			clearGameSaves();
+			System.out.println("Is cleared");
 			checkFirstLoadGameSaves();
 		};
 	}
