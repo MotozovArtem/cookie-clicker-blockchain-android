@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/foreground</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="android:statusBarColor">?attr/colorAccent</item>
+        <item name="android:statusBarColor">#C85108</item>
     </style>
 
     <!-- Custom Application theme -->
@@ -14,7 +14,7 @@
         <item name="android:colorForeground">@color/foreground</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="android:navigationBarColor">@color/black</item>
-        <item name="android:statusBarColor">?attr/colorAccent</item>
+        <item name="android:statusBarColor">#C85108</item>
     </style>
 
     <style name="ButtonInShop" parent="Base.AlertDialog.AppCompat.Light">
