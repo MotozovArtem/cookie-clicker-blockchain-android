@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 	private Button settings;
 	private Button multiplayer;
 	private Button shop;
-	private Button clear;
 
 	private MainContract.Presenter presenter;
 	private ImageView imageDonut;
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		multiplayer = findViewById(R.id.multiplayer);
 		shop = findViewById(R.id.btnShop);
 		settings = findViewById(R.id.settings);
-		clear = findViewById(R.id.btnClearGameSaves);
 		imageDonut = findViewById(R.id.donut);
 
 
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		statistics.setOnClickListener(buildChangeActivityOnClickListener(this, StatisticsActivity.class));
 		multiplayer.setOnClickListener(buildChangeActivityOnClickListener(this, OpponentsActivity.class));
 		shop.setOnClickListener(buildChangeActivityOnClickListener(this, ShopActivity.class));
-		clear.setOnClickListener(newOnClearGamesSavesClickListener());
 		imageDonut.setOnClickListener(newOnImageDonutClickListnener());
 		settings.setOnClickListener(newOnSettingsClickListnener());
 
