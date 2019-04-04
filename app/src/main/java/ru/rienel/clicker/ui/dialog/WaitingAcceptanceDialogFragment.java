@@ -46,8 +46,6 @@ public class WaitingAcceptanceDialogFragment extends DialogFragment {
 
 		donutIcon.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.dialog_donut_rotate));
 
-		presenter.handleOnOpponentListClick(opponent);
-
 		return new AlertDialog.Builder(getActivity())
 				.setView(root)
 				.setCancelable(true)

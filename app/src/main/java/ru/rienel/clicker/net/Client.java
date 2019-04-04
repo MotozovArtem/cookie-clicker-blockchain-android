@@ -220,7 +220,6 @@ public class Client implements Runnable {
 		listeners.remove(listener);
 	}
 
-
 	public static class ClientNetworkEvent extends EventObject {
 		private final Signal signal;
 

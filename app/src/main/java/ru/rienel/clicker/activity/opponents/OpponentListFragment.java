@@ -204,6 +204,7 @@ public class OpponentListFragment extends Fragment implements OpponentsContract.
 		@Override
 		public void onClick(View v) {
 			if (opponent.getIpAddress() != null) {
+				presenter.sendConnectionSignal(opponent);
 				WaitingAcceptanceDialogFragment dialogFragment = WaitingAcceptanceDialogFragment.newInstance(presenter, this.opponent);
 				dialogFragment.show(getFragmentManager(), WaitingAcceptanceDialogFragment.TAG);
 			} else {

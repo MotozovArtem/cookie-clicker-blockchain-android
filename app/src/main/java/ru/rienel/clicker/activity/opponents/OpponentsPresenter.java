@@ -2,6 +2,7 @@ package ru.rienel.clicker.activity.opponents;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,12 +88,20 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 	}
 
 	@Override
-	public void handleOnOpponentListClick(Opponent opponent) {
-		Preconditions.checkNotNull(opponent);
-		OpponentDto opponentDto = OpponentDto.newFromOpponent(opponent);
+	public void sendConnectionSignal(Opponent opponent) {
+		Opponent localDevice = null;
+		try {
+			localDevice = OpponentFactory.build(
+					networkService.getLocalDeviceName(),
+					networkService.getLocalDeviceAddress(),
+					InetAddress.getByName("192.168.46.1"));
+		} catch (UnknownHostException e) {
+			Log.e(TAG, "sendConnectionSignal: ", e);
+		}
+		OpponentDto opponentDto = OpponentDto.newFromOpponent(localDevice);
 		Signal signal = new Signal("connect", Signal.SignalType.INVITE, opponentDto);
 		try {
-			client.setAddress(opponentDto.getIpAddress());
+			client.setAddress(opponent.getIpAddress().getHostAddress());
 			client.setPort(Configuration.SERVER_PORT);
 			executor.execute(client);
 			client.sendSignal(signal);
@@ -176,7 +185,16 @@ public class OpponentsPresenter implements OpponentsContract.Presenter, Property
 
 		@Override
 		public void receivedSignal(Server.ServerNetworkEvent event) {
-
+			Signal signal = event.getSignal();
+			Opponent opponent;
+			try {
+				opponent = OpponentFactory.buildFromDto(signal.getOpponent());
+			} catch (UnknownHostException e) {
+				Log.e(TAG, "connected: ", e);
+				opponentsView.showErrorDialog(e);
+				return;
+			}
+			opponentsView.showAcceptanceDialog(opponent);
 		}
 	}
 

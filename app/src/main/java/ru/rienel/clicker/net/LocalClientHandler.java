@@ -3,6 +3,8 @@ package ru.rienel.clicker.net;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import android.util.Log;
 
@@ -59,7 +61,7 @@ public class LocalClientHandler {
 	private String extractMessageFromBuffer() {
 		buffer.flip();
 		byte[] bytes = new byte[buffer.remaining()];
-		buffer.get();
-		return new String(bytes);
+		buffer.get(bytes);
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 }

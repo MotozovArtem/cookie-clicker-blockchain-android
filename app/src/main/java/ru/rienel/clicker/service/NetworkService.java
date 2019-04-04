@@ -38,6 +38,9 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	private NetworkServiceBinder binder = new NetworkServiceBinder();
 	private WifiP2pManager wifiP2pManager;
+	private String localDeviceName;
+
+	private String deviceAddress;
 
 	private Channel channel;
 	private BroadcastReceiver receiver;
@@ -212,6 +215,22 @@ public class NetworkService extends Service implements ChannelListener, PeerList
 
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		changeSupport.removePropertyChangeListener(listener);
+	}
+
+	public String getLocalDeviceName() {
+		return this.localDeviceName;
+	}
+
+	public void setLocalDeviceName(String localDeviceName) {
+		this.localDeviceName = localDeviceName;
+	}
+
+	public void setLocalDeviceAddress(String deviceAddress) {
+		this.deviceAddress = deviceAddress;
+	}
+
+	public String getLocalDeviceAddress() {
+		return deviceAddress;
 	}
 
 	public class NetworkServiceBinder extends Binder {

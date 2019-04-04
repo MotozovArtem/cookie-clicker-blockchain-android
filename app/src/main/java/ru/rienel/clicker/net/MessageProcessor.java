@@ -8,6 +8,8 @@ import ru.rienel.clicker.common.Preconditions;
 import ru.rienel.clicker.common.StringJoiner;
 
 public class MessageProcessor {
+	public static final int MESSAGE_LENGTH_INDEX = 1;
+	public static final int MESSAGE_BODY_INDEX = 2;
 	private StringBuilder receivedChars = new StringBuilder();
 	private final Queue<String> messages = new ArrayDeque<>();
 
@@ -30,12 +32,12 @@ public class MessageProcessor {
 		if (splitAtHeader.length < 2) {
 			return false;
 		}
-		String lengthHeader = splitAtHeader[0];
+		String lengthHeader = splitAtHeader[MESSAGE_LENGTH_INDEX];
 		int lengthOfFirstMessage = Integer.parseInt(lengthHeader);
-		if (hasCompleteMessage(lengthOfFirstMessage, splitAtHeader[1])) {
-			String completeMsg = splitAtHeader[1].substring(0, lengthOfFirstMessage);
+		if (hasCompleteMessage(lengthOfFirstMessage, splitAtHeader[MESSAGE_BODY_INDEX])) {
+			String completeMsg = splitAtHeader[MESSAGE_BODY_INDEX].substring(0, lengthOfFirstMessage);
 			messages.add(completeMsg);
-			receivedChars.delete(0, lengthHeader.length() + MessageConstants.MESSAGE_LENGTH_DELIMITER.length() + lengthOfFirstMessage);
+			receivedChars.delete(0, allReceivedChars.length());
 			return true;
 		}
 		return false;

@@ -17,8 +17,8 @@ public class OpponentFactory {
 
 	public static Opponent buildFromDto(OpponentDto opponentDto) throws UnknownHostException {
 		Opponent opponent = new Opponent();
-		opponent.setName(opponent.getName());
-		opponent.setAddress(opponent.getAddress());
+		opponent.setName(opponentDto.getName());
+		opponent.setAddress(opponentDto.getAddress());
 		opponent.setIpAddress(InetAddress.getByName(opponentDto.getIpAddress()));
 		return opponent;
 	}

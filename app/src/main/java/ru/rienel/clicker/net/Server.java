@@ -105,6 +105,7 @@ public class Server implements Runnable {
 		try {
 			client.handler.receive();
 		} catch (IOException e) {
+			Log.e(TAG, "receive: Error while receiving", e);
 			removeClient(key);
 		}
 	}

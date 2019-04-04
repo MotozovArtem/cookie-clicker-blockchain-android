@@ -75,9 +75,8 @@ public class AcceptanceDialogFragment extends DialogFragment {
 
 	private DialogInterface.OnClickListener newOnOkClickListener() {
 		return (dialog, which) -> {
-
 			Signal acceptSignal = new Signal("accept", SignalType.ACCEPT, null);
-
+			// TODO: Send accept to opponent
 
 			Intent goToGameIntent = new Intent(getActivity(), GameActivity.class);
 			goToGameIntent.putExtra(GameActivity.INTENT_GAME_TYPE, GameType.MULTIPLAYER);

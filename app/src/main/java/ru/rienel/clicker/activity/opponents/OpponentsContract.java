@@ -35,7 +35,7 @@ public interface OpponentsContract {
 
 		ServiceConnection newServiceConnection();
 
-		void handleOnOpponentListClick(Opponent opponent);
+		void sendConnectionSignal(Opponent opponent);
 
 		void connect(WifiP2pConfig config);
 
