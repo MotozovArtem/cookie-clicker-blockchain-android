@@ -239,7 +239,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	@Override
 	public void setClicks(Integer clicks) {
-		click.setText(String.format(Locale.ENGLISH, "%d", this.coins)); // TODO: WTF!!1 Propblem with clicks text view
+		coinsCounterTextView.setText(String.format(Locale.ENGLISH, "Coins: %d", this.coins)); // TODO: WTF!!1 Propblem with clicks text view
+		multiplayerCoinsCounterTextView.setText(String.format(Locale.ENGLISH, "Multiplayer Coins: %d", this.multiplayerCoins)); // TODO: WTF!!1 Propblem with clicks text view
 	}
 
 	@Override
@@ -355,42 +356,88 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	public View.OnClickListener newOnIncrementTapClickListener() {
 		return view -> {
-			this.donutPerClick += 1;
-			this.tempClicks -= 1;
-			saves.edit().putInt("tempClicks", this.tempClicks).apply();
-			checkPurchasedItem(incTap, autoTap);
-			new CountDownTimer(10000, 1000) {
+			if (tempClicks < 1 && coins >= 10) {
+				tempClicks += 1;
+				saves.edit().putInt("tempClicks", tempClicks).apply();
+				updateCoins(10);
+//				updateTextView();
+//				checkingClicks();
+				checkPurchasedItem(incTap,autoTap);
+				coinsCounterTextView.setText(String.valueOf(this.coins));
+			} else if (tempClicks >= 1) {
+				this.donutPerClick += 1;
+				this.tempClicks -= 1;
+				saves.edit().putInt("tempClicks", this.tempClicks).apply();
+				checkPurchasedItem(incTap, autoTap);
+				new CountDownTimer(10000, 1000) {
 
-				@Override
-				public void onTick(long l) {
+					@Override
+					public void onTick(long l) {
 
-				}
+					}
 
-				@Override
-				public void onFinish() {
-					donutPerClick -= 1;
-				}
-			}.start();
+					@Override
+					public void onFinish() {
+						donutPerClick -= 1;
+					}
+				}.start();
+			}
 		};
 	}
 
 	public View.OnClickListener newOnAutoTapClickListener() {
 		return view -> {
-			this.tempAutoClicks -= 1;
-			saves.edit().putInt("tempAutoClicks", this.tempAutoClicks).apply();
-			checkPurchasedItem(incTap, autoTap);
-			new CountDownTimer(10000, 1000) {
+			if (tempAutoClicks < 1 && coins >= 20) {
+				tempAutoClicks += 1;
+				saves.edit().putInt("tempAutoClicks", tempAutoClicks).apply();
+				updateCoins(20);
+//				updateTextView();
+//				checkingClicks();
+				checkPurchasedItem(incTap, autoTap);
+				coinsCounterTextView.setText(String.valueOf(this.coins));
+			} else if (tempAutoClicks >= 1) {
+				this.tempAutoClicks -= 1;
+				saves.edit().putInt("tempAutoClicks", this.tempAutoClicks).apply();
+				checkPurchasedItem(incTap, autoTap);
+				new CountDownTimer(10000, 1000) {
 
-				@Override
-				public void onTick(long l) {
-					donutClick();
-				}
+					@Override
+					public void onTick(long l) {
+						donutClick();
+					}
 
-				@Override
-				public void onFinish() {
+					@Override
+					public void onFinish() {
 
-				}
-			}.start();
+					}
+				}.start();
+			}
+
+		};
+	}
+
+	public View.OnClickListener newOnRegularAutoTapClickListener() {
+		return view -> {
+			if (multiplayerCoins >= 20) {
+				mAutoClicks += 1;
+				saves.edit().putInt("mAutoClicks", mAutoClicks).apply();
+				updateMultiplayerCoins(20);
+				multiplayerAutoClicks();
+
+				multiplayerCoinsCounterTextView.setText(String.format(Locale.ENGLISH, "Multiplayer Coins: %d", this.multiplayerCoins));
+			}
+		};
+	}
+
+	public View.OnClickListener newOnRegularIncTapClickListener() {
+		return view -> {
+			if (multiplayerCoins >= 10) {
+				donutPerClick += 1;
+				saves.edit().putInt("donutPerClick", donutPerClick).apply();
+				updateMultiplayerCoins(10);
+
+				multiplayerCoinsCounterTextView.setText(String.format(Locale.ENGLISH, "Multiplayer Coins: %d", this.multiplayerCoins));
+			}
 		};
 	}
 
@@ -400,7 +447,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		this.tempAutoClicks = saves.getInt("tempAutoClicks", 0);
 		this.mAutoClicks = saves.getInt("mAutoClicks", 0);
 		this.currentLevel = saves.getInt("currentLevel", 0);
-		this.coins = saves.getInt("coins", 0);
+		this.coins = saves.getInt("commonCoins", 0);
+		this.multiplayerCoins = saves.getInt("multiplayerCoins", 0);
 		this.clicks = saves.getInt("clicks", 0);
 	}
 
@@ -413,12 +461,12 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	private void checkPurchasedItem(Button incTap, Button autoTap) {
 		if (tempClicks > 0) {
-			incTap.setEnabled(true);
 			String message = getResources().getString(R.string.IncClick) + " -" + tempClicks;
 			incTap.setText(message);
 		} else {
-			incTap.setEnabled(false);
-			incTap.setText(R.string.IncClick);
+			String message1 = getResources().getString(R.string.IncClick) + " -";
+			String message2 = getResources().getString(R.string.tempIncrementButton);
+			incTap.setText(message1 + message2);
 		}
 
 		if (tempAutoClicks > 0) {
@@ -426,8 +474,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			String message = getResources().getString(R.string.AutoClick) + " -" + tempAutoClicks;
 			autoTap.setText(message);
 		} else {
-			autoTap.setEnabled(false);
-			autoTap.setText(R.string.AutoClick);
+			String message1 = getResources().getString(R.string.AutoClick) + " -";
+			String message2 = getResources().getString(R.string.tempAutoClickButton);
+			autoTap.setText(message1 + message2);
 		}
 	}
 
@@ -435,7 +484,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		saves = getContext().getSharedPreferences(getString(R.string.gameSaves), Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = saves.edit();
 		editor.putInt("clicks", (int)progressBar.getProgress());
-		editor.putInt("coins", this.coins);
+		editor.putInt("commonCoins", this.coins);
 		editor.putInt("currentLevel", this.currentLevel);
 		editor.apply();
 	}
@@ -466,6 +515,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		requiredClicks = (int)Math.pow(((float)(curentLevel + 1) / 0.5), 2);
 		progressBar.setMax(requiredClicks);
 		progressBar.setProgress(clicks);
+		currentLevelTextView.setText(getResources().getString(R.string.current_level) + " " + this.currentLevel);
 	}
 
 	private void increaseProgressBar(int value) {
@@ -483,8 +533,8 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			presenter.finishGame(message, this.requiredClicks);
 
 			preparingProgressBar(currentLevel, this.clicks);
-			click.setText(String.valueOf(this.coins));
-
+			coinsCounterTextView.setText(String.format(Locale.ENGLISH, "Coins: %d", this.coins));
+//			multiplayerCoinsCounterTextView.setText(String.format(Locale.ENGLISH, "Multiplayer Coins: %d", this.multiplayerCoins)); // TODO for multiplayer add "If" condition
 
 
 		} else if (this.clicks == requiredClicks) {
@@ -496,9 +546,18 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			presenter.finishGame(message, this.requiredClicks);
 
 			preparingProgressBar(currentLevel, 0);
-			click.setText(String.valueOf(this.coins));
+			coinsCounterTextView.setText(String.format(Locale.ENGLISH, "Coins: %d", this.coins));
+			multiplayerCoinsCounterTextView.setText(String.format(Locale.ENGLISH, "Multiplayer Coins: %d", this.multiplayerCoins)); // TODO for multiplayer add "If" condition
 
 
 		}
+	}
+
+	private void updateCoins(int coins) {
+		this.coins -= coins;
+	}
+
+	private void updateMultiplayerCoins(int coins) {
+		this.multiplayerCoins -= coins;
 	}
 }
