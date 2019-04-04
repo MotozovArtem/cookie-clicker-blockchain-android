@@ -17,6 +17,7 @@ import ru.rienel.clicker.activity.shop.ShopActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
 import ru.rienel.clicker.common.ImageDonut;
 import ru.rienel.clicker.ui.dialog.DonutDialogFragment;
+import ru.rienel.clicker.ui.dialog.SettingsDialogFragment;
 
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DONUT_ID;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
@@ -24,6 +25,7 @@ import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFE
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 	private Button startGame;
 	private Button statistics;
+	private Button settings;
 	private Button multiplayer;
 	private Button shop;
 	private Button clear;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		statistics = findViewById(R.id.statistic);
 		multiplayer = findViewById(R.id.multiplayer);
 		shop = findViewById(R.id.btnShop);
+		settings = findViewById(R.id.settings);
 		clear = findViewById(R.id.btnClearGameSaves);
 		imageDonut = findViewById(R.id.donut);
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		shop.setOnClickListener(buildChangeActivityOnClickListener(this, ShopActivity.class));
 		clear.setOnClickListener(newOnClearGamesSavesClickListener());
 		imageDonut.setOnClickListener(newOnImageDonutClickListnener());
+		settings.setOnClickListener(newOnSettingsClickListnener());
 
 		checkFirstLoadGameSaves();
 	}
@@ -73,6 +77,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		SharedPreferences.Editor editor = cookieSettings.edit();
 		editor.putInt(PREFERENCES_DONUT_ID, resourceId);
 		editor.apply();
+	}
+
+	public View.OnClickListener newOnSettingsClickListnener() {
+		return (v) -> {
+			SettingsDialogFragment dialog = new SettingsDialogFragment();
+			dialog.show(getSupportFragmentManager(), "custom");
+		};
 	}
 
 	public View.OnClickListener newOnImageDonutClickListnener() {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#F3F0D1">
+
+
+    <TextView
+        android:id="@+id/SoundE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound effects:"
+        app:layout_constraintBottom_toTopOf="@+id/SoundM"
+        app:layout_constraintStart_toStartOf="@+id/SoundM"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/SoundM"
+        android:layout_width="105dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="10dp"
+        android:text="Sound of music:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/seekBarM"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SoundE" />
+
+    <SeekBar
+        android:id="@+id/seekBarE"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:max="100"
+        android:progress="3"
+        app:layout_constraintBottom_toTopOf="@+id/seekBarM"
+        app:layout_constraintEnd_toEndOf="@+id/seekBarM"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/SoundE"
+        app:layout_constraintStart_toStartOf="@+id/seekBarM"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarM"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:max="100"
+        android:progress="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/SoundM"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarE" />
+
+
+</android.support.constraint.ConstraintLayout>

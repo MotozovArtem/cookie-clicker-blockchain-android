@@ -20,6 +20,7 @@ public class Configuration {
 	public static final class SharedPreferencesKeys {
 		public static final String PREFERENCES_NAME = "cookie_settings";
 		public static final String PREFERENCES_DONUT_ID = "donut_id";
-
+		public static final String PREFERENCES_VOLUME_MUSIC  = "volume_music";
+		public static final String PREFERENCES_VOLUME_EFFECT  = "volume_effect";
 	}
 }
