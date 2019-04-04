@@ -32,7 +32,13 @@ public class SettingsDialogFragment extends DialogFragment implements SeekBar.On
         volumeM = (SeekBar)view.findViewById(R.id.seekBarM);
         volumeE = (SeekBar)view.findViewById(R.id.seekBarE);
 
+        volumeM.setOnSeekBarChangeListener(this);
+        volumeE.setOnSeekBarChangeListener(this);
+
         cookieSettings = view.getContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+        volumeM.setProgress((int)(cookieSettings.getFloat(PREFERENCES_VOLUME_MUSIC,0)*volumeM.getMax()));
+        volumeE.setProgress((int)(cookieSettings.getFloat(PREFERENCES_VOLUME_EFFECT,0)*volumeM.getMax()));
 
 
 
@@ -43,19 +49,7 @@ public class SettingsDialogFragment extends DialogFragment implements SeekBar.On
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        float noiseVol = (float) progress / (float) volumeM.getMax();
-//        if (seekBar.getId() == R.id.seekBarM)
-//        {
-            SharedPreferences.Editor editor = cookieSettings.edit();
-            editor.putFloat(PREFERENCES_VOLUME_MUSIC, noiseVol);
-            editor.apply();
-//        }
-//        else
-//        {
-//            SharedPreferences.Editor editor = cookieSettings.edit();
-//            editor.putFloat(PREFERENCES_VOLUME_EFFECT, noiseVol);
-//            editor.apply();
-//        }
+
 
     }
 
@@ -66,6 +60,18 @@ public class SettingsDialogFragment extends DialogFragment implements SeekBar.On
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        SharedPreferences.Editor editor = cookieSettings.edit();
+
+        if (seekBar.getId() == R.id.seekBarM) {
+            float musicVolumeLevel = (float) seekBar.getProgress() / (float) volumeM.getMax();
+            editor.putFloat(PREFERENCES_VOLUME_MUSIC, musicVolumeLevel);
+            editor.apply();
+        } else if(seekBar.getId() == R.id.seekBarE) {
+            float effectVolumeLevel = (float) seekBar.getProgress() / (float) volumeE.getMax();
+            editor.putFloat(PREFERENCES_VOLUME_EFFECT, effectVolumeLevel);
+            editor.apply();
+        }
+
 
     }
 

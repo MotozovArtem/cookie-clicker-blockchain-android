@@ -32,6 +32,7 @@ import ru.rienel.clicker.ui.dialog.ErrorMultiplayerDialogFragment;
 
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_DONUT_ID;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_NAME;
+import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_VOLUME_EFFECT;
 import static ru.rienel.clicker.common.Configuration.SharedPreferencesKeys.PREFERENCES_VOLUME_MUSIC;
 
 public class GameFragment extends Fragment implements GameContract.View, SoundPool.OnLoadCompleteListener {
@@ -74,9 +75,9 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	private int tempAutoClicks;
 	private int mAutoClicks;
 
-	private SoundPool soundPool;
-	private int soundId;
-	private float volumeM, volumeS;
+	private SoundPool clickSound;
+	private int clickSoundId;
+	private float volumeM, volumeE;
 	private SoundPool backgroundSound;
 	private int backgroundSoundId;
 	private SharedPreferences saves, cookieSettings;
@@ -117,7 +118,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		progressBar = root.findViewById(R.id.progressBarB);
 		donutImage = root.findViewById(R.id.donut);
 		clock = root.findViewById(R.id.stopwatch);
-		volumeM =0.5f;
 		newClick = root.findViewById(R.id.newClick);
 		newClick.setVisibility(View.INVISIBLE);
 
@@ -128,24 +128,35 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 		preparingProgressBar(this.currentLevel, this.clicks);
 		loadDonutImage();
 
-		//Tap sound
-		soundPool = newSoundPool();
-		soundId = soundPool.load(getActivity(), R.raw.muda, 1);
+		// Click sound
+		clickSound = new SoundPool.Builder().setMaxStreams(1).build();
+		clickSound.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+				if (cookieSettings.contains(PREFERENCES_VOLUME_EFFECT)) {
+					volumeE = cookieSettings.getFloat(PREFERENCES_VOLUME_EFFECT,0);
+				}
+
+			}
+		});
+		clickSoundId = clickSound.load(getActivity(), R.raw.muda, 1);
 
 		// Background sound
 		backgroundSound = new SoundPool.Builder().setMaxStreams(1).build();
 		backgroundSound.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
 			@Override
 			public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-				backgroundSound.play(backgroundSoundId, 1, 1, 0, -1, 1);
 				if (cookieSettings.contains(PREFERENCES_VOLUME_MUSIC))
 				{
-					volumeM = cookieSettings.getFloat(PREFERENCES_VOLUME_MUSIC, 0.5f);
+					volumeM = cookieSettings.getFloat(PREFERENCES_VOLUME_MUSIC, 0);
 				}
-				backgroundSound.setVolume(backgroundSoundId, volumeM, volumeM);
+				backgroundSound.play(backgroundSoundId, volumeM, volumeM, 0, -1, 1);
 
 			}
 		});
+
+		backgroundSoundId = backgroundSound.load(this.getContext(), R.raw.epic_sax_guy_v6, 1);
+
 
 		donutClickAnimation.setAnimationListener(new Animation.AnimationListener() {
 			@Override
@@ -166,7 +177,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 			}
 		});
 
-		backgroundSoundId = backgroundSound.load(this.getContext(), R.raw.epic_sax_guy_v6, 1);
 
 		donutImage.setOnClickListener(newOnDonutClickListener());
 
@@ -276,16 +286,6 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 
 	}
 
-	private SoundPool newSoundPool() {
-		// Click sound
-		SoundPool soundPool = new SoundPool.Builder()
-				.setMaxStreams(1)
-				.build();
-		soundPool.setOnLoadCompleteListener((thisSoundPool, sampleId, status) -> {
-		});
-		return soundPool;
-	}
-
 	private void initializeActivityState(Bundle savedInstanceState) {
 		if (savedInstanceState == null) {
 //			donutPerClick = 1;
@@ -349,7 +349,7 @@ public class GameFragment extends Fragment implements GameContract.View, SoundPo
 	public View.OnClickListener newOnDonutClickListener() {
 		return view -> {
 			presenter.handleClick();
-			soundPool.play(soundId, 1, 1, 0, 0, 1);
+			clickSound.play(clickSoundId, volumeE, volumeE, 0, 0, 1);
 			view.startAnimation(donutClickAnimation);
 		};
 	}
