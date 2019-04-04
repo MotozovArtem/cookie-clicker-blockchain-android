@@ -35,6 +35,7 @@ public class GameActivity extends AppCompatActivity {
 		}
 		Intent intent = getIntent();
 
+
 		GameType gameType = null;
 		InetAddress address = null;
 
