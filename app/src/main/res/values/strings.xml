@@ -6,8 +6,8 @@
 	<string name="title">Donut clicker</string>
 	<string name="backToMenu">Back to menu</string>
 	<string name="name">Buy donuts per click!</string>
-	<string name="tempIncrementButton">Increment click +1 (-10 coins)</string>
-	<string name="tempAutoClickButton">Auto click (-20 coins)</string>
+	<string name="tempIncrementButton">buy it: (-10 coins)</string>
+	<string name="tempAutoClickButton">buy it: (-20 coins)</string>
 	<string name="mAutoClick">Auto click (-200 Multiplayer coins)</string>
 	<string name="mIncrementClick">Increment click +1 (-100 Multiplayer coins)</string>
 	<string name="shop">Go to shop</string>
@@ -44,7 +44,7 @@
 	<string name="DPC">Donuts Per Click:</string>
 	<string name="clearGameSaves">Clear game saves</string>
 	<string name="IncClick">Increment Click</string>
-	<string name="AutoClick">Auto Click</string>
+	<string name="AutoClick">AutoClick</string>
 	<string name="multiplayer_coins">Multiplayer Coins:</string>
 	<string name="select">Select</string>
 	<string name="cancel">Cancel</string>
@@ -54,4 +54,7 @@
 	<string name="question_mark">\?</string>
 	<string name="resolve_ip">Resolve IP</string>
     <string name="buy">Buy</string>
+	<string name="regular_inc">Regular Inc (-10 coins)</string>
+	<string name="regular_autoclick">Regular AutoClick (-20 coins)</string>
+	<string name="current_level">Level </string>
 </resources>

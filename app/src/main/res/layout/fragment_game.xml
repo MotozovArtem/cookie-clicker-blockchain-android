@@ -31,6 +31,17 @@
 		app:rcRadius="50dp"
 		app:rcReverse="false" />
 
+	<TextView
+		android:id="@+id/tvCurrentLevel"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:text="@string/current_level"
+		android:textColor="@color/colorToast"
+		android:textSize="26sp"
+		android:layout_below="@id/progressBarB"/>
+
 
 	<TextView
 		android:id="@+id/stopwatch"
@@ -63,14 +74,26 @@
 		android:textSize="26sp" />
 
 	<TextView
-		android:id="@+id/tvClicks"
+		android:id="@+id/tvCoinsCounter"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/donut"
 		android:layout_centerHorizontal="true"
 		android:layout_marginBottom="20dp"
 		android:paddingTop="20dp"
-		android:textSize="32sp" />
+		android:textSize="20sp"
+		android:layout_toLeftOf="@id/donut"/>
+
+	<TextView
+		android:id="@+id/tvMultiplayerCoinsCounter"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/donut"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="20dp"
+		android:paddingTop="20dp"
+		android:textSize="20sp"
+		android:paddingLeft="30sp"/>
 
 
 	<android.support.constraint.ConstraintLayout
@@ -109,7 +132,7 @@
 			android:text="AutoClick \n 1 coin"
 			android:paddingStart="20dp"
 			android:textAlignment="textStart"
-			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap1"
+			app:layout_constraintBottom_toTopOf="@+id/btnRegularIncTap"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toStartOf="parent"
@@ -117,36 +140,36 @@
 			tools:ignore="RtlSymmetry" />
 
 		<Button
-			android:id="@+id/btnAutoTap1"
+			android:id="@+id/btnRegularIncTap"
 			style="@style/TextStyle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_toEndOf="@id/btnIncTap"
 			android:background="@drawable/buttons_style"
-			android:text="Regular Inc \n 1 coin"
+			android:text="@string/regular_inc"
 			android:paddingStart="20dp"
 			android:textAlignment="textStart"
-			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap2"
+			app:layout_constraintBottom_toTopOf="@+id/btnRegularAutoTap"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/btnAutoTap" />
 
 		<Button
-			android:id="@+id/btnAutoTap2"
+			android:id="@+id/btnRegularAutoTap"
 			style="@style/TextStyle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_toEndOf="@id/btnIncTap"
 			android:background="@drawable/buttons_style"
-			android:text="Regular AutoClick \ 1 coin"
+			android:text="@string/regular_autoclick"
 			android:paddingStart="20dp"
 			android:textAlignment="textStart"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/btnAutoTap1"
+			app:layout_constraintTop_toBottomOf="@+id/btnRegularIncTap"
 			/>
 	</android.support.constraint.ConstraintLayout>
 </RelativeLayout>

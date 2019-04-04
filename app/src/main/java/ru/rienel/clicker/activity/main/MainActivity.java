@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 			editor.putInt("mClicks", 0);            // Multiplayer Clicks
 			editor.putInt("currentLevel", 0);            // Player Level
 			editor.putInt("commonCoins", 0);            // Player common coins
-			editor.putInt("multiplayerCoins", 10000);            // Player multiplayer coins
+			editor.putInt("multiplayerCoins", 10);            // Player multiplayer coins
 			editor.apply();
 			return true;
 		}
