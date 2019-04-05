@@ -51,9 +51,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/stopwatch"
-
 		android:layout_centerInParent="true"
-		android:layout_marginTop="25dp"
 		android:background="@drawable/donut_for_game"
 		android:scaleType="center"
 		android:soundEffectsEnabled="false" />
@@ -73,12 +71,12 @@
 		android:layout_height="wrap_content"
 		android:layout_above="@id/donut"
 		android:layout_centerHorizontal="false"
-		android:layout_marginBottom="20sp"
+		android:layout_marginBottom="10sp"
 		android:paddingTop="20sp"
 		style="@style/TextStyleGameTitle"
 		android:paddingStart="50sp"
 		android:paddingEnd="50sp"
-		android:textSize="15sp"/>
+		android:textSize="12sp"/>
 
 	<TextView
 		android:id="@+id/tvMultiplayerCoinsCounter"
@@ -87,10 +85,10 @@
 		android:layout_above="@id/donut"
 		android:layout_toEndOf="@id/tvCoinsCounter"
 		android:layout_centerHorizontal="false"
-		android:layout_marginBottom="20sp"
+		android:layout_marginBottom="10sp"
 		android:paddingTop="20dp"
 		style="@style/TextStyleGameTitle"
-		android:textSize="15sp"/>
+		android:textSize="12sp"/>
 
 
 	<android.support.constraint.ConstraintLayout
