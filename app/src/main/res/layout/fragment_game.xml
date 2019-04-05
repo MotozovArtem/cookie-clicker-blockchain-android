@@ -74,6 +74,7 @@
 		style="@style/TextStyleGameTitle"
 		android:paddingStart="50sp"
 		android:paddingEnd="50sp"
+		android:layout_marginBottom="13sp"
 		android:textSize="12sp"/>
 
 	<TextView
