@@ -26,6 +26,8 @@
 		app:rcReverse="false" />
 
 	<TextView
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
 		android:id="@+id/tvCurrentLevel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -49,9 +51,9 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/stopwatch"
-		android:layout_centerHorizontal="true"
-		android:layout_centerVertical="true"
 
+		android:layout_centerInParent="true"
+		android:layout_marginTop="25dp"
 		android:background="@drawable/donut_for_game"
 		android:scaleType="center"
 		android:soundEffectsEnabled="false" />
@@ -98,7 +100,7 @@
 		android:layout_below="@+id/donut"
 		android:layout_alignParentStart="true"
 		android:layout_marginStart="35dp"
-		android:layout_marginTop="40dp"
+
 		android:layout_marginEnd="35dp">
 
 		<Button
@@ -107,15 +109,15 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:background="@drawable/buttons_style"
-			android:text="@string/incclick_coins"
 			android:paddingStart="20dp"
+			android:text="@string/incclick_coins"
 			android:textAlignment="textStart"
 			app:layout_constraintBottom_toTopOf="@+id/btnAutoTap"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintVertical_chainStyle="spread" />
+			app:layout_constraintVertical_chainStyle="packed" />
 
 		<Button
 			android:id="@+id/btnAutoTap"
