@@ -74,7 +74,7 @@
 		style="@style/TextStyleGameTitle"
 		android:paddingStart="50sp"
 		android:paddingEnd="50sp"
-		android:layout_marginBottom="13sp"
+		android:layout_marginBottom="15sp"
 		android:textSize="12sp"/>
 
 	<TextView
@@ -85,6 +85,7 @@
 		android:layout_toEndOf="@id/tvCoinsCounter"
 		android:layout_centerHorizontal="false"
 		android:paddingTop="20dp"
+		android:layout_marginBottom="15sp"
 		style="@style/TextStyleGameTitle"
 		android:textSize="12sp"/>
 
