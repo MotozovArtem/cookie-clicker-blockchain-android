@@ -16,6 +16,7 @@ import ru.rienel.clicker.activity.opponents.OpponentsActivity;
 import ru.rienel.clicker.activity.shop.ShopActivity;
 import ru.rienel.clicker.activity.statistics.StatisticsActivity;
 import ru.rienel.clicker.common.ImageDonut;
+import ru.rienel.clicker.ui.dialog.ComingSoonDialogFragment;
 import ru.rienel.clicker.ui.dialog.DonutDialogFragment;
 import ru.rienel.clicker.ui.dialog.SettingsDialogFragment;
 
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 		startGame.setOnClickListener(buildChangeActivityOnClickListener(this, GameActivity.class));
 		statistics.setOnClickListener(buildChangeActivityOnClickListener(this, StatisticsActivity.class));
-		multiplayer.setOnClickListener(buildChangeActivityOnClickListener(this, OpponentsActivity.class));
+		multiplayer.setOnClickListener(newOnCoomingSonClickListnener());
+//		multiplayer.setOnClickListener(buildChangeActivityOnClickListener(this, OpponentsActivity.class));
 		imageDonut.setOnClickListener(newOnImageDonutClickListnener());
 		settings.setOnClickListener(newOnSettingsClickListnener());
 
@@ -81,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 		SharedPreferences.Editor editor = cookieSettings.edit();
 		editor.putInt(PREFERENCES_DONUT_ID, resourceId);
 		editor.apply();
+	}
+
+	public View.OnClickListener newOnCoomingSonClickListnener() {
+		return (v) -> {
+			ComingSoonDialogFragment dialog = new ComingSoonDialogFragment();
+			dialog.show(getSupportFragmentManager(), "custom");
+		};
 	}
 
 	public View.OnClickListener newOnSettingsClickListnener() {

@@ -54,9 +54,9 @@
 	<string name="question_mark">\?</string>
 	<string name="resolve_ip">Resolve IP</string>
     <string name="buy">Buy</string>
-	<string name="regular_inc">Regular Inc (-10 multicoins)</string>
-	<string name="regular_autoclick">Regular AutoClick (-20 multicoins)</string>
+	<string name="regular_inc">Regular Inc \n(-10 multicoins)</string>
+	<string name="regular_autoclick">Regular AutoClick\n(-20 multicoins)</string>
 	<string name="current_level">Level </string>
-	<string name="autoclick_coins">AutoClick (- 20 coins)</string>
-	<string name="incclick_coins">IncClick (-10 coins)</string>
+	<string name="autoclick_coins">AutoClick \n(- 20 coins)</string>
+	<string name="incclick_coins">IncClick \n(-10 coins)</string>
 </resources>
